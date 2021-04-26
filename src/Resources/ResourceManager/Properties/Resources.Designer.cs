@@ -70,6 +70,24 @@ namespace Microsoft.Azure.Commands.ResourceManager.Cmdlets.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot find Bicep. Please add Bicep to your PATH or visit https://github.com/Azure/bicep/blob/main/docs/installing.md to install Bicep..
+        /// </summary>
+        internal static string BicepNotFound {
+            get {
+                return ResourceManager.GetString("BicepNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please use bicep &apos;{0}&apos; or higher verison..
+        /// </summary>
+        internal static string BicepVersionRequirement {
+            get {
+                return ResourceManager.GetString("BicepVersionRequirement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancelling active deployment ....
         /// </summary>
         internal static string CancelDeploymentMessage {
@@ -445,6 +463,24 @@ namespace Microsoft.Azure.Commands.ResourceManager.Cmdlets.Properties {
         internal static string InvalidAssignableScopes {
             get {
                 return ResourceManager.GetString("InvalidAssignableScopes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Bicep file path..
+        /// </summary>
+        internal static string InvalidBicepFilePath {
+            get {
+                return ResourceManager.GetString("InvalidBicepFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unrecognized resource change {0}: {1}. Specify one ore more values in the following list and try again: {2}..
+        /// </summary>
+        internal static string InvalidChangeType {
+            get {
+                return ResourceManager.GetString("InvalidChangeType", resourceCulture);
             }
         }
         
@@ -1169,12 +1205,12 @@ namespace Microsoft.Azure.Commands.ResourceManager.Cmdlets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Note: As What-If is currently in preview, the result may contain false positive predictions (noise).
+        ///   Looks up a localized string similar to Note: The result may contain false positive predictions (noise).
         ///You can help us improve the accuracy of the result by opening an issue here: https://aka.ms/WhatIfIssues..
         /// </summary>
-        internal static string WhatIfPreviewNotice {
+        internal static string WhatIfNoiseNotice {
             get {
-                return ResourceManager.GetString("WhatIfPreviewNotice", resourceCulture);
+                return ResourceManager.GetString("WhatIfNoiseNotice", resourceCulture);
             }
         }
     }

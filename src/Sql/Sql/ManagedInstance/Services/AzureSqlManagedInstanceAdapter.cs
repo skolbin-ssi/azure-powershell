@@ -101,6 +101,17 @@ namespace Microsoft.Azure.Commands.Sql.ManagedInstance.Adapter
         }
 
         /// <summary>
+        /// Failovers a managed instance.
+        /// </summary>
+        /// <param name="resourceGroupName">The resource group the instance is in.</param>
+        /// <param name="name">The name of Azure Managed Instance to failover.</param>
+        /// <param name="replicaType">The type of replica to failover.</param>
+        public void FailoverManagedInstance(string resourceGroupName, string name, string replicaType)
+        {
+            Communicator.Failover(resourceGroupName, name, replicaType);
+        }
+
+        /// <summary>
         /// Upserts a managed instance
         /// </summary>
         /// <param name="model">The managed instance to upsert</param>
@@ -127,7 +138,9 @@ namespace Microsoft.Azure.Commands.Sql.ManagedInstance.Adapter
                 InstancePoolId = model.InstancePoolName != null ?
                     string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/instancePools/{2}",
                         Context.Subscription.Id, model.ResourceGroupName, model.InstancePoolName): null,
-                MinimalTlsVersion = model.MinimalTlsVersion
+                MinimalTlsVersion = model.MinimalTlsVersion,
+                StorageAccountType = MapExternalBackupStorageRedundancyToInternal(model.BackupStorageRedundancy),
+                MaintenanceConfigurationId = model.MaintenanceConfigurationId
             });
 
             return CreateManagedInstanceModelFromResponse(resp);
@@ -203,6 +216,8 @@ namespace Microsoft.Azure.Commands.Sql.ManagedInstance.Adapter
             managedInstance.InstancePoolName = resp.InstancePoolId != null ?
                 new ResourceIdentifier(resp.InstancePoolId).ResourceName : null;
             managedInstance.MinimalTlsVersion = resp.MinimalTlsVersion;
+            managedInstance.BackupStorageRedundancy = MapInternalBackupStorageRedundancyToExternal(resp.StorageAccountType);
+            managedInstance.MaintenanceConfigurationId = resp.MaintenanceConfigurationId;
 
             Management.Internal.Resources.Models.Sku sku = new Management.Internal.Resources.Models.Sku();
             sku.Name = resp.Sku.Name;
@@ -230,6 +245,51 @@ namespace Microsoft.Azure.Commands.Sql.ManagedInstance.Adapter
             }
 
             return SqlSkuUtils.GetVcoreSkuPrefix(tier) ?? "Unknown";
+        }
+
+        /// <summary>
+        /// Map external BackupStorageRedundancy to Internal
+        /// </summary>
+        /// <param name="backupStorageRedundancy">Backup storage redundancy</param>
+        /// <returns>internal backupStorageRedundancy</returns>
+        public static string MapExternalBackupStorageRedundancyToInternal(string backupStorageRedundancy)
+        {
+            if (string.IsNullOrWhiteSpace(backupStorageRedundancy))
+            {
+                return null;
+            }
+
+            switch (backupStorageRedundancy.ToLower())
+            {
+                case "geo":
+                    return "GRS";
+                case "local":
+                    return "LRS";
+                case "zone":
+                    return "ZRS";
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// Map internal BackupStorageRedundancy to external
+        /// </summary>
+        /// <param name="backupStorageRedundancy">Backup storage redundancy</param>
+        /// <returns>internal backupStorageRedundancy</returns>
+        public static string MapInternalBackupStorageRedundancyToExternal(string backupStorageRedundancy)
+        {
+            switch (backupStorageRedundancy)
+            {
+                case "GRS":
+                    return "Geo";
+                case "LRS":
+                    return "Local";
+                case "ZRS":
+                    return "Zone";
+                default:
+                    return null;
+            }
         }
     }
 }

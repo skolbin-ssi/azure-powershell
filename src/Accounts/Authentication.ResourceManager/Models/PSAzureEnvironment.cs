@@ -73,6 +73,10 @@ namespace Microsoft.Azure.Commands.Profile.Models
         public PSAzureEnvironment(IAzureEnvironment environment)
         {
             this.CopyFrom(environment);
+            if(environment is AzureEnvironment source)
+            {
+                this.Type = source.Type;
+            }
         }
 
         /// <summary>
@@ -108,6 +112,7 @@ namespace Microsoft.Azure.Commands.Profile.Models
             SqlDatabaseDnsSuffix = other.GetProperty<string>(nameof(SqlDatabaseDnsSuffix));
             StorageEndpointSuffix = other.GetProperty<string>(nameof(StorageEndpointSuffix));
             TrafficManagerDnsSuffix = other.GetProperty<string>(nameof(TrafficManagerDnsSuffix));
+            ContainerRegistryEndpointSuffix = other.GetProperty<string>(nameof(ContainerRegistryEndpointSuffix));
             AzureOperationalInsightsEndpointResourceId =
                 other.GetProperty<string>(nameof(AzureOperationalInsightsEndpointResourceId));
             AzureOperationalInsightsEndpoint = other.GetProperty<string>(nameof(AzureOperationalInsightsEndpoint));
@@ -126,6 +131,11 @@ namespace Microsoft.Azure.Commands.Profile.Models
         /// </summary>
         [Ps1Xml(Label = "Name", Target = ViewControl.Table, Position = 0)]
         public string Name { get; set; }
+
+        /// <summary>
+        /// Type of environment
+        /// </summary>
+        public string Type { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether ADFS authentication should be allowed . 
@@ -236,6 +246,11 @@ namespace Microsoft.Azure.Commands.Profile.Models
         /// Gets or sets the expected token audience for authenticating requests to the key vault service.
         /// </summary>
         public string AzureKeyVaultServiceEndpointResourceId { get; set; }
+
+        /// <summary>
+        /// The domain name suffix for Azure Container Registry
+        /// </summary>
+        public string ContainerRegistryEndpointSuffix { get; set; }
 
         /// <summary>
         /// The token audience required for communicating with the Azure Log Analytics query service in this environment
@@ -398,7 +413,8 @@ namespace Microsoft.Azure.Commands.Profile.Models
                        && AzureOperationalInsightsEndpointResourceId == other.AzureOperationalInsightsEndpointResourceId
                        && AzureOperationalInsightsEndpoint == other.AzureOperationalInsightsEndpoint
                        && AzureAttestationServiceEndpointResourceId == other.AzureAttestationServiceEndpointResourceId
-                       && AzureAttestationServiceEndpointSuffix == other.AzureAttestationServiceEndpointSuffix;
+                       && AzureAttestationServiceEndpointSuffix == other.AzureAttestationServiceEndpointSuffix
+                       && ContainerRegistryEndpointSuffix == other.ContainerRegistryEndpointSuffix;
             }
 
             return false;

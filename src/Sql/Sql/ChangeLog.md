@@ -18,6 +18,117 @@
         - Additional information about change #1
 -->
 ## Upcoming Release
+
+## Version 2.17.1
+* Added cmdlet output breaking change warnings to the following: 
+    - `New-AzSqlDatabase`
+    - `Get-AzSqlDatabase`
+    - `Set-AzSqlDatabase`
+    - `Remove-AzSqlDatabase`
+    - `New-AzSqlDatabaseSecondary`
+    - `Remove-AzSqlDatabaseSecondary`
+    - `Get-AzSqlDatabaseReplicationLink`
+    - `New-AzSqlDatabaseCopy`
+    - `Set-AzSqlDatabaseSecondary`
+
+
+## Version 2.17.0
+* Added cmdlet `New-AzSqlServerTrustGroup`
+* Added cmdlet `Remove-AzSqlServerTrustGroup`
+* Added cmdlet `Get-AzSqlServerTrustGroup`
+
+## Version 2.16.0
+* Added MaintenanceConfigurationId to 'New-AzSqlDatabase', 'Set-AzSqlDatabase', 'New-AzSqlElasticPool' and 'Set-AzSqlElasticPool'
+* Fixed regression in 'Set-AzSqlServerAudit' when PredicateExpression argument is provided
+
+
+## Version 2.15.0
+* Made `Start-AzSqlInstanceDatabaseLogReplay` cmdlet synchronous, added -AsJob flag
+
+## Version 2.14.0
+* Fixed parameter description for `InstanceFailoverGroup` command.
+* Updated the logic in which schemaName, tableName and columnName are being extracted from the id of SQL Data Classification commands.
+* Fixed Status and StatusMessage fields in `Get-AzSqlDatabaseImportExportStatus` to conform to documentation
+* Added Microsoft support operations (DevOps) auditing cmdlets: Get-AzSqlServerMSSupportAudit, Set-AzSqlServerMSSupportAudit, Remove-AzSqlServerMSSupportAudit
+
+## Version 2.13.0
+* Added SecondaryType to the following: 
+    - `New-AzSqlDatabase`
+    - `Set-AzSqlDatabase`
+    - `New-AzSqlDatabaseSecondary`
+* Added HighAvailabilityReplicaCount to the following: 
+    - `New-AzSqlDatabase`
+    - `Set-AzSqlDatabase`
+* Made ReadReplicaCount an alias of HighAvailabilityReplicaCount in the following: 
+    - `New-AzSqlDatabase`
+    - `Set-AzSqlDatabase`
+
+## Version 2.12.0
+* Fixed issues where Set-AzSqlDatabaseAudit were not support Hyperscale database and database edition cannot be determined
+* Added MaintenanceConfigurationId to 'New-AzSqlInstance' and 'Set-AzSqlInstance'
+* Fixed a bug in GetAzureSqlDatabaseReplicationLink.cs where PartnerServerName parameter was being checked for by value instead of key
+
+## Version 2.11.1
+* Fixed issue where New-AzSqlDatabaseExport fails if networkIsolation not specified [#13097]
+* Fixed issue where New-AzSqlDatabaseExport and New-AzSqlDatabaseImport were not returning OperationStatusLink in the result object [#13097]
+* Update Azure Paired Regions URL in Backup Storage Redundancy Warnings
+
+## Version 2.11.0
+* Added BackupStorageRedundancy to the following: 
+    - `Restore-AzureRmSqlDatabase`
+    - `New-AzSqlDatabaseCopy`
+    - `New-AzSqlDatabaseSecondary`
+* Removed case sensitivity for BackupStorageRedundancy parameter for all SQL DB references 
+* Updated BackupStorageRedundancy warning message names
+* Added support for Managed HSM Uris for SQL DB and Managed Instance
+
+## Version 2.10.1
+* Added warning for BackupStorageRedundancy configuration in select regions in `New-AzSqlDatabase` (Ignore Case for BackupStorageRedundancy configuration input)
+* Fixed for bug in `New-AzSqlDatabaseExport`
+* Removed case sensitivity for BackupStorageRedundancy parameter for `New-AzSqlInstance` 
+
+## Version 2.10.0
+* Added BackupStorageRedundancy to `New-AzSqlInstance` and `Get-AzSqlInstance`
+* Added cmdlet `Get-AzSqlServerActiveDirectoryOnlyAuthentication`
+* Added cmdlet `Enable-AzSqlServerActiveDirectoryOnlyAuthentication`
+* Added Force parameter to `New-AzSqlInstance`
+* Added cmdlets for Managed Database Log Replay service
+	- `Start-AzSqlInstanceDatabaseLogReplay`
+	- `Get-AzSqlInstanceDatabaseLogReplay`
+	- `Complete-AzSqlInstanceDatabaseLogReplay`
+	- `Stop-AzSqlInstanceDatabaseLogReplay`
+* Added cmdlet `Get-AzSqlInstanceActiveDirectoryOnlyAuthentication`
+* Added cmdlet `Enable-AzSqlInstanceActiveDirectoryOnlyAuthentication`
+* Added cmdlet `Disable-AzSqlInstanceActiveDirectoryOnlyAuthentication`
+* Updated cmdlets `New-AzSqlDatabaseImport` and `New-AzSqlDatabaseExport` to support network isolation functionality
+* Added cmdlet `New-AzSqlDatabaseImportExisting`
+* Updated Databases cmdlets to support backup storage type specification
+* Added Force parameter to `New-AzSqlDatabase`
+* Updated ActiveDirectoryOnlyAuthentication cmdlets for server and instance to include ResourceId and InputObject
+* Added support for Managed HSM Uris for SQL DB and Managed Instance
+
+## Version 2.9.1
+* Fixed potential server name case insensitive error in `New-AzSqlServer` and `Set-AzSqlServer`
+* Fixed wrong database name returned on existing database error in `New-AzSqlDatabaseSecondary`
+* Added operation parameters and steps in `Get-AzSqlInstanceOperation`
+
+## Version 2.9.0
+* Added support for Service principal and guest users in Set-AzSqlInstanceActiveDirectoryAdministrator cmdlet`
+* Fixed a bug in Data Classification cmdlets.`
+* Added support for Azure SQL Managed Instance failover: `Invoke-AzSqlInstanceFailover`
+
+## Version 2.8.0
+* Added support for service principal for Set SQL Server Azure Active Directory Admin cmdlet
+* Fixed sync issue in Data Classification cmdlets.
+* Supported searching user by mail on `Set-AzSqlServerActiveDirectoryAdministrator` [#12192]
+
+## Version 2.7.0
+* Added UsePrivateLinkConnection to `New-AzSqlSyncGroup`, `Update-AzSqlSyncGroup`, `New-AzSqlSyncMember` and `Update-AzSqlSyncMember`
+* Added SyncMemberAzureDatabaseResourceId to `New-AzSqlSyncMember` and `Update-AzSqlSyncMember`
+* Added Guest user lookup support to Set SQL Server Azure Active Directory Admin cmdlet
+* Remove IsAzureADOnlyAuthentication parameter from Set-AzSqlServerActiveDirectoryAdministrator as it is not usable. 
+
+## Version 2.6.1
 * Enhance performance of:
     - `Set-AzSqlDatabaseSensitivityClassification`
     - `Set-AzSqlInstanceDatabaseSensitivityClassification`
@@ -29,6 +140,7 @@
     - `Disable-AzSqlInstanceDatabaseSensitivityRecommendation`
 * Removed client-side validation of 'RetentionDays' parameter from cmdlet `Set-AzSqlDatabaseBackupShortTermRetentionPolicy`
 * Auditing to a storage account in Vnet, fixing a bug when creating a Storage Blob Data Contributor role.
+* Allow Azure Active Directory applications to be set as SQL Server Azure Active Directory admin.
 
 ## Version 2.6.0
 * Added cmdlets `Get-AzSqlInstanceOperation` and `Stop-AzSqlInstanceOperation`

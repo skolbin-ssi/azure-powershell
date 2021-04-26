@@ -4,33 +4,45 @@ Tests Synapse SparkPool Lifecycle (Create, Update, Get, List, Delete).
 #>
 function Test-SynapseSparkPool
 {
-    param
-    (
-        $resourceGroupName = (Get-ResourceGroupName),
-        $workspaceName = (Get-SynapseWorkspaceName),
-        $sparkPoolName = (Get-SynapseSparkPoolName),
-        $sparkPoolNodeCount = 3,
-        $sparkPoolNodeSize = "Small",
-        $sparkVersion = 2.4
-    )
+	# Setup
+	$testSuffix = getAssetName
+	Create-WorkspaceTestEnvironment $testSuffix
+	$params = Get-WorkspaceTestEnvironmentParameters $testSuffix
+
+    $resourceGroupName = $params.rgname
+    $workspaceName = $params.workspaceName
+    $sparkPoolName = $params.sparkPoolName
+    $sparkPoolNameForAutoScale = $sparkPoolName + "1"
+    $sparkPoolNodeCount = 3
+    $sparkAutoScaleMinNodeCount = 3
+    $sparkAutoScaleMaxNodeCount = 6
+    $sparkPoolNodeSize = "Small"
+    $sparkVersion = 2.4
 
     try
     {
-        $resourceGroupName = [Microsoft.Azure.Test.HttpRecorder.HttpMockServer]::GetVariable("resourceGroupName", $resourceGroupName)
-		$workspaceName = [Microsoft.Azure.Test.HttpRecorder.HttpMockServer]::GetVariable("workspaceName", $workspaceName)
         $workspace = Get-AzSynapseWorkspace -resourceGroupName $resourceGroupName -Name $workspaceName
         $location = $workspace.Location
 
         # Test to make sure the SparkPool doesn't exist
         Assert-False {Test-AzSynapseSparkPool -ResourceGroupName $resourceGroupName -WorkspaceName $workspaceName -Name $sparkPoolName}
 
-        $sparkPoolCreated = New-AzSynapseSparkPool -ResourceGroupName $resourceGroupName -WorkspaceName $workspaceName -Name $sparkPoolName -NodeCount $sparkPoolNodeCount -SparkVersion $sparkVersion -NodeSize $sparkPoolNodeSize
+        # UnableAutoScale 
+        $sparkPoolCreatedForUnableAutoScale = New-AzSynapseSparkPool -ResourceGroupName $resourceGroupName -WorkspaceName $workspaceName -Name $sparkPoolName -NodeCount $sparkPoolNodeCount -SparkVersion $sparkVersion -NodeSize $sparkPoolNodeSize
 
-        Assert-AreEqual $sparkPoolName $sparkPoolCreated.Name
-        Assert-AreEqual $location $sparkPoolCreated.Location
-        Assert-AreEqual "Microsoft.Synapse/Workspaces/bigDataPools" $sparkPoolCreated.Type
-        Assert-True {$sparkPoolCreated.Id -like "*$resourceGroupName*"}
+        Assert-AreEqual $sparkPoolName $sparkPoolCreatedForUnableAutoScale.Name
+        Assert-AreEqual $location $sparkPoolCreatedForUnableAutoScale.Location
+        Assert-AreEqual "Microsoft.Synapse/Workspaces/bigDataPools" $sparkPoolCreatedForUnableAutoScale.Type
+        Assert-True {$sparkPoolCreatedForUnableAutoScale.Id -like "*$resourceGroupName*"}
 
+        # just test create for EnableAutoScale
+        $sparkPoolCreatedForAutoScale = New-AzSynapseSparkPool -ResourceGroupName $resourceGroupName -WorkspaceName $workspaceName -Name $sparkPoolNameForAutoScale -AutoScaleMinNodeCount $sparkAutoScaleMinNodeCount -AutoScaleMaxNodeCount $sparkAutoScaleMaxNodeCount   -SparkVersion $sparkVersion -NodeSize $sparkPoolNodeSize
+
+        Assert-AreEqual $sparkPoolNameForAutoScale $sparkPoolCreatedForAutoScale.Name
+        Assert-AreEqual $location $sparkPoolCreatedForAutoScale.Location
+        Assert-AreEqual "Microsoft.Synapse/Workspaces/bigDataPools" $sparkPoolCreatedForAutoScale.Type
+        Assert-True {$sparkPoolCreatedForAutoScale.Id -like "*$resourceGroupName*"}
+        
         # In loop to check if Spark pool exists
         for ($i = 0; $i -le 60; $i++)
         {
@@ -40,7 +52,7 @@ function Test-SynapseSparkPool
                 Assert-AreEqual $sparkPoolName $sparkPoolGet[0].Name
                 Assert-AreEqual $location $sparkPoolGet[0].Location
                 Assert-AreEqual "Microsoft.Synapse/Workspaces/bigDataPools" $sparkPoolGet[0].Type
-                Assert-True {$sparkPoolCreated.Id -like "*$resourceGroupName*"}
+                Assert-True {$sparkPoolCreatedForUnableAutoScale.Id -like "*$resourceGroupName*"}
                 break
             }
 
@@ -113,7 +125,8 @@ function Test-SynapseSparkPool
         Assert-True {$found -eq 1} "SparkPool created earlier is not found when listing all in resource group: $resourceGroupName."
 
         # Delete SparkPool
-        Assert-True {Remove-AzSynapseSparkPool -ResourceGroupName $resourceGroupName -WorkspaceName $workspaceName -Name $sparkPoolName -PassThru} "Remove SparkPool failed."
+        Assert-True {Remove-AzSynapseSparkPool -ResourceGroupName $resourceGroupName -WorkspaceName $workspaceName -Name $sparkPoolName -PassThru -Force} "Remove SparkPool failed."
+        Assert-True {Remove-AzSynapseSparkPool -ResourceGroupName $resourceGroupName -WorkspaceName $workspaceName -Name $sparkPoolNameForAutoScale -PassThru -Force} "Remove SparkPool failed."
 
         # Verify that it is gone by trying to get it again
         Assert-Throws {Get-AzSynapseSparkPool -ResourceGroupName $resourceGroupName -WorkspaceName $workspaceName -Name $sparkPoolName}
@@ -121,6 +134,55 @@ function Test-SynapseSparkPool
     finally
     {
         # cleanup the spark pool that was used in case it still exists. This is a best effort task, we ignore failures here.
-        Invoke-HandledCmdlet -Command {Remove-AzSynapseSparkPool -ResourceGroupName $resourceGroupName -WorkspaceName $workspaceName -Name $sparkPoolName -ErrorAction SilentlyContinue} -IgnoreFailures
+        Invoke-HandledCmdlet -Command {Remove-AzSynapseSparkPool -ResourceGroupName $resourceGroupName -WorkspaceName $workspaceName -Name $sparkPoolName -ErrorAction SilentlyContinue -Force} -IgnoreFailures
+        Invoke-HandledCmdlet -Command {Remove-AzSynapseSparkPool -ResourceGroupName $resourceGroupName -WorkspaceName $workspaceName -Name $sparkPoolNameForAutoScale -ErrorAction SilentlyContinue -Force} -IgnoreFailures
     }
+}
+
+<#
+.SYNOPSIS
+Creates the test environment needed to perform the Synapse Spark related tests
+#>
+function Create-SparkTestEnvironmentWithParams ($params, $location)
+{
+	Create-BasicTestEnvironmentWithParams $params $location
+	New-AzSynapseSparkPool -ResourceGroupName $params.rgname -WorkspaceName $params.workspaceName -SqlPoolName $params.sqlPoolName -PerformanceLevel $params.perfLevel
+	Wait-Seconds 10
+}
+
+<#
+.SYNOPSIS
+Creates the test environment needed to perform the tests
+#>
+function Create-WorkspaceTestEnvironment ($testSuffix)
+{
+	$params = Get-WorkspaceTestEnvironmentParameters $testSuffix
+	Create-TestEnvironmentWithParams $params $params.location
+}
+
+<#
+.SYNOPSIS
+Gets the values of the parameters used at the tests
+#>
+function Get-WorkspaceTestEnvironmentParameters ($testSuffix)
+{
+	return @{ rgname = "ws-cmdlet-test-rg" +$testSuffix;
+			  workspaceName = "ws" +$testSuffix;
+			  storageAccountName = "wsstorage" + $testSuffix;
+			  fileSystemName = "wscmdletfs" + $testSuffix;
+			  loginName = "testlogin";
+			  pwd = "testp@ssMakingIt1007Longer";
+              location = "westcentralus";
+              sparkPoolName = "spool" + $testSuffix;
+		}
+}
+
+<#
+.SYNOPSIS
+Removes the test environment that was needed to perform the tests
+#>
+function Remove-WorkspaceTestEnvironment ($testSuffix)
+{
+	$params = Get-WorkspaceTestEnvironmentParameters $testSuffix
+	Remove-AzResourceGroup -Name $params.rgname -Force
 }

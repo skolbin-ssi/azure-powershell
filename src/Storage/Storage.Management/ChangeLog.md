@@ -18,6 +18,197 @@
         - Additional information about change #1
 -->
 ## Upcoming Release
+* Supported create/update storage account with KeyExpirationPeriod and SasExpirationPeriod
+    - `New-AzStorageAccount`
+    - `Set-AzStorageAccount`
+* Supported create/update storage account with keyvault encryption and access keyvault with user assigned identity
+    - `New-AzStorageAccount`
+    - `Set-AzStorageAccount`
+* Supported EdgeZone in create storage account
+    - `New-AzStorageAccount`
+* Fixed an issue that delete immutable blob will prompt incorrect message.
+    - `Remove-AzStorageAccount`
+* Allowed update Storage Account KeyVault properties by cleanup Keyversion to enable key auto rotation [#14769]
+    - `Set-AzStorageAccount`
+* Added breaking change warning message for upcoming cmdlet breaking change
+    - `Remove-AzRmStorageShare`
+
+## Version 3.5.1
+* Fixed copy blob fail with source context as Oauth [#14662]
+    -  `Start-AzStorageBlobCopy`
+
+## Version 3.5.0
+* Fixed an issue that list account from resource group won't use nextlink
+    - `Get-AzStorageAccount`
+* Supported ChangeFeedRetentionInDays when Enable ChangeFeed on Blob service
+    - `Update-AzStorageBlobServiceProperty`
+
+## Version 3.4.0
+* Upgraded to Microsoft.Azure.Management.Storage 19.0.0, to support new API version 2021-01-01.
+* Supported resource access rule in NetworkRuleSet
+    - `Update-AzStorageAccountNetworkRuleSet`
+    - `Add-AzStorageAccountNetworkRule`
+    - `Remove-AzStorageAccountNetworkRule`
+* Supported Blob version and Append Blob type in Management Policy
+    - `Add-AzStorageAccountManagementPolicyAction`
+    - `New-AzStorageAccountManagementPolicyFilter`
+    - `Set-AzStorageAccountManagementPolicy`
+* Supported create/update account with AllowSharedKeyAccess
+    - `New-AzStorageAccount`
+    - `Set-AzStorageAccount`
+* Supported create Encryption Scope with RequireInfrastructureEncryption
+    - `New-AzStorageEncryptionScope`
+* Supported copy block blob synchronously, with encryption scope
+    - `Copy-AzStorageBlob`
+* Fixed issue that Get-AzStorageBlobContent use wrong directory separator char on Linux and MacOS [#14234]
+
+## Version 3.3.0
+* Supported RoutingPreference settings in create/update Storage account
+    - `New-AzStorageAccount`
+    - `Set-AzStorageAccount`
+* Upgraded Azure.Storage.Blobs to 12.8.0
+* Upgraded Azure.Storage.Files.Shares to 12.6.0
+* Upgraded Azure.Storage.Files.DataLake to 12.6.0
+
+## Version 3.2.1
+* Fix ContinuationToken never null when list blob with -IncludeVersion
+    - `Get-AzStorageBlob`
+
+## Version 3.2.0
+* Supported create/update/get/list EncryptionScope of a Storage account
+    - `New-AzStorageEncryptionScope`
+    - `Update-AzStorageEncryptionScope`
+    - `Get-AzStorageEncryptionScope`
+* Supported create container and upload blob with Encryption Scope setting
+    - `New-AzRmStorageContainer`
+    - `New-AzStorageContainer`
+    - `Set-AzStorageBlobContent`
+
+## Version 3.1.0
+* Supported upload Azure File size up to 4 TiB
+    - `Set-AzStorageFileContent`
+* Upgraded Azure.Storage.Blobs to 12.7.0
+* Upgraded Azure.Storage.Files.Shares to 12.5.0
+* Upgraded Azure.Storage.Files.DataLake to 12.5.0
+* Upgraded Azure.Storage.Queues to 12.5.0
+
+## Version 3.0.0
+* Removed obsolete property RestorePolicy.LastEnabledTime
+    - `Enable-AzStorageBlobRestorePolicy`
+    - `Disable-AzStorageBlobRestorePolicy`
+    - `Get-AzStorageBlobServiceProperty`
+    - `Update-AzStorageBlobServiceProperty`
+* Change Type of DaysAfterModificationGreaterThan from int to int?
+    - `Set-AzStorageAccountManagementPolicy`
+    - `Get-AzStorageAccountManagementPolicy`
+    - `Add-AzStorageAccountManagementPolicyAction`
+    - `New-AzStorageAccountManagementPolicyRule`
+* Supported create/update file share with access tier
+    - `New-AzRmStorageShare`
+    - `Update-AzRmStorageShare`
+* Supported set/update/remove Acl recursively on Datalake Gen2 item 
+    -  `Set-AzDataLakeGen2AclRecursive` 
+    -  `Update-AzDataLakeGen2AclRecursive` 
+    -  `Remove-AzDataLakeGen2AclRecursive`
+* Supported Container access policy with new permission x,t
+    -  `New-AzStorageContainerStoredAccessPolicy`
+    -  `Set-AzStorageContainerStoredAccessPolicy`
+* Changed the output of get/set Container access policy cmdlet, by change the child property Permission type from enum to String
+    -  `Get-AzStorageContainerStoredAccessPolicy`
+    -  `Set-AzStorageContainerStoredAccessPolicy`
+* Fixed a sample script issue of set management policy with json
+    -  `Set-AzStorageAccountManagementPolicy`
+
+## Version 2.7.0
+* Supported enable/disable/get share soft delete properties on file Service of a Storage account
+    - `Update-AzStorageFileServiceProperty`
+    - `Get-AzStorageFileServiceProperty`
+* Supported list file shares include the deleted ones of a Storage account, and Get single file share usage
+    - `Get-AzRmStorageShare`
+* Supported restore a deleted file share
+    - `Restore-AzRmStorageShare`
+* Changed the cmdlets for modify blob service properties, won't get the original properties from server, but only set the modified properties to server.
+    - `Enable-AzStorageBlobDeleteRetentionPolicy`
+    - `Disable-AzStorageBlobDeleteRetentionPolicy`  
+    - `Enable-AzStorageBlobRestorePolicy`
+    - `Disable-AzStorageBlobRestorePolicy`
+    - `Update-AzStorageBlobServiceProperty`
+* Fixed help issue for New-AzStorageAccount parameter -Kind default value [#12189]
+* Fixed issue by add example to show how to set correct ContentType in blob upload [#12989]
+
+## Version 2.6.0
+* Fixed upload blob fail by upgrade to Microsoft.Azure.Storage.DataMovement 2.0.0 [#12220]
+* Supported Point In Time Restore
+    - `Enable-AzStorageBlobRestorePolicy`
+    - `Disable-AzStorageBlobRestorePolicy`
+    - `New-AzStorageBlobRangeToRestore`
+    - `Restore-AzStorageBlobRange`
+* Supported get blob restore status of Storage account by run get-AzureRMStorageAccount with parameter -IncludeBlobRestoreStatus 
+    - `Get-AzureRMStorageAccount`
+* Added breaking change warning message for upcoming cmdlet output change
+    - `Get-AzStorageContainerStoredAccessPolicy`
+    - `Set-AzStorageContainerStoredAccessPolicy`
+    - `Set-AzStorageAccountManagementPolicy`
+    - `Get-AzStorageAccountManagementPolicy`
+    - `Add-AzStorageAccountManagementPolicyAction`
+    - `New-AzStorageAccountManagementPolicyRule`
+* Upgraded Microsoft.Azure.Cosmos.Table SDK to 1.0.8
+
+    
+## Version 2.5.0
+* Supported blob query acceleration
+    -  `Get-AzStorageBlobQueryResult`
+    -  `New-AzStorageBlobQueryConfig`
+* Updated help file, added more description, and fixed typo
+    -  `Start-AzStorageBlobCopy`
+    -  `Get-AzDataLakeGen2Item`
+* Fixed download blob fail when related sub directory not exist [#12592]
+    -  `Get-AzStorageBlobContent`
+* Supported Set/Get/Remove Object Replication Policy on Storage accounts
+    - `New-AzStorageObjectReplicationPolicyRule`
+    - `Set-AzStorageObjectReplicationPolicy`
+    - `Get-AzStorageObjectReplicationPolicy`
+    - `Remove-AzStorageObjectReplicationPolicy`
+* Supported enable/disable ChangeFeed on Blob Service of a Storage account
+    - `Update-AzStorageBlobServiceProperty`
+
+## Version 2.4.0
+* Supported create container/blob Sas token with new permission x,t
+    -  `New-AzStorageBlobSASToken`
+    -  `New-AzStorageContainerSASToken`
+* Supported create account Sas token with new permission x,t,f
+    -  `New-AzStorageAccountSASToken`
+* Supported get single file share usage
+    - `Get-AzRmStorageShare`
+        
+## Version 2.3.0
+* Fixed the issue that UserAgent is not added for some data plane cmdlets.
+* Supported create/update Storage account with MinimumTlsVersion and AllowBlobPublicAccess
+    -  `New-AzStorageAccount`
+    -  `Set-AzStorageAccount`
+* Support enable/disable versioning on Blob Service of a Storage account
+    - `Update-AzStorageBlobServiceProperty`
+* Support list blobs with blob versions
+    - `Get-AzStorageBlob`
+* Support get/remove single blob snapshot or blob version
+    - `Get-AzStorageBlob`
+    - `Remove-AzStorageBlob`
+* Support pipeline from blob object generated from Azure.Storage.Blobs V12
+    - `Get-AzStorageBlobContent`
+    - `New-AzStorageBlobSASToken`
+    - `Remove-AzStorageBlob`
+    - `Set-AzStorageBlobContent`
+    - `Start-AzStorageBlobCopy`
+
+## Version 2.2.0
+* Supported create Storage account with RequireInfrastructureEncryption
+    -  `New-AzStorageAccount`
+* Moved the logic of loading Azure.Core to Az.Accounts
+
+## Version 2.1.0
+* Updated assembly version of data plane cmdlets
+
+## Version 2.0.0
 * Added `-AsJob` to get/list account cmdlet `Get-AzStorageAccount`
 * Make KeyVersion to optional when update Storage account with KeyvaultEncryption, to support key auto-rotation
     - `Set-AzStorageAccount`

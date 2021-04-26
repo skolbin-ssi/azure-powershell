@@ -2,7 +2,7 @@
 external help file: Microsoft.Azure.PowerShell.Cmdlets.ApiManagement.ServiceManagement.dll-Help.xml
 Module Name: Az.ApiManagement
 ms.assetid: 29CCF141-CC2F-4E11-8235-64025CFB5782
-online version: https://docs.microsoft.com/en-us/powershell/module/az.apimanagement/set-azapimanagementapi
+online version: https://docs.microsoft.com/powershell/module/az.apimanagement/set-azapimanagementapi
 schema: 2.0.0
 ---
 
@@ -38,13 +38,13 @@ The **Set-AzApiManagementApi** cmdlet modifies an Azure API Management API.
 
 ## EXAMPLES
 
-### Example 1 Modify an API
+### Example 1: Modify an API
 ```powershell
 PS C:\>$ApiMgmtContext = New-AzApiManagementContext -ResourceGroupName "Api-Default-WestUS" -ServiceName "contoso"
 PS C:\>Set-AzApiManagementApi -Context $ApiMgmtContext -Name "EchoApi" -ServiceUrl "https://contoso.com/apis/echo" -Protocols @('https') -Description "Responds with what was sent" -Path "echo"
 ```
 
-### Example 2 Add an API to an existing ApiVersionSet
+### Example 2: Add an API to an existing ApiVersionSet
 ```powershell
 PS C:\>$ApiMgmtContext = New-AzApiManagementContext -ResourceGroupName "Api-Default-WestUS" -ServiceName "contoso"
 PS C:\>$versionSet = New-AzApiManagementApiVersionSet -Context $context -Name "Echo API Version Set" -Scheme Segment -Description "version set sample"
@@ -57,7 +57,7 @@ PS C:\>Set-AzApiManagementApi -InputObject $api -PassThru
 
 This example adds an API to an existing API Version Set
 
-### Example 3 Change the Backend ServiceUrl where the API is pointing to
+### Example 3: Change the Backend ServiceUrl where the API is pointing to
 ```powershell
 PS C:\>$ApiMgmtContext = New-AzApiManagementContext -ResourceGroupName "Api-Default-WestUS" -ServiceName "contoso"
 PS C:\>$updatedApiServiceUrl = "http://newechoapi.cloudapp.net/updateapi"

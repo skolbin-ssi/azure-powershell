@@ -1,7 +1,7 @@
 ﻿---
 external help file: Microsoft.Azure.PowerShell.Cmdlets.EventHub.dll-Help.xml
 Module Name: Az.EventHub
-online version: https://docs.microsoft.com/en-us/powershell/module/az.eventhub/remove-azeventhubnamespace
+online version: https://docs.microsoft.com/powershell/module/az.eventhub/remove-azeventhubnamespace
 schema: 2.0.0
 ---
 
@@ -36,36 +36,36 @@ The Remove-AzEventHubNamespace cmdlet removes and deletes the specified Event Hu
 ## EXAMPLES
 
 ### Example 1
-```
+```powershell
 PS C:\> Remove-AzEventHubNamespace -ResourceGroupName MyResourceGroupName -Name MyNamespaceName
 ```
 
 Removes the Event Hubs namespace \`MyNamespaceName\` in resource group \`MyResourceGroupName\`.
 
-### Example 2.1 - InputObject - Using Variable:
-```
+### Example 2: InputObject - Using Variable:
+```powershell
 PS C:\> $inputObject = Get-AzEventHubNamespace <params> 
 PS C:\> Remove-AzEventHubNamespace -InputObject $inputObject
 ```
 
-### Example 2.1 - InputObject - Using Piping:
-```
+### Example 3: InputObject - Using Piping:
+```powershell
 PS C:\> Get-AzEventHubNamespace <params> | Remove-AzEventHubNamespace
 ```
 
-### Example 3.1 - ResourceId - Using Variable
-```
+### Example 4: ResourceId - Using Variable
+```powershell
 PS C:\> $resourceid = Get-AzEventHubNamespace <params>
 PS C:\> Remove-AzEventHubNamespace -ResourceId $resourceid.Id
 ```
 
-### Example 3.2 - ResourceId - Using Piping:
-```
+### Example 5: ResourceId - Using Piping:
+```powershell
 PS C:\> Get-AzResource -ResourceType Microsoft.EventHub/Namespaces | Remove-AzEventHubNamespace
 ```
 
-### Example 3.3 - ResourceId - Using String:
-```
+### Example 6: ResourceId - Using String:
+```powershell
 PS C:\> Remove-AzEventHubNamespace -ResourceId "/subscriptions/xxx-xxxxx-xxxxxx-xxxxxx/resourceGroups/ResourceGroupName/providers/Microsoft.EventHub/namespaces/NamespaceName"
 ```
 

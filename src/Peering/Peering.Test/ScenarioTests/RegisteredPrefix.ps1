@@ -18,7 +18,7 @@ GetPeeringServiceProviders
 function Test-CreateRegisteredPrefix {
     $randNum = getRandomNumber
     $peering = (Get-AzPeering -Kind Direct)[0];
-    $resourceGroup = (Get-AzResource -ResourceId $peering.Id).ResourceGroupName
+    $resourceGroup = $peering[0].Id.Split("/")[4]
     Assert-NotNull $peering
     $name = getAssetName "name"
     $prefix = newIpV4Address $true $false 0 $randNum
@@ -32,9 +32,10 @@ function Test-GetRegisteredPrefix {
     $peering = (Get-AzPeering -Kind Direct)[0];
     $name = getAssetName
     $assetName = getAssetName "peering"
-    $resourceGroup = (Get-AzResource -ResourceId $peering.Id).ResourceGroupName
+    $resourceGroup = $peering[0].Id.Split("/")[4]
     Assert-ThrowsContains { $peering | Get-AzPeeringRegisteredPrefix -Name $name } "NotFound"
-    Assert-ThrowsContains { Get-AzPeeringRegisteredPrefix -ResourceId $peering.Id } "peeringName"
+    $resourceId = $peering.Id+"/registerdPrefix/"+$name
+    Assert-ThrowsContains { Get-AzPeeringRegisteredPrefix -ResourceId $resourceId } "NotFound"
    Assert-ThrowsContains {Get-AzPeeringRegisteredPrefix -ResourceGroupName $resourceGroup -PeeringName $assetName} "NotFound"
     Assert-ThrowsContains { Get-AzPeeringRegisteredPrefix -ResourceGroupName $resourceGroup -PeeringName $assetName -Name $name } "NotFound"
     Assert-ThrowsContains { Get-AzPeeringRegisteredPrefix -ResourceGroupName $resourceGroup -PeeringName $assetName -Name $name -ResourceId "asdfa" } "Parameter set cannot be resolved using the specified named parameters"

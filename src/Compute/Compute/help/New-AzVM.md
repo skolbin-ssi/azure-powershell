@@ -2,7 +2,7 @@
 external help file: Microsoft.Azure.PowerShell.Cmdlets.Compute.dll-Help.xml
 Module Name: Az.Compute
 ms.assetid: 05E6155D-4F0E-406B-9312-77AD97EF66EE
-online version: https://docs.microsoft.com/en-us/powershell/module/az.compute/new-azvm
+online version: https://docs.microsoft.com/powershell/module/az.compute/new-azvm
 schema: 2.0.0
 ---
 
@@ -21,8 +21,9 @@ New-AzVM [[-ResourceGroupName] <String>] [[-Location] <String>] [[-Zone] <String
  [-AllocationMethod <String>] [-SecurityGroupName <String>] [-OpenPorts <Int32[]>] [-Image <String>]
  [-Size <String>] [-AvailabilitySetName <String>] [-SystemAssignedIdentity] [-UserAssignedIdentity <String>]
  [-AsJob] [-DataDiskSizeInGb <Int32[]>] [-EnableUltraSSD] [-ProximityPlacementGroupId <String>]
- [-HostId <String>] [-Priority <String>] [-EvictionPolicy <String>] [-MaxPrice <Double>]
- [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-HostId <String>] [-VmssId <String>] [-Priority <String>] [-EvictionPolicy <String>] [-MaxPrice <Double>]
+ [-EncryptionAtHost] [-HostGroupId <String>] [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
+ [<CommonParameters>]
 ```
 
 ### DefaultParameterSet
@@ -40,8 +41,8 @@ New-AzVM [[-ResourceGroupName] <String>] [[-Location] <String>] -Name <String> [
  [-SecurityGroupName <String>] [-OpenPorts <Int32[]>] -DiskFile <String> [-Linux] [-Size <String>]
  [-AvailabilitySetName <String>] [-SystemAssignedIdentity] [-UserAssignedIdentity <String>] [-AsJob]
  [-DataDiskSizeInGb <Int32[]>] [-EnableUltraSSD] [-ProximityPlacementGroupId <String>] [-HostId <String>]
- [-Priority <String>] [-EvictionPolicy <String>] [-MaxPrice <Double>]
- [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-VmssId <String>] [-Priority <String>] [-EvictionPolicy <String>] [-MaxPrice <Double>] [-EncryptionAtHost]
+ [-HostGroupId <String>] [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -334,8 +335,25 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -EncryptionAtHost
+EncryptionAtHost property can be used by user in the request to enable or disable the Host Encryption for the virtual machine or virtual machine scale set. 
+This will enable the encryption for all the disks including Resource/Temp disk at host itself. 
+Default: The Encryption at host will be disabled unless this property is set to true for the resource.
+
+```yaml
+Type: System.Management.Automation.SwitchParameter
+Parameter Sets: SimpleParameterSet, DiskFileParameterSet
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -EvictionPolicy
-The eviction policy for the low priority virtual machine.  Only supported value is 'Deallocate'.
+The eviction policy for the Azure Spot virtual machine.  Supported values are 'Deallocate' and 'Delete'.
 
 ```yaml
 Type: System.String
@@ -346,6 +364,21 @@ Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -HostGroupId
+Specifies the dedicated host group the virtual machine will reside in.
+
+```yaml
+Type: System.String
+Parameter Sets: SimpleParameterSet, DiskFileParameterSet
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
@@ -381,12 +414,12 @@ Accept wildcard characters: False
 
 ### -LicenseType
 Specifies a license type, which indicates that the image or disk for the virtual machine was licensed on-premises.
-This value is used only for images that contain the Windows Server operating system.
-The acceptable values for this parameter are:
+Possible values for Windows Server are:
 - Windows_Client
 - Windows_Server
-This value cannot be updated.
-If you specify this parameter for an update, the value must match the initial value for the virtual machine.
+Possible values for Linux Server operating system are: 
+- RHEL_BYOS (for RHEL) 
+- SLES_BYOS (for SUSE) 
 
 ```yaml
 Type: System.String
@@ -578,7 +611,7 @@ Accept wildcard characters: False
 ```
 
 ### -Size
-The Virtual Machine Size.  The Default Value is: Standard_DS1_v2.
+The Virtual Machine Size.  The Default Value is: Standard_D2s_v3.
 
 ```yaml
 Type: System.String
@@ -587,7 +620,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: Standard_DS1_v2
+Default value: Standard_D2s_v3
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -698,6 +731,21 @@ Required: True
 Position: 2
 Default value: None
 Accept pipeline input: True (ByPropertyName, ByValue)
+Accept wildcard characters: False
+```
+
+### -VmssId
+The ID of Virtual Machine Scale Set that this VM will be associated with
+
+```yaml
+Type: System.String
+Parameter Sets: SimpleParameterSet, DiskFileParameterSet
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

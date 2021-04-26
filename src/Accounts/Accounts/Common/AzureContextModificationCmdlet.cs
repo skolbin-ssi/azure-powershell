@@ -38,19 +38,23 @@ namespace Microsoft.Azure.Commands.Profile.Common
 
 
         /// <summary>
-        /// Modify the context according to the appropriate scope for this cmdlet invociation
+        /// Modify the context according to the appropriate scope for this cmdlet invocation
         /// </summary>
-        /// <param name="contextAction">The action that modifes the context given a profile and profile client</param>
+        /// <param name="contextAction">The action that modifies the context given a profile and profile client</param>
         protected virtual void ModifyContext(Action<AzureRmProfile, RMProfileClient> contextAction)
         {
             using (var profile = GetDefaultProfile())
             {
-                contextAction(profile.ToProfile(), new RMProfileClient(profile));
+                var client = new RMProfileClient(profile)
+                {
+                    WarningLog = (s) => WriteWarning(s)
+                };
+                contextAction(profile.ToProfile(), client);
             }
         }
 
         /// <summary>
-        /// Modify the Profile according to the selected scope for thsi invocation
+        /// Modify the Profile according to the selected scope for this invocation
         /// </summary>
         /// <param name="profileAction">The action to take over the given profile</param>
         protected virtual void ModifyProfile(Action<IProfileOperations> profileAction)
@@ -83,7 +87,7 @@ namespace Microsoft.Azure.Commands.Profile.Common
         }
 
         /// <summary>
-        /// Get the context modification scope for the current cmdlet invoication
+        /// Get the context modification scope for the current cmdlet invocation
         /// </summary>
         /// <returns>Process if the cmdlet should only change the current process, CurrentUser 
         /// if any changes should occur globally.</returns>
@@ -91,7 +95,7 @@ namespace Microsoft.Azure.Commands.Profile.Common
         {
             ContextModificationScope scope = ScopeHelpers.GetContextModificationScopeForProcess(WriteDebugWithTimestamp);
 
-            // override default scope with appropriate scope for thsi cmdlet invocation
+            // override default scope with appropriate scope for this cmdlet invocation
             if (MyInvocation != null && MyInvocation.BoundParameters != null && MyInvocation.BoundParameters.ContainsKey(nameof(DefaultProfile)))
             {
                 // never autosave with a passed-in profile
@@ -123,12 +127,9 @@ namespace Microsoft.Azure.Commands.Profile.Common
                     {
                         ProtectedProfileProvider.InitializeResourceManagerProfile();
                     }
-                    catch (SystemException e)
+                    catch (Exception e)
                     {
-                        if (!(e is IOException) && !(e is UnauthorizedAccessException))
-                        {
-                            throw e;
-                        }
+                        //Likely the exception is related to IO or permission, fallback to Process save mode
                         WriteInitializationWarnings(string.Format(Resources.ProfileFileNotAccessible, e.Message));
                         ResourceManagerProfileProvider.InitializeResourceManagerProfile(true);
                     }

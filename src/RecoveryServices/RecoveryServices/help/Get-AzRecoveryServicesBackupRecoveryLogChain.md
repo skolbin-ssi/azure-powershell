@@ -1,7 +1,7 @@
 ---
 external help file: Microsoft.Azure.PowerShell.Cmdlets.RecoveryServices.Backup.dll-Help.xml
 Module Name: Az.RecoveryServices
-online version: https://docs.microsoft.com/en-us/powershell/module/az.recoveryservices/get-azrecoveryservicesbackuprecoverylogchain
+online version: https://docs.microsoft.com/powershell/module/az.recoveryservices/get-azrecoveryservicesbackuprecoverylogchain
 schema: 2.0.0
 ---
 
@@ -40,8 +40,8 @@ PS C:\> $RP = Get-AzRecoveryServicesBackupItem -Container $Container -WorkloadTy
 
 The first command gets the date from seven days ago, and then stores it in the $StartDate variable.
 The second command gets today's date, and then stores it in the $EndDate variable.
-The third command gets AzureWorkload backup containers, and stores them in the $Containers variable.
-The fourth command gets the backup item, and then stores it in the $BackupItem variable.
+The third command gets AzureWorkload backup containers, and stores them in the $Container variable.
+The fourth command gets the backup item, and then shares it across the piped cmdlet as backup item object.
 The last command gets an array of recovery point time ranges for the item in $BackupItem, and then stores them in the $RP variable.
 
 ### Example 2

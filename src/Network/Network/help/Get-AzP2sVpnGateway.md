@@ -1,7 +1,7 @@
 ---
 external help file: Microsoft.Azure.PowerShell.Cmdlets.Network.dll-Help.xml
 Module Name: Az.Network
-online version: https://docs.microsoft.com/en-us/powershell/module/az.network/get-azp2svpngateway
+online version: https://docs.microsoft.com/powershell/module/az.network/get-azp2svpngateway
 schema: 2.0.0
 ---
 
@@ -51,6 +51,22 @@ P2SConnectionConfigurations    : [
                                        "AddressPrefixes": [
                                          "192.168.2.0/24"
                                        ]
+                                     },
+                                     "RoutingConfiguration": {
+                                       "AssociatedRouteTable": {
+                                         "Id": "/subscriptions/b1f1deed-af60-4bab-9223-65d340462e24/resourceGroups/P2SCortexGATesting/providers/Microsoft.Network/virtualHubs/WestUsVirtualHub/hubRouteTables/defaultRouteTable"
+                                       }
+                                       "PropagatedRouteTables": {
+                                         "Labels": [],
+                                         "Ids": [
+                                           {
+                                            "Id": "/subscriptions/b1f1deed-af60-4bab-9223-65d340462e24/resourceGroups/P2SCortexGATesting/providers/Microsoft.Network/virtualHubs/WestUsVirtualHub/hubRouteTables/defaultRouteTable"
+                                           }
+                                        ]
+                                       },
+                                       "VnetRoutes": {
+                                         "StaticRoutes": []
+                                       }
                                      },
                                      "Name": "P2SConnectionConfigDefault",
                                      "Etag": "W/\"4b96e6a2-b4d8-46b3-9210-76d40f359bef\"",

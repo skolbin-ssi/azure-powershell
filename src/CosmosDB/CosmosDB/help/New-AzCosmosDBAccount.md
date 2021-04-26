@@ -1,7 +1,7 @@
 ---
 external help file: Microsoft.Azure.PowerShell.Cmdlets.CosmosDB.dll-Help.xml
 Module Name: Az.CosmosDB
-online version: https://docs.microsoft.com/en-us/powershell/module/az.cosmosdb/new-azcosmosdbaccount
+online version: https://docs.microsoft.com/powershell/module/az.cosmosdb/new-azcosmosdbaccount
 schema: 2.0.0
 ---
 
@@ -13,13 +13,16 @@ Create a new CosmosDB Account.
 ## SYNTAX
 
 ```
-New-AzCosmosDBAccount -ResourceGroupName <String> -Name <String> [-DefaultConsistencyLevel <String>]
- [-EnableAutomaticFailover] [-EnableMultipleWriteLocations] [-EnableVirtualNetwork] [-IpRangeFilter <String[]>]
- [-Location <String[]>] [-LocationObject <PSLocation[]>] [-MaxStalenessIntervalInSeconds <Int32>]
+New-AzCosmosDBAccount [-EnableAutomaticFailover] [-EnableMultipleWriteLocations] [-EnableVirtualNetwork]
+ [-ApiKind <String>] [-DisableKeyBasedMetadataWriteAccess] [-EnableFreeTier <Boolean>] [-Location <String[]>]
+ [-LocationObject <PSLocation[]>] -ResourceGroupName <String> -Name <String>
+ [-DefaultConsistencyLevel <String>] [-IpRule <String[]>] [-MaxStalenessIntervalInSeconds <Int32>]
  [-MaxStalenessPrefix <Int32>] [-Tag <Hashtable>] [-VirtualNetworkRule <String[]>]
- [-VirtualNetworkRuleObject <PSVirtualNetworkRule[]>] [-ApiKind <String>] [-PublicNetworkAccess <String>]
- [-DisableKeyBasedMetadataWriteAccess] [-KeyVaultKeyUri <String>] [-AsJob]
- [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-VirtualNetworkRuleObject <PSVirtualNetworkRule[]>] [-PublicNetworkAccess <String>]
+ [-KeyVaultKeyUri <String>] [-EnableAnalyticalStorage <Boolean>] [-AsJob] [-NetworkAclBypass <String>]
+ [-NetworkAclBypassResourceId <String[]>] [-ServerVersion <String>] [-BackupIntervalInMinutes <Int32>]
+ [-BackupRetentionIntervalInHours <Int32>] [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -50,6 +53,8 @@ Tags                          : {}
 Id                            : /subscriptions/{subscriptionid}/resourceGroups/resourceGroupName/providers/Microsoft.DocumentDB/databaseAccounts/databaseAccountName
 Name                          : databaseAccountName
 Type                          : Microsoft.DocumentDB/databaseAccounts
+NetworkAclBypass              : None
+NetworkAclBypassResourceIds   : {}
 ```
 
 A new CosmosDB Account with name databaseAccountName is created in the ResourceGroup resourceGroupName.
@@ -58,8 +63,8 @@ A new CosmosDB Account with name databaseAccountName is created in the ResourceG
 
 ### -ApiKind
 The type of Cosmos DB database account to create.
-Accepted values: GlobalDocumentDB, MongoDB, Gremlin, Table, Cassandra.
-Default value: GlobalDocumentDB
+Accepted values: Sql, MongoDB, Gremlin, Table, Cassandra.
+Default value: Sql
 
 ```yaml
 Type: String
@@ -78,6 +83,36 @@ Run cmdlet in the background
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -BackupIntervalInMinutes
+The interval(in minutes) with which backup are taken (only for accounts with periodic mode backups)
+
+```yaml
+Type: Int32
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -BackupRetentionIntervalInHours
+The time(in hours) for which each backup is retained (only for accounts with periodic mode backups)
+
+```yaml
+Type: Int32
 Parameter Sets: (All)
 Aliases:
 
@@ -149,6 +184,21 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -EnableAnalyticalStorage
+Bool to indicate if AnalyticalStorage is enabled on the account.
+
+```yaml
+Type: Boolean
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -EnableAutomaticFailover
 Enables automatic failover of the write region in the rare event that the region is unavailable due to an outage.
 Automatic failover will result in a new write region for the account and is chosen based on the failover priorities configured for the account.
@@ -156,6 +206,21 @@ Accepted values: false, true
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -EnableFreeTier
+Bool to indicate if FreeTier is enabled on the account.
+
+```yaml
+Type: Boolean
 Parameter Sets: (All)
 Aliases:
 
@@ -198,9 +263,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -IpRangeFilter
-Firewall support.
-Specifies the set of IP addresses or IP address ranges in CIDR form to be included as the allowed list of client IPs for a given database account
+### -IpRule
+Firewall support. Specifies the set of IP addresses or IP address ranges in CIDR form to be included as the allowed list of client IPs for a given database account.
 
 ```yaml
 Type: String[]
@@ -307,6 +371,36 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -NetworkAclBypass
+Whether or not Network Acl Bypass is enabled for this account for Synapse Link. Possible values include: 'None', 'AzureServices'.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -NetworkAclBypassResourceId
+List of Resource Ids to allow Network Acl Bypass for Synapse Link.
+
+```yaml
+Type: String[]
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -PublicNetworkAccess
 Whether or not public endpoint access is allowed for this server. Possible values include: 'Enabled', 'Disabled'
 
@@ -331,6 +425,21 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ServerVersion
+ServerVersion, valid only in case of MongoDB Accounts.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False

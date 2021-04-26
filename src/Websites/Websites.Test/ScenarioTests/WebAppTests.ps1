@@ -124,7 +124,7 @@ function Test-StartStopRestartWebApp
 		$webApp = $webApp | Stop-AzWebApp
 
 		Assert-AreEqual "Stopped" $webApp.State
-		$ping = PingWebApp $webApp
+		# $ping = PingWebApp $webApp
 
 		# Start web app
 		$webApp = $webApp | Start-AzWebApp
@@ -136,7 +136,7 @@ function Test-StartStopRestartWebApp
 		$webApp = Stop-AzWebApp -ResourceGroupName $rgname -Name $wname
 
 		Assert-AreEqual "Stopped" $webApp.State
-		$ping = PingWebApp $webApp
+		# $ping = PingWebApp $webApp
 
 		# Start web app
 		$webApp = Start-AzWebApp -ResourceGroupName $rgname -Name $wname
@@ -469,10 +469,10 @@ function Test-CreateNewWebAppHyperV
 	$tier = "PremiumContainer"
 	$apiversion = "2015-08-01"
 	$resourceType = "Microsoft.Web/sites"
-    $containerImageName = "pstestacr.azurecr.io/tests/iis:latest"
-    $containerRegistryUrl = "https://pstestacr.azurecr.io"
-    $containerRegistryUser = "pstestacr"
-    $pass = "cYK4qnENExflnnOkBN7P+gkmBG0sqgIv"
+    $containerImageName = "dotnetsdktesting.azurecr.io/webapplication3:latest"
+    $containerRegistryUrl = "https://dotnetsdktesting.azurecr.io"
+    $containerRegistryUser ="DotNetSDKTesting"
+    $pass = "NuO4xVus40R/wukMM9i1OdMIohADB=oR"
     $containerRegistryPassword = ConvertTo-SecureString -String $pass -AsPlainText -Force
     $dockerPrefix = "DOCKER|" 
 
@@ -506,12 +506,11 @@ function Test-CreateNewWebAppHyperV
         "DOCKER_REGISTRY_SERVER_USERNAME" = $containerRegistryUser;
         "DOCKER_REGISTRY_SERVER_PASSWORD" = $pass;}
 
-        foreach($nvp in $webApp.SiteConfig.AppSettings)
+        foreach($nvp in $result.SiteConfig.AppSettings)
 		{
 			Assert-True { $appSettings.Keys -contains $nvp.Name }
-			Assert-True { $appSettings[$nvp.Name] -match $nvp.Value }
+			Assert-AreEqual $appSettings[$nvp.Name] $nvp.Value
 		}
-
 
 	}
 	finally
@@ -521,6 +520,131 @@ function Test-CreateNewWebAppHyperV
 		Remove-AzAppServicePlan -ResourceGroupName $rgname -Name  $whpName -Force
 		Remove-AzResourceGroup -Name $rgname -Force
 	}
+}
+
+<#
+.SYNOPSIS
+Tests changing registry credentials for a Windows Container app
+.DESCRIPTION
+SmokeTest
+#>
+function Test-SetWebAppHyperVCredentials
+{
+		# Setup
+		$rgname = Get-ResourceGroupName
+		$wname = Get-WebsiteName
+		$location = Get-WebLocation
+		$whpName = Get-WebHostPlanName
+		$tier = "PremiumContainer"
+		$apiversion = "2015-08-01"
+		$resourceType = "Microsoft.Web/sites"
+		$containerImageName = "pstestacr.azurecr.io/tests/iis:latest"
+		$containerRegistryUrl = "https://pstestacr.azurecr.io"
+		$containerRegistryUser = "pstestacr"
+		$pass = "cYK4qnENExflnnOkBN7P+gkmBG0sqgIv"
+		$containerRegistryPassword = ConvertTo-SecureString -String $pass -AsPlainText -Force
+		$dockerPrefix = "DOCKER|" 
+	
+	
+		try
+		{
+			#Setup
+			New-AzResourceGroup -Name $rgname -Location $location
+			$serverFarm = New-AzAppServicePlan -ResourceGroupName $rgname -Name  $whpName -Location  $location -Tier $tier -WorkerSize Small -HyperV
+			
+			# Create new web app
+			$job = New-AzWebApp -ResourceGroupName $rgname -Name $wname -Location $location -AppServicePlan $whpName -ContainerImageName $containerImageName -ContainerRegistryUrl $containerRegistryUrl -ContainerRegistryUser $containerRegistryUser -ContainerRegistryPassword $containerRegistryPassword -AsJob
+			$job | Wait-Job
+			$actual = $job | Receive-Job
+			
+			# Assert
+			Assert-AreEqual $wname $actual.Name
+			Assert-AreEqual $serverFarm.Id $actual.ServerFarmId
+	
+			# Get new web app
+			$result = Get-AzWebApp -ResourceGroupName $rgname -Name $wname
+			
+			# Assert
+			Assert-AreEqual $wname $result.Name
+			Assert-AreEqual $serverFarm.Id $result.ServerFarmId
+			Assert-AreEqual $true $result.IsXenon
+			Assert-AreEqual ($dockerPrefix + $containerImageName)  $result.SiteConfig.WindowsFxVersion			
+
+			$appSettings = @{
+			"DOCKER_REGISTRY_SERVER_URL" = $containerRegistryUrl;
+			"DOCKER_REGISTRY_SERVER_USERNAME" = $containerRegistryUser;
+			"DOCKER_REGISTRY_SERVER_PASSWORD" = $pass;}
+	
+			foreach($nvp in $result.SiteConfig.AppSettings)
+			{
+				Assert-True { $appSettings.Keys -contains $nvp.Name }
+				Assert-AreEqual $appSettings[$nvp.Name] $nvp.Value
+			}
+
+			$updatedContainerImageName = "microsoft/iis:latest"
+
+			# Change the webapp's container image to a public image and remove the credentials
+			$updateJob = Set-AzWebApp -ResourceGroupName $rgname -Name $wname -ContainerImageName $updatedContainerImageName -ContainerRegistryUrl '' -ContainerRegistryUser '' -ContainerRegistryPassword $null -AsJob
+			$updateJob | Wait-Job
+			$updated = $updateJob | Receive-Job
+
+			# Get updated web app
+			$updatedWebApp = Get-AzWebApp -ResourceGroupName $rgname -Name $wname
+
+			# Assert that container image has been updated
+			Assert-AreEqual ($dockerPrefix + $updatedContainerImageName)  $updatedWebApp.SiteConfig.WindowsFxVersion
+
+			# Assert that registry credentials have been removed
+			foreach($nvp in $updatedWebApp.SiteConfig.AppSettings)
+			{
+				Assert-False { $appSettings.Keys -contains $nvp.Name}
+			}
+
+			# Create a slot
+			$slotName = "stagingslot"
+			$slotJob = New-AzWebAppSlot -ResourceGroupName $rgname -AppServicePlan $whpName -Name $wname -slot $slotName -ContainerImageName $containerImageName -ContainerRegistryUrl $containerRegistryUrl -ContainerRegistryUser $containerRegistryUser -ContainerRegistryPassword $containerRegistryPassword -AsJob
+			$slotJob | Wait-Job
+			$actualSlot = $slotJob | Receive-Job
+
+			# Assert
+			$appWithSlotName = "$wname/$slotName"
+			Assert-AreEqual $appWithSlotName $actualSlot.Name
+
+			# Get deployment slot
+			$slot = Get-AzWebAppSlot -ResourceGroupName $rgname -Name $wname -Slot $slotName
+
+			# Assert app settings in slot
+			foreach($nvp in $slot.SiteConfig.AppSettings)
+			{
+				Assert-True { $appSettings.Keys -contains $nvp.Name }
+				Assert-AreEqual $appSettings[$nvp.Name] $nvp.Value
+			}
+
+			# Change the slot's  container image to a public image and remove the credentials
+			$updateSlotJob = Set-AzWebAppSlot -ResourceGroupName $rgname -Name $wname -Slot $slotName -ContainerImageName $updatedContainerImageName -ContainerRegistryUrl '' -ContainerRegistryUser '' -ContainerRegistryPassword $null -AsJob
+			$updateSlotJob | Wait-Job
+			$updatedSlot = $updateSlotJob | Receive-Job
+
+			# Get updated slot
+			$updatedWebAppSlot = Get-AzWebAppSlot -ResourceGroupName $rgname -Name $wname -Slot $slotName
+
+			# Assert that container image has been updated
+			Assert-AreEqual ($dockerPrefix + $updatedContainerImageName)  $updatedWebAppSlot.SiteConfig.WindowsFxVersion
+
+			# Assert that registry credentials have been removed from the slot
+			foreach($nvp in $updatedWebAppSlot.SiteConfig.AppSettings)
+			{
+				Assert-False { $appSettings.Keys -contains $nvp.Name}
+			}
+
+		}
+		finally
+		{
+			# Cleanup
+			Remove-AzWebApp -ResourceGroupName $rgname -Name $wname -Force
+			Remove-AzAppServicePlan -ResourceGroupName $rgname -Name  $whpName -Force
+			Remove-AzResourceGroup -Name $rgname -Force
+		}
 }
 
 <#
@@ -612,10 +736,10 @@ function Test-WindowsContainerCanIssueWebAppPSSession
 	$tier = "PremiumContainer"
 	$apiversion = "2015-08-01"
 	$resourceType = "Microsoft.Web/sites"
-    $containerImageName = "mcr.microsoft.com/azure-app-service/samples/aspnethelloworld:latest"
-    $containerRegistryUrl = "https://mcr.microsoft.com"
-	$containerRegistryUser = "testregistry"
-    $pass = "7Dxo9p79Ins2K3ZU"
+    $containerImageName = "dotnetsdktesting.azurecr.io/webapplication3:latest"
+    $containerRegistryUrl = "https://dotnetsdktesting.azurecr.io"
+    $containerRegistryUser ="DotNetSDKTesting"
+    $pass = "NuO4xVus40R/wukMM9i1OdMIohADB=oR"
     $containerRegistryPassword = ConvertTo-SecureString -String $pass -AsPlainText -Force
 	$dockerPrefix = "DOCKER|"
 
@@ -903,10 +1027,10 @@ function Test-SetAzureStorageWebAppHyperV
 	$tier = "PremiumContainer"
 	$apiversion = "2015-08-01"
 	$resourceType = "Microsoft.Web/sites"
-    $containerImageName = "pstestacr.azurecr.io/tests/iis:latest"
-    $containerRegistryUrl = "https://pstestacr.azurecr.io"
-    $containerRegistryUser = "pstestacr"
-    $pass = "cYK4qnENExflnnOkBN7P+gkmBG0sqgIv"
+    $containerImageName = "dotnetsdktesting.azurecr.io/webapplication3:latest"
+    $containerRegistryUrl = "https://dotnetsdktesting.azurecr.io"
+    $containerRegistryUser ="DotNetSDKTesting"
+    $pass = "NuO4xVus40R/wukMM9i1OdMIohADB=oR"
     $containerRegistryPassword = ConvertTo-SecureString -String $pass -AsPlainText -Force
     $dockerPrefix = "DOCKER|" 
 	$azureStorageAccountCustomId1 = "mystorageaccount"
@@ -914,13 +1038,13 @@ function Test-SetAzureStorageWebAppHyperV
 	$azureStorageAccountName1 = "myaccountname.file.core.windows.net"
 	$azureStorageAccountShareName1 = "myremoteshare"
 	$azureStorageAccountAccessKey1 = "AnAccessKey"
-	$azureStorageAccountMountPath1 = "\mymountpath"
+	$azureStorageAccountMountPath1 = "/mymountpath"
 	$azureStorageAccountCustomId2 = "mystorageaccount2"
 	$azureStorageAccountType2 = "AzureFiles"
 	$azureStorageAccountName2 = "myaccountname2.file.core.windows.net"
 	$azureStorageAccountShareName2 = "myremoteshare2"
 	$azureStorageAccountAccessKey2 = "AnAccessKey2"
-	$azureStorageAccountMountPath2 = "\mymountpath2"
+	$azureStorageAccountMountPath2 = "/mymountpath2"
 
 	try
 	{
@@ -1020,11 +1144,11 @@ function Test-CreateNewWebAppOnAse
 	# Setup
 	# Creating and provisioning an ASE currently takes 30 mins to an hour, hence this test requires that the ASE & ASP are already created 
 	# before creating the app on the ASE
-	$rgname = "mnresourcegroup"
+	$rgname = "11698RG1"
 	$wname = Get-WebsiteName
-	$location = "South Central US"
+	$location = "East US"
 	$whpName = "powershellasp"
-	$aseName = "mnASE"
+	$aseName = "11698ASP-PS"
 	$resourceType = "Microsoft.Web/sites"
 	try
 	{

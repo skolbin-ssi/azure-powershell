@@ -2,7 +2,7 @@
 external help file: Microsoft.Azure.PowerShell.Cmdlets.RecoveryServices.Backup.dll-Help.xml
 Module Name: Az.RecoveryServices
 ms.assetid: 707A3E57-AF46-44B3-A491-89554900EF03
-online version: https://docs.microsoft.com/en-us/powershell/module/az.recoveryservices/get-azrecoveryservicesbackupjobdetail
+online version: https://docs.microsoft.com/powershell/module/az.recoveryservices/get-azrecoveryservicesbackupjobdetail
 schema: 2.0.0
 ---
 
@@ -16,14 +16,14 @@ Gets details for a Backup job.
 
 ### JobFilterSet (Default)
 ```
-Get-AzRecoveryServicesBackupJobDetail [-Job] <JobBase> [-VaultId <String>]
- [-DefaultProfile <IAzureContextContainer>] [<CommonParameters>]
+Get-AzRecoveryServicesBackupJobDetail [-Job] <JobBase> [-UseSecondaryRegion]
+ [-VaultId <String>] [-DefaultProfile <IAzureContextContainer>] [<CommonParameters>]
 ```
 
 ### IdFilterSet
 ```
-Get-AzRecoveryServicesBackupJobDetail [-JobId] <String> [-VaultId <String>]
- [-DefaultProfile <IAzureContextContainer>] [<CommonParameters>]
+Get-AzRecoveryServicesBackupJobDetail [-JobId] <String> [-UseSecondaryRegion]
+ [-VaultId <String>] [-DefaultProfile <IAzureContextContainer>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -44,8 +44,8 @@ PS C:\> $JobDetails = Get-AzRecoveryServicesBackupJobDetail -Job $Jobs[0] -Vault
 PS C:\> $JobDetails.ErrorDetails
 ```
 
-The first command gets an array of failed jobs in the vault, and then stores them in the $Jobs array.
-The second command gets the job details for the failed jobs in $Jobs, and then stores them in the $JobDetails variable.
+The first command fetches the relevant vault. The second command gets an array of failed jobs in the vault, and then stores them in the $Jobs array.
+The third command gets the job details for the 1st failed job in $Jobs, and then stores them in the $JobDetails variable.
 The final command displays error details for the failed jobs.
 
 ## PARAMETERS

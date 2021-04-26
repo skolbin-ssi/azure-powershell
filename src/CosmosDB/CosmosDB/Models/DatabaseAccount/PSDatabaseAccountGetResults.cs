@@ -43,7 +43,7 @@ namespace Microsoft.Azure.Commands.CosmosDB.Models
             ConsistencyPolicy = databaseAccountGetResults.ConsistencyPolicy;
             EnableAutomaticFailover = databaseAccountGetResults.EnableAutomaticFailover;
             IsVirtualNetworkFilterEnabled = databaseAccountGetResults.IsVirtualNetworkFilterEnabled;
-            IpRangeFilter = databaseAccountGetResults.IpRangeFilter;
+            IpRules = databaseAccountGetResults.IpRules;
             DatabaseAccountOfferType = databaseAccountGetResults.DatabaseAccountOfferType;
             DocumentEndpoint = databaseAccountGetResults.DocumentEndpoint;
             ProvisioningState = databaseAccountGetResults.ProvisioningState;
@@ -55,6 +55,12 @@ namespace Microsoft.Azure.Commands.CosmosDB.Models
             PublicNetworkAccess = databaseAccountGetResults.PublicNetworkAccess;
             KeyVaultKeyUri = databaseAccountGetResults.KeyVaultKeyUri;
             PrivateEndpointConnections = databaseAccountGetResults.PrivateEndpointConnections;
+            EnableFreeTier = databaseAccountGetResults.EnableFreeTier;
+            ApiProperties = new PSApiProperties(databaseAccountGetResults.ApiProperties);
+            EnableAnalyticalStorage = databaseAccountGetResults.EnableAnalyticalStorage;
+            NetworkAclBypass = databaseAccountGetResults.NetworkAclBypass;
+            NetworkAclBypassResourceIds = databaseAccountGetResults.NetworkAclBypassResourceIds;
+            BackupPolicy = new PSBackupPolicy(databaseAccountGetResults.BackupPolicy);
         }
 
         //
@@ -125,11 +131,8 @@ namespace Microsoft.Azure.Commands.CosmosDB.Models
         public bool? IsVirtualNetworkFilterEnabled { get; set; }
         //
         // Summary:
-        //     Gets or sets cosmos DB Firewall Support: This value specifies the set of IP addresses
-        //     or IP address ranges in CIDR form to be included as the allowed list of client
-        //     IPs for a given database account. IP addresses/ranges must be comma separated
-        //     and must not contain any spaces.
-        public string IpRangeFilter { get; set; }
+        //     Gets or sets list of IpRules.
+        public IList<IpAddressOrRange> IpRules { get; set; }
         //
         // Summary:
         //     Gets the offer type for the Cosmos DB database account. Default value: Standard.
@@ -168,5 +171,29 @@ namespace Microsoft.Azure.Commands.CosmosDB.Models
         public string KeyVaultKeyUri { get; set; }
         //     Gets or sets list of Private Endpoint Connections configured for the Cosmos DB account.
         public IList<PrivateEndpointConnection> PrivateEndpointConnections { get; set; }
+        //
+        // Summary:
+        //     Gets or sets flag to indicate whether Free Tier is enabled.
+        public bool? EnableFreeTier { get; }
+        //
+        // Summary:
+        //     Gets or sets API specific properties.
+        public PSApiProperties ApiProperties { get; set; }
+        //
+        // Summary:
+        //     Gets or sets flag to indicate whether to enable storage analytics.
+        public bool? EnableAnalyticalStorage { get; set; }
+        //
+        // Summary:
+        //     Gets or sets flag to indicate to allow Network Acl Bypass.
+        public NetworkAclBypass? NetworkAclBypass { get; set; }
+        //
+        // Summary:
+        //     Gets or sets list of Network Acl Bypass Resource Ids.
+        public IList<string> NetworkAclBypassResourceIds { get; set; }
+        //
+        // Summary:
+        //     Gets or sets the backup policy of the database account.
+        public PSBackupPolicy BackupPolicy { get; set; }
     }
 }

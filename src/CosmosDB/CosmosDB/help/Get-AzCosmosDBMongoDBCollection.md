@@ -1,7 +1,7 @@
 ---
 external help file: Microsoft.Azure.PowerShell.Cmdlets.CosmosDB.dll-Help.xml
 Module Name: Az.CosmosDB
-online version: https://docs.microsoft.com/en-us/powershell/module/az.cosmosdb/get-azcosmosdbmongodbcollection
+online version: https://docs.microsoft.com/powershell/module/az.cosmosdb/get-azcosmosdbmongodbcollection
 schema: 2.0.0
 ---
 
@@ -31,13 +31,24 @@ The **Get-AzCosmosDBMongoDBCollection** cmdlet gets the CosmosDB MongoDB Collect
 
 ### Example 1
 ```powershell
-PS C:\> Get-AzCosmosDBMongoDBCollection -ResourceGroupName {rgName} -AccountName {accountName}  -Database {dbName} -Name {collectionName} 
+PS C:\> Get-AzCosmosDBMongoDBCollection -ResourceGroupName {rgName} -AccountName {accountName} -Database {dbName} -Name {collectionName} 
 
 Name    Id   Resource
 {name}  {id} Microsoft.Azure.Commands.CosmosDB.Models.PSMongoDBCollectionGetPropertiesResource
 ```
 
 Resource Object contains MongoIndexes, _rid, _ts, _etag properties.
+
+### Example 2
+```powershell
+PS C:\> (Get-AzCosmosDBMongoDBCollection -ResourceGroupName {rgName} -AccountName {accountName} -Database {dbName} -Name {collectionName}).Resource.ShardKey 
+
+Key           Value
+----          ----- 
+<ShardKey>    <Value>
+```
+
+This example gets the ShardKey of the retrieved collection
 
 ## PARAMETERS
 

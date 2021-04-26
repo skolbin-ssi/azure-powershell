@@ -36,7 +36,7 @@ Gets valid location name
 #>
 function Get-Location
 {
-    return "West US"
+    return "southcentralus"
 }
 
 <#
@@ -46,6 +46,15 @@ Gets offerThroughput value
 function Get-OfferThroughput
 {
     return 1000
+}
+
+<#
+.SYNOPSIS
+Gets keyVaultKeyUri value
+#>
+function Get-KeyVaultKeyUri
+{
+    return "https://pshealthapitestvault.vault.azure.net/keys/PSKey1"
 }
 
 <#

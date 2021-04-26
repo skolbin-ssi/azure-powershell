@@ -17,7 +17,108 @@
     * Overview of change #1
         - Additional information about change #1
 -->
+
 ## Upcoming Release
+* Added parameter `ObjectType` for `New-AzRoleAssignment`
+
+## Version 3.4.1
+* Added upcoming breaking change warnings on below cmdlets, because the value of `IdentifierUris` parameter will need verified domain.
+  - `New-AzADApplication` 
+  - `Update-AzADApplication`
+  - `New-AzADServicePrincipal`
+  - `Update-AzADServicePrincipal`
+* Ignored Bicep warning message in error stream if exitcode equals zero.
+
+## Version 3.4.0
+* Redirected bicep message to verbose stream
+* Removed the logic of copying Bicep template file to temp folder.
+* Added support of policy exemption resource type
+* Fixed what-if functionality when using `-QueryString` parameter.
+* Normalized `-QueryString` starting with "?" for scenarios involving dynamic parameters.
+
+## Version 3.3.0
+* Added support for Azure resources deployment in Bicep language
+* Fixed issues with TemplateSpec deployments in `New-AzTenantDeployment` and `New-AzManagementGroupDeployment`
+* Added support for `-QueryString` parameter in `Test-Az*Deployments` cmdlets
+* Fixed issue with dynamic parameters when `New-Az*Deployments` is used with `-QueryString`
+* Added support for `-TemplateParameterObject` parameter while using `-TemplateSpecId` parameter in `New-Az*Deployments` cmdlets
+* Fixed the inaccurate error message received on trying to deploy a non-existent template spec
+* Added support for policy export format to ```New-AzPolicyDefinition -Policy```
+* Add support for property updates from ```Set-AzPolicyAssignment -InputObject```
+
+## Version 3.2.1
+* Removed principal type on New-AzRoleAssignment and Set-AzRoleAssignment because current mapping was breaking certain scenarios
+
+## Version 3.2.0
+* Added support for -QueryString parameter in New-Az*Deployments cmdlets
+
+## Version 3.1.1
+* Fixed a NullRef exception issue in `New-AzureManagedApplication` and `Set-AzureManagedApplication`.
+* Updated Azure Resource Manager SDK to use latest DeploymentScripts GA api-version: 2020-10-01.
+
+## Version 3.1.0
+* Added `-Tag` parameter support to `Set-AzTemplateSpec` and `New-AzTemplateSpec`
+* Added Tag display support to default formatter for Template Specs 
+
+## Version 3.0.1
+* Fixed an issue where What-If shows two resource group scopes with different casing
+* Updated `Export-AzResourceGroup` to use the SDK.
+* Added culture info to parse methods
+* Fixed issue where attempts to deploy template specs from a subscription outside of the current subscription context would fail
+* Changed Double parser for version parser
+* Changed New-AzRoleAssignment to include principal type during calls
+* Changed Set-AzRoleAssignment to include principal type during calls
+
+## Version 3.0.0
+* Fixed parsing bug
+* Updated ARM template What-If cmdlets to remove preview message from results
+* Fixed an issue where template deployment cmdlets crash if `-WhatIf` is set at a higher scope [#13038]
+* Fixed an issue where template deployment cmdlets does not preserve case for template parameters
+* Added a default API version to be used in `Export-AzResourceGroup` cmdlet
+* Added cmdlets for Template Specs (`Get-AzTemplateSpec`, `Set-AzTemplateSpec`, `New-AzTemplateSpec`, `Remove-AzTemplateSpec`, `Export-AzTemplateSpec`)
+* Added support for deploying Template Specs using existing deployment cmdlets (via the new -TemplateSpecId parameter) 
+* Updated `Get-AzResourceGroupDeploymentOperation` to use the SDK.
+* Removed `-ApiVersion` parameter from `*-AzDeployment` cmdlets.
+
+## Version 2.5.1
+* Added missing check for Set-AzRoleAssignment
+* Added breaking change attribute to `SubscriptionId` parameter of `Get-AzResourceGroupDeploymentOperation`
+* Updated ARM template What-If cmdlets to show "Ignore" resource changes last
+* Fixed secure and array parameter serialization issues for deployment cmdlets [#12773]
+
+## Version 2.5.0
+* Updated `Get-AzPolicyAlias` response to include information indicating whether the alias is modifiable by Azure Policy.
+* Created new cmdlet `Set-AzRoleAssignment`
+* Added `Get-AzDeploymentManagementGroupWhatIfResult` for getting ARM template What-If results at management Group scope
+* Added `Get-AzTenantWhatIfResult` new cmdlet for getting ARM template What-If results at tenant scope
+* Overrode `-WhatIf` and `-Confirm` for `New-AzManagementGroupDeployment` and `New-AzTenantDeployment` to use ARM template What-If results
+* Fixed the behaviors of `-WhatIf` and `-Confirm` for new deployment cmdlets so they comply with $WhatIfPreference and $ConfrimPreference
+* Fixed serialization error for `-TemplateObject` and `TemplateParameterObject` [#1528] [#6292]
+
+## Version 2.4.0
+* Added properties "Condition", "ConditionVersion" and "Description" to `New-AzRoleAssignment`
+    - This included all the relevant changes to the data models
+
+## Version 2.3.0
+* Updated `Save-AzResourceGroupDeploymentTemplate` to use the SDK.
+* Added 'Unregister-AzResourceProvider' cmdlet.
+
+## Version 2.2.0
+* Added `UsageLocation`, `GivenName`, `Surname`, `AccountEnabled`, `MailNickname`, `Mail` on `PSADUser` [#10526] [#10497]
+* Fixed issue that `-Mail` doesn't work on `Get-AzADUser` [#11981]
+* Added `-ExcludeChangeType` parameter to `Get-AzDeploymentWhatIfResult` and `Get-AzResourceGroupDeploymentWhatIfResult`
+* Added `-WhatIfExcludeChangeType` parameter to `New-AzDeployment` and `New-AzResourceGroupDeployment`
+* Updated `Test-Az*Deployment` cmdlets to show better error messages
+* Fixed help message for `-Name` parameter of deployment create and What-If cmdlets
+
+## Version 2.1.0
+* Added Tail parameter to Get-AzDeploymentScriptLog and Save-AzDeploymentScriptLog cmdlets
+* Formatted Output property and show it on the Get-AzDeploymentScript cmdlet output
+* Renamed -DeploymentScriptInputObject parameter to -DeploymentScriptObject
+* Fixed missing file/target name in cmdlet messages.
+* Updated assembly version of resource manager and tags cmdlets
+
+## Version 2.0.1
 * Added message warning about view delay when creating a new Role Definition
 * Changed policy cmdlets to output strongly-typed objects
 * Removed `-TenantLevel` parameter used for on the `Get-AzResourceLock` cmdlet [#11335]
@@ -38,6 +139,7 @@
     - `New-AzManagementGroupDeployment`
     - `New-AzResourceGroupDeployment`
     - `New-AzTenantDeployment`
+
 
 ## Version 1.13.0
 * Fixed `Get-AzResource -ResourceGroupName -Name -ExpandProperties -ResourceType` to use actual apiVersion of resources instead of default apiVersion [#11267]

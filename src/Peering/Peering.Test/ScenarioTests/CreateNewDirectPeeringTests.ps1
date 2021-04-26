@@ -32,7 +32,7 @@ function Test-NewDirectPeering
 	Write-Debug "Random Number $randNum";
 	$peerAsn = makePeerAsn $randNum
 	$asn = Get-AzPeerAsn -Name $peerAsn.Name
-	$facilityId = $peeringLocation[0].PeeringDBFacilityId
+	$facilityId = 104
 	#create Connection
 	$bandwidth = getBandwidth
 	$directConnection = NewDirectConnectionV4V6 $facilityId $bandwidth
@@ -178,7 +178,8 @@ function Test-NewDirectPeeringPremiumDirectFree
 	#create peering
 	$connection2.UseForPeeringService = $true
 	Write-Output "New-AzPeering -Name $resourceName -ResourceGroupName $resourceGroup -PeeringLocation $peeringLocation[0].PeeringLocation -MicrosoftNetwork AS8075 -Sku Premium_Direct_Free -PeerAsnResourceId $asn.Id -Tag $tags -DirectConnection $connection1, $connection2"
-    Assert-ThrowsContains {$createdPeering = New-AzPeering -Name $resourceName -ResourceGroupName $resourceGroup -PeeringLocation $peeringLocation[0].PeeringLocation -MicrosoftNetwork AS8075 -Sku "Premium_Direct_Free" -PeerAsnResourceId $asn.Id -Tag $tags -DirectConnection $connection1, $connection2} "Internal"
+    $createdPeering = New-AzPeering -Name $resourceName -ResourceGroupName $resourceGroup -PeeringLocation $peeringLocation[0].PeeringLocation -MicrosoftNetwork AS8075 -Sku "Premium_Direct_Free" -PeerAsnResourceId $asn.Id -Tag $tags -DirectConnection $connection1, $connection2
+	Assert-NotNull $createdPeering
 }
 
 <#
@@ -202,7 +203,7 @@ function Test-NewDirectPeeringPremiumDirectUnlimited
 	$resourceName = getAssetName "DirectOneConnection";
 	Write-Debug "Setting $resourceName"
     $peeringLocation = getPeeringLocation $kind $loc;
-	$facilityId = $peeringLocation[0].PeeringDBFacilityId
+	$facilityId = 1236
 	#create Connection
 	$bandwidth = getBandwidth
 	$bandwidth2 = getBandwidth

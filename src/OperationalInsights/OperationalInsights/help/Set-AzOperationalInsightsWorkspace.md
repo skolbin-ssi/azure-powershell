@@ -2,7 +2,7 @@
 external help file: Microsoft.Azure.PowerShell.Cmdlets.OperationalInsights.dll-Help.xml
 Module Name: Az.OperationalInsights
 ms.assetid: 54DFBB63-AE8C-4918-870F-19FAD6CC5E4A
-online version: https://docs.microsoft.com/en-us/powershell/module/az.operationalinsights/set-azoperationalinsightsworkspace
+online version: https://docs.microsoft.com/powershell/module/az.operationalinsights/set-azoperationalinsightsworkspace
 schema: 2.0.0
 ---
 
@@ -144,12 +144,15 @@ Valid values are:
 - free
 - standard
 - premium
+- pernode
+- standalone
+- pergb2018
 
 ```yaml
 Type: System.String
 Parameter Sets: (All)
 Aliases:
-Accepted values: free, standard, premium, pernode, standalone
+Accepted values: free, standard, premium, pernode, standalone, pergb2018
 
 Required: False
 Position: 3

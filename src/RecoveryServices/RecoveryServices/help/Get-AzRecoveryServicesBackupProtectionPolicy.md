@@ -2,7 +2,7 @@
 external help file: Microsoft.Azure.PowerShell.Cmdlets.RecoveryServices.Backup.dll-Help.xml
 Module Name: Az.RecoveryServices
 ms.assetid: 2E202D0D-076D-431D-9338-9A84ABC0B461
-online version: https://docs.microsoft.com/en-us/powershell/module/az.recoveryservices/get-azrecoveryservicesbackupprotectionpolicy
+online version: https://docs.microsoft.com/powershell/module/az.recoveryservices/get-azrecoveryservicesbackupprotectionpolicy
 schema: 2.0.0
 ---
 
@@ -66,14 +66,13 @@ This command gets the protection policy named DefaultPolicy, and then stores it 
 ## PARAMETERS
 
 ### -BackupManagementType
-Specifies the Backup management type.
-Currently, only AzureVM, AzureStorage is supported.
+The class of resources being protected. Currently the values supported for this cmdlet are AzureVM, AzureStorage, AzureWorkload
 
 ```yaml
 Type: System.Nullable`1[Microsoft.Azure.Commands.RecoveryServices.Backup.Cmdlets.Models.BackupManagementType]
 Parameter Sets: WorkloadBackupManagementTypeParamSet
 Aliases:
-Accepted values: AzureVM, MARS, SCDPM, AzureBackupServer, AzureSQL, AzureStorage, AzureWorkload
+Accepted values: AzureVM, MARS, SCDPM, AzureBackupServer, AzureStorage, AzureWorkload, MAB
 
 Required: True
 Position: 3
@@ -128,8 +127,7 @@ Accept wildcard characters: False
 ```
 
 ### -WorkloadType
-Specifies the workload type.
-Currently, only AzureVM, AzureFiles is supported.
+Workload type of the resource. The current supported values are AzureVM, AzureFiles, MSSQL
 
 ```yaml
 Type: System.Nullable`1[Microsoft.Azure.Commands.RecoveryServices.Backup.Cmdlets.Models.WorkloadType]

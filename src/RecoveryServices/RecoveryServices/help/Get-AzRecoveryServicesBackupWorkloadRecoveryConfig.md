@@ -1,7 +1,7 @@
 ---
 external help file: Microsoft.Azure.PowerShell.Cmdlets.RecoveryServices.Backup.dll-Help.xml
 Module Name: Az.RecoveryServices
-online version: https://docs.microsoft.com/en-us/powershell/module/az.recoveryservices/get-azrecoveryservicesbackupworkloadrecoveryconfig
+online version: https://docs.microsoft.com/powershell/module/az.recoveryservices/get-azrecoveryservicesbackupworkloadrecoveryconfig
 schema: 2.0.0
 ---
 
@@ -56,7 +56,7 @@ Get-AzRecoveryServicesBackupWorkloadRecoveryConfig -AlternateWorkloadRestore -Re
 ## PARAMETERS
 
 ### -AlternateWorkloadRestore
-Specifies that the backed up DB is to be overwritten with the DB information present in the recovery point.
+Specifies that the backed up DB should be restored onto another selected server.
 
 ```yaml
 Type: System.Management.Automation.SwitchParameter
@@ -86,7 +86,7 @@ Accept wildcard characters: False
 ```
 
 ### -FilePath
-Specifies the filepath for restore operation.
+Specifies the filepath which is used for restore operation.
 
 ```yaml
 Type: System.String

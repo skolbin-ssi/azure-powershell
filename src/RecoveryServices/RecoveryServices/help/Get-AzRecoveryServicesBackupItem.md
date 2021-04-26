@@ -2,7 +2,7 @@
 external help file: Microsoft.Azure.PowerShell.Cmdlets.RecoveryServices.Backup.dll-Help.xml
 Module Name: Az.RecoveryServices
 ms.assetid: DEB3D7B5-D974-472B-B8B4-9A19CA6AECCC
-online version: https://docs.microsoft.com/en-us/powershell/module/az.recoveryservices/get-azrecoveryservicesbackupitem
+online version: https://docs.microsoft.com/powershell/module/az.recoveryservices/get-azrecoveryservicesbackupitem
 schema: 2.0.0
 ---
 
@@ -19,7 +19,7 @@ Gets the items from a container in Backup.
 Get-AzRecoveryServicesBackupItem [-Container] <ContainerBase> [[-Name] <String>]
  [[-ProtectionStatus] <ItemProtectionStatus>] [[-ProtectionState] <ItemProtectionState>]
  [-WorkloadType] <WorkloadType> [[-DeleteState] <ItemDeleteState>] [-FriendlyName <String>] [-VaultId <String>]
- [-DefaultProfile <IAzureContextContainer>] [<CommonParameters>]
+ [-DefaultProfile <IAzureContextContainer>]  [-UseSecondaryRegion] [<CommonParameters>]
 ```
 
 ### GetItemsForVault
@@ -27,7 +27,7 @@ Get-AzRecoveryServicesBackupItem [-Container] <ContainerBase> [[-Name] <String>]
 Get-AzRecoveryServicesBackupItem [-BackupManagementType] <BackupManagementType> [[-Name] <String>]
  [[-ProtectionStatus] <ItemProtectionStatus>] [[-ProtectionState] <ItemProtectionState>]
  [-WorkloadType] <WorkloadType> [[-DeleteState] <ItemDeleteState>] [-FriendlyName <String>] [-VaultId <String>]
- [-DefaultProfile <IAzureContextContainer>] [<CommonParameters>]
+ [-DefaultProfile <IAzureContextContainer>]  [-UseSecondaryRegion] [<CommonParameters>]
 ```
 
 ### GetItemsForPolicy
@@ -35,12 +35,12 @@ Get-AzRecoveryServicesBackupItem [-BackupManagementType] <BackupManagementType> 
 Get-AzRecoveryServicesBackupItem [-Policy] <PolicyBase> [[-Name] <String>]
  [[-ProtectionStatus] <ItemProtectionStatus>] [[-ProtectionState] <ItemProtectionState>]
  [[-DeleteState] <ItemDeleteState>] [-FriendlyName <String>] [-VaultId <String>]
- [-DefaultProfile <IAzureContextContainer>] [<CommonParameters>]
+ [-DefaultProfile <IAzureContextContainer>]  [-UseSecondaryRegion] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
 
-The **Get-AzRecoveryServicesBackupItem** cmdlet gets the items in a container or a value in Azure Backup and the protection status of the items.
+The **Get-AzRecoveryServicesBackupItem** cmdlet gets the list of protected items in a container and the protection status of the items.
 A container that is registered to an Azure Recovery Services vault can have one or more items that can be protected.
 For Azure virtual machines, there can be only one backup item in the virtual machine container.
 Set the vault context by using the -VaultId parameter.
@@ -51,7 +51,7 @@ Set the vault context by using the -VaultId parameter.
 
 ```powershell
 PS C:\> $vault = Get-AzRecoveryServicesVault -ResourceGroupName "resourceGroup" -Name "vaultName"
-PS C:\> $Container = Get-AzRecoveryServicesBackupContainer -ContainerType AzureVM -Status Registered -Name "V2VM" -VaultId $vault.ID
+PS C:\> $Container = Get-AzRecoveryServicesBackupContainer -ContainerType AzureVM -Status Registered -FriendlyName "V2VM" -VaultId $vault.ID
 PS C:\> $BackupItem = Get-AzRecoveryServicesBackupItem -Container $Container -WorkloadType AzureVM -VaultId $vault.ID
 ```
 
@@ -62,26 +62,22 @@ The second command gets the Backup item named V2VM in $Container, and then store
 
 ```powershell
 PS C:\> $vault = Get-AzRecoveryServicesVault -ResourceGroupName "resourceGroup" -Name "vaultName"
-PS C:\> $Container = Get-AzRecoveryServicesBackupContainer -ContainerType AzureStorage -Status Registered -Name "StorageAccount1" -VaultId $vault.ID
+PS C:\> $Container = Get-AzRecoveryServicesBackupContainer -ContainerType AzureStorage -Status Registered -FriendlyName "StorageAccount1" -VaultId $vault.ID
 PS C:\> $BackupItem = Get-AzRecoveryServicesBackupItem -Container $Container -WorkloadType AzureFiles -VaultId $vault.ID -FriendlyName "FileShareName"
 ```
 
 The first command gets the container of type AzureStorage, and then stores it in the $Container variable.
 The second command gets the Backup item whose friendlyName matches the value passed in FriendlyName Parameter, and then stores it in the $BackupItem variable.
-Using FriendlyName parameter can result in returning more than one Azure File Share. In such cases use -Name parameter with parameter value as the Name property returned in $BackupItem variable.
+Using FriendlyName parameter can result in returning more than one Azure File Share. In such cases, execute the cmdlet by passing value for -Name parameter as the Name property returned in the result set of $BackupItem.
 
 ## PARAMETERS
 
 ### -BackupManagementType
 
-Specifies the Backup management type.
-The acceptable values for this parameter are:
+The class of resources being protected. The acceptable values for this parameter are:
 
 - AzureVM
-- MARS
-- SCDPM
-- AzureBackupServer
-- AzureSQL
+- MAB
 - AzureStorage
 - AzureWorkload
 
@@ -89,7 +85,7 @@ The acceptable values for this parameter are:
 Type: Microsoft.Azure.Commands.RecoveryServices.Backup.Cmdlets.Models.BackupManagementType
 Parameter Sets: GetItemsForVault
 Aliases:
-Accepted values: AzureVM, MARS, SCDPM, AzureBackupServer, AzureSQL, AzureStorage, AzureWorkload
+Accepted values: AzureVM, MARS, AzureStorage, AzureWorkload
 
 Required: True
 Position: 1
@@ -168,7 +164,7 @@ Accept wildcard characters: False
 
 ### -Name
 
-Specifies the name of the container.
+Specifies the name of backup item. For file share, specify the unique ID of protected file share.
 
 ```yaml
 Type: System.String
@@ -264,11 +260,9 @@ Accept wildcard characters: False
 
 ### -WorkloadType
 
-Specifies the workload type.
-The acceptable values for this parameter are:
+Workload type of the resource. The acceptable values for this parameter are:
 
 - AzureVM
-- AzureSQLDatabase
 - AzureFiles
 - MSSQL
 
@@ -276,7 +270,7 @@ The acceptable values for this parameter are:
 Type: Microsoft.Azure.Commands.RecoveryServices.Backup.Cmdlets.Models.WorkloadType
 Parameter Sets: GetItemsForContainer, GetItemsForVault
 Aliases:
-Accepted values: AzureVM, AzureSQLDatabase, AzureFiles, MSSQL
+Accepted values: AzureVM, AzureFiles, MSSQL
 
 Required: True
 Position: 5

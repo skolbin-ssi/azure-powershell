@@ -20,6 +20,7 @@ namespace Microsoft.WindowsAzure.Commands.Common.Storage.ResourceModel
     using global::Azure.Storage.Blobs;
     using Microsoft.WindowsAzure.Commands.Storage;
     using global::Azure.Storage;
+    using global::Azure.Storage.Blobs.Models;
 
     /// <summary>
     /// azure storage container
@@ -37,6 +38,11 @@ namespace Microsoft.WindowsAzure.Commands.Common.Storage.ResourceModel
         /// the permission of CloudBlobContainer
         /// </summary>
         public BlobContainerPermissions Permission { get; private set; }
+
+        /// <summary>
+        /// the AccessPolicy of BlobContainer
+        /// </summary>
+        public BlobContainerAccessPolicy AccessPolicy { get; private set; }
 
         /// <summary>
         /// the public access level of CloudBlobContainer
@@ -110,6 +116,42 @@ namespace Microsoft.WindowsAzure.Commands.Common.Storage.ResourceModel
             LastModified = container.Properties.LastModified;
         }
 
+        public void SetTrack2Permission(BlobContainerAccessPolicy accesspolicy = null)
+        {
+            // Try to get container permission if not input it, and container not deleted
+            if (accesspolicy == null)
+            {
+                try
+                {
+                    accesspolicy = BlobContainerClient.GetAccessPolicy().Value;
+                }
+                catch (global::Azure.RequestFailedException e) when (e.Status == 403 || e.Status == 404)
+                {
+                    // 404 Not found, or 403 Forbidden means we don't have permission to query the Permission of the specified container.
+                    // Just skip return container permission in this case.
+                }
+            }
+
+            if (accesspolicy != null)
+            {
+                AccessPolicy = accesspolicy;
+
+                switch (accesspolicy.BlobPublicAccess)
+                {
+                    case PublicAccessType.Blob:
+                        PublicAccess = BlobContainerPublicAccessType.Blob;
+                        break;
+                    case PublicAccessType.BlobContainer:
+                        PublicAccess = BlobContainerPublicAccessType.Container;
+                        break;
+                    case PublicAccessType.None:
+                    default:
+                        PublicAccess = BlobContainerPublicAccessType.Off;
+                        break;
+                }
+            }
+        }
+
         //refresh XSCL track2 container properties object from server
         public void FetchAttributes()
         {
@@ -117,7 +159,7 @@ namespace Microsoft.WindowsAzure.Commands.Common.Storage.ResourceModel
         }
 
         // Convert Track1 Container object to Track 2 Container Client
-        protected static BlobContainerClient GetTrack2BlobContainerClient(CloudBlobContainer cloubContainer, AzureStorageContext context)
+        public static BlobContainerClient GetTrack2BlobContainerClient(CloudBlobContainer cloubContainer, AzureStorageContext context, BlobClientOptions options = null)
         {
             BlobContainerClient blobContainerClient;
             if (cloubContainer.ServiceClient.Credentials.IsToken) //Oauth
@@ -127,23 +169,23 @@ namespace Microsoft.WindowsAzure.Commands.Common.Storage.ResourceModel
                     //TODO : Get Oauth context from current login user.
                     throw new System.Exception("Need Storage Context to convert Track1 object in token credentail to Track2 object.");
                 }
-                blobContainerClient = new BlobContainerClient(cloubContainer.Uri, context.Track2OauthToken);
+                blobContainerClient = new BlobContainerClient(cloubContainer.Uri, context.Track2OauthToken, options);
 
             }
             else if (cloubContainer.ServiceClient.Credentials.IsSAS) //SAS
             {
                 string fullUri = cloubContainer.Uri.ToString();
                 fullUri = fullUri + cloubContainer.ServiceClient.Credentials.SASToken;
-                blobContainerClient = new BlobContainerClient(new Uri(fullUri));
+                blobContainerClient = new BlobContainerClient(new Uri(fullUri), options);
             }
             else if (cloubContainer.ServiceClient.Credentials.IsSharedKey) //Shared Key
             {
                 blobContainerClient = new BlobContainerClient(cloubContainer.Uri,
-                    new StorageSharedKeyCredential(context.StorageAccountName, cloubContainer.ServiceClient.Credentials.ExportBase64EncodedKey()));
+                    new StorageSharedKeyCredential(context.StorageAccountName, cloubContainer.ServiceClient.Credentials.ExportBase64EncodedKey()), options);
             }
             else //Anonymous
             {
-                blobContainerClient = new BlobContainerClient(cloubContainer.Uri);
+                blobContainerClient = new BlobContainerClient(cloubContainer.Uri, options);
             }
 
             return blobContainerClient;

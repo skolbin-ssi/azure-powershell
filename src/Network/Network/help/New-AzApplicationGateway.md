@@ -2,7 +2,7 @@
 external help file: Microsoft.Azure.PowerShell.Cmdlets.Network.dll-Help.xml
 Module Name: Az.Network
 ms.assetid: 1F5066C6-9756-47B4-886C-C52755809926
-online version: https://docs.microsoft.com/en-us/powershell/module/az.network/new-azapplicationgateway
+online version: https://docs.microsoft.com/powershell/module/az.network/new-azapplicationgateway
 schema: 2.0.0
 ---
 
@@ -21,11 +21,13 @@ New-AzApplicationGateway -Name <String> -ResourceGroupName <String> -Location <S
  [-SslCertificates <PSApplicationGatewaySslCertificate[]>]
  [-AuthenticationCertificates <PSApplicationGatewayAuthenticationCertificate[]>]
  [-TrustedRootCertificate <PSApplicationGatewayTrustedRootCertificate[]>]
+ [-TrustedClientCertificates <PSApplicationGatewayTrustedClientCertificate[]>]
  [-FrontendIPConfigurations <PSApplicationGatewayFrontendIPConfiguration[]>]
  -FrontendPorts <PSApplicationGatewayFrontendPort[]> [-Probes <PSApplicationGatewayProbe[]>]
  -BackendAddressPools <PSApplicationGatewayBackendAddressPool[]>
  -BackendHttpSettingsCollection <PSApplicationGatewayBackendHttpSettings[]>
- -HttpListeners <PSApplicationGatewayHttpListener[]> [-UrlPathMaps <PSApplicationGatewayUrlPathMap[]>]
+ [-SslProfiles <PSApplicationGatewaySslProfile[]>] -HttpListeners <PSApplicationGatewayHttpListener[]>
+ [-UrlPathMaps <PSApplicationGatewayUrlPathMap[]>]
  -RequestRoutingRules <PSApplicationGatewayRequestRoutingRule[]>
  [-RewriteRuleSet <PSApplicationGatewayRewriteRuleSet[]>]
  [-RedirectConfigurations <PSApplicationGatewayRedirectConfiguration[]>]
@@ -33,6 +35,7 @@ New-AzApplicationGateway -Name <String> -ResourceGroupName <String> -Location <S
  [-AutoscaleConfiguration <PSApplicationGatewayAutoscaleConfiguration>] [-EnableHttp2] [-EnableFIPS]
  [-ForceFirewallPolicyAssociation] [-Zone <String[]>] [-Tag <Hashtable>] [-UserAssignedIdentityId <String>]
  [-Force] [-AsJob] [-CustomErrorConfiguration <PSApplicationGatewayCustomError[]>]
+ [-PrivateLinkConfiguration <PSApplicationGatewayPrivateLinkConfiguration[]>]
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
@@ -44,11 +47,13 @@ New-AzApplicationGateway -Name <String> -ResourceGroupName <String> -Location <S
  [-SslCertificates <PSApplicationGatewaySslCertificate[]>]
  [-AuthenticationCertificates <PSApplicationGatewayAuthenticationCertificate[]>]
  [-TrustedRootCertificate <PSApplicationGatewayTrustedRootCertificate[]>]
+ [-TrustedClientCertificates <PSApplicationGatewayTrustedClientCertificate[]>]
  [-FrontendIPConfigurations <PSApplicationGatewayFrontendIPConfiguration[]>]
  -FrontendPorts <PSApplicationGatewayFrontendPort[]> [-Probes <PSApplicationGatewayProbe[]>]
  -BackendAddressPools <PSApplicationGatewayBackendAddressPool[]>
  -BackendHttpSettingsCollection <PSApplicationGatewayBackendHttpSettings[]>
- -HttpListeners <PSApplicationGatewayHttpListener[]> [-UrlPathMaps <PSApplicationGatewayUrlPathMap[]>]
+ [-SslProfiles <PSApplicationGatewaySslProfile[]>] -HttpListeners <PSApplicationGatewayHttpListener[]>
+ [-UrlPathMaps <PSApplicationGatewayUrlPathMap[]>]
  -RequestRoutingRules <PSApplicationGatewayRequestRoutingRule[]>
  [-RewriteRuleSet <PSApplicationGatewayRewriteRuleSet[]>]
  [-RedirectConfigurations <PSApplicationGatewayRedirectConfiguration[]>]
@@ -56,6 +61,7 @@ New-AzApplicationGateway -Name <String> -ResourceGroupName <String> -Location <S
  [-FirewallPolicyId <String>] [-AutoscaleConfiguration <PSApplicationGatewayAutoscaleConfiguration>]
  [-EnableHttp2] [-EnableFIPS] [-ForceFirewallPolicyAssociation] [-Zone <String[]>] [-Tag <Hashtable>] [-Force]
  [-AsJob] [-CustomErrorConfiguration <PSApplicationGatewayCustomError[]>]
+ [-PrivateLinkConfiguration <PSApplicationGatewayPrivateLinkConfiguration[]>]
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
@@ -67,11 +73,13 @@ New-AzApplicationGateway -Name <String> -ResourceGroupName <String> -Location <S
  [-SslCertificates <PSApplicationGatewaySslCertificate[]>]
  [-AuthenticationCertificates <PSApplicationGatewayAuthenticationCertificate[]>]
  [-TrustedRootCertificate <PSApplicationGatewayTrustedRootCertificate[]>]
+ [-TrustedClientCertificates <PSApplicationGatewayTrustedClientCertificate[]>]
  [-FrontendIPConfigurations <PSApplicationGatewayFrontendIPConfiguration[]>]
  -FrontendPorts <PSApplicationGatewayFrontendPort[]> [-Probes <PSApplicationGatewayProbe[]>]
  -BackendAddressPools <PSApplicationGatewayBackendAddressPool[]>
  -BackendHttpSettingsCollection <PSApplicationGatewayBackendHttpSettings[]>
- -HttpListeners <PSApplicationGatewayHttpListener[]> [-UrlPathMaps <PSApplicationGatewayUrlPathMap[]>]
+ [-SslProfiles <PSApplicationGatewaySslProfile[]>] -HttpListeners <PSApplicationGatewayHttpListener[]>
+ [-UrlPathMaps <PSApplicationGatewayUrlPathMap[]>]
  -RequestRoutingRules <PSApplicationGatewayRequestRoutingRule[]>
  [-RewriteRuleSet <PSApplicationGatewayRewriteRuleSet[]>]
  [-RedirectConfigurations <PSApplicationGatewayRedirectConfiguration[]>]
@@ -79,8 +87,9 @@ New-AzApplicationGateway -Name <String> -ResourceGroupName <String> -Location <S
  [-FirewallPolicy <PSApplicationGatewayWebApplicationFirewallPolicy>]
  [-AutoscaleConfiguration <PSApplicationGatewayAutoscaleConfiguration>] [-EnableHttp2] [-EnableFIPS]
  [-ForceFirewallPolicyAssociation] [-Zone <String[]>] [-Tag <Hashtable>] [-Force] [-AsJob]
- [-CustomErrorConfiguration <PSApplicationGatewayCustomError[]>] [-DefaultProfile <IAzureContextContainer>]
- [-WhatIf] [-Confirm] [<CommonParameters>]
+ [-CustomErrorConfiguration <PSApplicationGatewayCustomError[]>]
+ [-PrivateLinkConfiguration <PSApplicationGatewayPrivateLinkConfiguration[]>]
+ [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### IdentityByIdentityObject
@@ -91,11 +100,13 @@ New-AzApplicationGateway -Name <String> -ResourceGroupName <String> -Location <S
  [-SslCertificates <PSApplicationGatewaySslCertificate[]>]
  [-AuthenticationCertificates <PSApplicationGatewayAuthenticationCertificate[]>]
  [-TrustedRootCertificate <PSApplicationGatewayTrustedRootCertificate[]>]
+ [-TrustedClientCertificates <PSApplicationGatewayTrustedClientCertificate[]>]
  [-FrontendIPConfigurations <PSApplicationGatewayFrontendIPConfiguration[]>]
  -FrontendPorts <PSApplicationGatewayFrontendPort[]> [-Probes <PSApplicationGatewayProbe[]>]
  -BackendAddressPools <PSApplicationGatewayBackendAddressPool[]>
  -BackendHttpSettingsCollection <PSApplicationGatewayBackendHttpSettings[]>
- -HttpListeners <PSApplicationGatewayHttpListener[]> [-UrlPathMaps <PSApplicationGatewayUrlPathMap[]>]
+ [-SslProfiles <PSApplicationGatewaySslProfile[]>] -HttpListeners <PSApplicationGatewayHttpListener[]>
+ [-UrlPathMaps <PSApplicationGatewayUrlPathMap[]>]
  -RequestRoutingRules <PSApplicationGatewayRequestRoutingRule[]>
  [-RewriteRuleSet <PSApplicationGatewayRewriteRuleSet[]>]
  [-RedirectConfigurations <PSApplicationGatewayRedirectConfiguration[]>]
@@ -103,6 +114,7 @@ New-AzApplicationGateway -Name <String> -ResourceGroupName <String> -Location <S
  [-AutoscaleConfiguration <PSApplicationGatewayAutoscaleConfiguration>] [-EnableHttp2] [-EnableFIPS]
  [-ForceFirewallPolicyAssociation] [-Zone <String[]>] [-Tag <Hashtable>] -Identity <PSManagedServiceIdentity>
  [-Force] [-AsJob] [-CustomErrorConfiguration <PSApplicationGatewayCustomError[]>]
+ [-PrivateLinkConfiguration <PSApplicationGatewayPrivateLinkConfiguration[]>]
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
@@ -488,6 +500,21 @@ Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
+### -PrivateLinkConfiguration
+The list of privateLink Configuration
+
+```yaml
+Type: Microsoft.Azure.Commands.Network.Models.PSApplicationGatewayPrivateLinkConfiguration[]
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
 ### -Probes
 Specifies probes for the application gateway.
 
@@ -608,12 +635,42 @@ Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
+### -SslProfiles
+The list of ssl profiles
+
+```yaml
+Type: Microsoft.Azure.Commands.Network.Models.PSApplicationGatewaySslProfile[]
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
 ### -Tag
 Key-value pairs in the form of a hash table. For example:
 @{key0="value0";key1=$null;key2="value2"}
 
 ```yaml
 Type: System.Collections.Hashtable
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -TrustedClientCertificates
+The list of trusted client CA certificate chains
+
+```yaml
+Type: Microsoft.Azure.Commands.Network.Models.PSApplicationGatewayTrustedClientCertificate[]
 Parameter Sets: (All)
 Aliases:
 
@@ -788,7 +845,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 [New-AzApplicationGatewayBackendAddressPool](./New-AzApplicationGatewayBackendAddressPool.md)
 
-[New-AzApplicationGatewayBackendHttpSettings](./New-AzApplicationGatewayBackendHttpSettings.md)
+[New-AzApplicationGatewayBackendHttpSetting](./New-AzApplicationGatewayBackendHttpSetting.md)
 
 [New-AzApplicationGatewayFrontendIPConfig](./New-AzApplicationGatewayFrontendIPConfig.md)
 

@@ -2,7 +2,7 @@
 external help file: Microsoft.Azure.PowerShell.Cmdlets.Network.dll-Help.xml
 Module Name: Az.Network
 ms.assetid: 5784FD44-91D4-4537-84F3-4F03CCBA355F
-online version: https://docs.microsoft.com/en-us/powershell/module/az.network/new-azvirtualnetworkgateway
+online version: https://docs.microsoft.com/powershell/module/az.network/new-azvirtualnetworkgateway
 schema: 2.0.0
 ---
 
@@ -13,60 +13,18 @@ Creates a Virtual Network Gateway
 
 ## SYNTAX
 
-### Default (Default)
 ```
 New-AzVirtualNetworkGateway -Name <String> -ResourceGroupName <String> -Location <String>
  [-IpConfigurations <PSVirtualNetworkGatewayIpConfiguration[]>] [-GatewayType <String>] [-VpnType <String>]
  [-EnableBgp <Boolean>] [-EnableActiveActiveFeature] [-EnablePrivateIpAddress] [-GatewaySku <String>]
  [-GatewayDefaultSite <PSLocalNetworkGateway>] [-VpnClientAddressPool <String[]>]
- [-VpnClientProtocol <String[]>] [-VpnClientRootCertificates <PSVpnClientRootCertificate[]>]
+ [-VpnClientProtocol <String[]>] [-VpnAuthenticationType <String[]>]
+ [-VpnClientRootCertificates <PSVpnClientRootCertificate[]>]
  [-VpnClientRevokedCertificates <PSVpnClientRevokedCertificate[]>] [-VpnClientIpsecPolicy <PSIpsecPolicy[]>]
  [-Asn <UInt32>] [-PeerWeight <Int32>]
  [-IpConfigurationBgpPeeringAddresses <PSIpConfigurationBgpPeeringAddress[]>] [-Tag <Hashtable>] [-Force]
- [-CustomRoute <String[]>] [-VpnGatewayGeneration <String>] [-AsJob] [-DefaultProfile <IAzureContextContainer>]
- [-WhatIf] [-Confirm] [<CommonParameters>]
-```
-
-### MultipleRadiusServersConfiguration
-```
-New-AzVirtualNetworkGateway -Name <String> -ResourceGroupName <String> -Location <String>
- [-IpConfigurations <PSVirtualNetworkGatewayIpConfiguration[]>] [-GatewayType <String>] [-VpnType <String>]
- [-EnableBgp <Boolean>] [-EnableActiveActiveFeature] [-EnablePrivateIpAddress] [-GatewaySku <String>]
- [-GatewayDefaultSite <PSLocalNetworkGateway>] [-VpnClientAddressPool <String[]>]
- [-VpnClientProtocol <String[]>] [-VpnClientRootCertificates <PSVpnClientRootCertificate[]>]
- [-VpnClientRevokedCertificates <PSVpnClientRevokedCertificate[]>] [-VpnClientIpsecPolicy <PSIpsecPolicy[]>]
- [-Asn <UInt32>] [-PeerWeight <Int32>]
- [-IpConfigurationBgpPeeringAddresses <PSIpConfigurationBgpPeeringAddress[]>] [-Tag <Hashtable>] [-Force]
- -RadiusServerList <PSRadiusServer[]> [-CustomRoute <String[]>] [-VpnGatewayGeneration <String>] [-AsJob]
- [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
-```
-
-### RadiusServerConfiguration
-```
-New-AzVirtualNetworkGateway -Name <String> -ResourceGroupName <String> -Location <String>
- [-IpConfigurations <PSVirtualNetworkGatewayIpConfiguration[]>] [-GatewayType <String>] [-VpnType <String>]
- [-EnableBgp <Boolean>] [-EnableActiveActiveFeature] [-EnablePrivateIpAddress] [-GatewaySku <String>]
- [-GatewayDefaultSite <PSLocalNetworkGateway>] [-VpnClientAddressPool <String[]>]
- [-VpnClientProtocol <String[]>] [-VpnClientRootCertificates <PSVpnClientRootCertificate[]>]
- [-VpnClientRevokedCertificates <PSVpnClientRevokedCertificate[]>] [-VpnClientIpsecPolicy <PSIpsecPolicy[]>]
- [-Asn <UInt32>] [-PeerWeight <Int32>]
- [-IpConfigurationBgpPeeringAddresses <PSIpConfigurationBgpPeeringAddress[]>] [-Tag <Hashtable>] [-Force]
- -RadiusServerAddress <String> -RadiusServerSecret <SecureString> [-CustomRoute <String[]>]
- [-VpnGatewayGeneration <String>] [-AsJob] [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
- [<CommonParameters>]
-```
-
-### AadAuthenticationConfiguration
-```
-New-AzVirtualNetworkGateway -Name <String> -ResourceGroupName <String> -Location <String>
- [-IpConfigurations <PSVirtualNetworkGatewayIpConfiguration[]>] [-GatewayType <String>] [-VpnType <String>]
- [-EnableBgp <Boolean>] [-EnableActiveActiveFeature] [-EnablePrivateIpAddress] [-GatewaySku <String>]
- [-GatewayDefaultSite <PSLocalNetworkGateway>] [-VpnClientAddressPool <String[]>]
- [-VpnClientProtocol <String[]>] [-VpnClientRootCertificates <PSVpnClientRootCertificate[]>]
- [-VpnClientRevokedCertificates <PSVpnClientRevokedCertificate[]>] [-VpnClientIpsecPolicy <PSIpsecPolicy[]>]
- [-Asn <UInt32>] [-PeerWeight <Int32>]
- [-IpConfigurationBgpPeeringAddresses <PSIpConfigurationBgpPeeringAddress[]>] [-Tag <Hashtable>] [-Force]
- -AadTenantUri <String> -AadAudienceId <String> -AadIssuerUri <String> [-CustomRoute <String[]>]
+ [-RadiusServerAddress <String>] [-RadiusServerSecret <SecureString>] [-RadiusServerList <PSRadiusServer[]>]
+ [-AadTenantUri <String>] [-AadAudienceId <String>] [-AadIssuerUri <String>] [-CustomRoute <String[]>]
  [-VpnGatewayGeneration <String>] [-AsJob] [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
  [<CommonParameters>]
 ```
@@ -83,8 +41,8 @@ You can also choose to include other features like BGP and Active-Active.
 
 ## EXAMPLES
 
-### 1: Create a Virtual Network Gateway
-```
+### Example 1: Create a Virtual Network Gateway
+```powershell
 New-AzResourceGroup -Location "UK West" -Name "vnet-gateway"
 $subnet = New-AzVirtualNetworkSubnetConfig -Name 'gatewaysubnet' -AddressPrefix '10.254.0.0/27'
 
@@ -102,8 +60,8 @@ The gateway will be called "myNGW" within the resource group "vnet-gateway" in t
 West" with the previously created IP configurations saved in the variable "ngwIPConfig," the
 gateway type of "VPN," the vpn type "RouteBased," and the sku "Basic."
 
-### 2: Create a Virtual Network Gateway with External Radius Configuration
-```
+### Example 2: Create a Virtual Network Gateway with External Radius Configuration
+```powershell
 New-AzResourceGroup -Location "UK West" -Name "vnet-gateway"
 New-AzVirtualNetworkSubnetConfig -Name 'gatewaysubnet' -AddressPrefix '10.254.0.0/27'
 
@@ -120,8 +78,8 @@ The above will create a resource group, request a Public IP Address, create a Vi
 subnet and create a Virtual Network Gateway in Azure.
 The gateway will be called "myNGW" within the resource group "vnet-gateway" in the location "UK West" with the previously created IP configurations saved in the variable "ngwIPConfig," the gateway type of "VPN," the vpn type "RouteBased," and the sku "Basic." It also adds an external radius server with address "TestRadiusServer". It will also set custom routes specified by customers on gateway.
 
-### 3: Create a Virtual Network Gateway with P2S settings
-```
+### Example 3: Create a Virtual Network Gateway with P2S settings
+```powershell
 New-AzResourceGroup -Location "UK West" -Name "vnet-gateway"
 $subnet = New-AzVirtualNetworkSubnetConfig -Name 'gatewaysubnet' -AddressPrefix '10.254.0.0/27'
 
@@ -140,8 +98,8 @@ subnet and create a Virtual Network Gateway with P2S settings e.g. VpnProtocol,V
 The gateway will be called "myNGW" within the resource group "vnet-gateway" in the location "UK West" with the previously created IP configurations saved in the variable "ngwIPConfig," the gateway type of "VPN," the vpn type "RouteBased," and the sku "VpnGw1." Vpn settings will be set on Gateway such as VpnProtocol set as Ikev2, VpnClientAddressPool as "201.169.0.0/16", VpnClientRootCertificate set as passed one: clientRootCertName and custom vpn ipsec policy passed in object:$vpnclientipsecpolicy  
 It will also set custom routes specified by customers on gateway.
 
-### 4: Create a Virtual Network Gateway with AAD authentication Configuration for VpnClient of virtual network gateway.
-```
+### Example 4: Create a Virtual Network Gateway with AAD authentication Configuration for VpnClient of virtual network gateway.
+```powershell
 New-AzResourceGroup -Location "UK West" -Name "vnet-gateway"
 New-AzVirtualNetworkSubnetConfig -Name 'gatewaysubnet' -AddressPrefix '10.254.0.0/27'
 
@@ -158,8 +116,8 @@ The above will create a resource group, request a Public IP Address, create a Vi
 subnet and create a Virtual Network Gateway in Azure.
 The gateway will be called "myNGW" within the resource group "vnet-gateway" in the location "UK West" with the previously created IP configurations saved in the variable "ngwIPConfig," the gateway type of "VPN," the vpn type "RouteBased," and the sku "Basic." It also configures AAD authentication configurations: AadTenantUri, AadIssuerUri and AadAudienceId for VpnClient of virtual network gateway.
 
-### 5: Create a Virtual Network Gateway with VpnGatewayGeneration
-```
+### Example 5: Create a Virtual Network Gateway with VpnGatewayGeneration
+```powershell
 New-AzResourceGroup -Location "UK West" -Name "vnet-gateway"
 $subnet = New-AzVirtualNetworkSubnetConfig -Name 'gatewaysubnet' -AddressPrefix '10.254.0.0/27'
 
@@ -177,8 +135,8 @@ The gateway will be called "myNGW" within the resource group "vnet-gateway" in t
 with the previously created IP configurations saved in the variable "ngwIPConfig," the
 gateway type of "VPN", the vpn type "RouteBased", the sku "VpnGw4" and VpnGatewayGeneration Generation2 enabled.
 
-### 6: Create a Virtual Network Gateway with IpConfigurationBgpPeeringAddresses
-```
+### Example 6: Create a Virtual Network Gateway with IpConfigurationBgpPeeringAddresses
+```powershell
 New-AzResourceGroup -Location "UK West" -Name "resourcegroup1"
 $subnet = New-AzVirtualNetworkSubnetConfig -Name 'gatewaysubnet' -AddressPrefix '10.254.0.0/27'
 
@@ -208,10 +166,10 @@ P2S AAD authentication option:AadAudienceId.
 
 ```yaml
 Type: System.String
-Parameter Sets: AadAuthenticationConfiguration
+Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
@@ -223,10 +181,10 @@ P2S AAD authentication option:AadIssuerUri.
 
 ```yaml
 Type: System.String
-Parameter Sets: AadAuthenticationConfiguration
+Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
@@ -238,10 +196,10 @@ P2S AAD authentication option:AadTenantUri.
 
 ```yaml
 Type: System.String
-Parameter Sets: AadAuthenticationConfiguration
+Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
@@ -400,7 +358,7 @@ Accept wildcard characters: False
 ```
 
 ### -GatewayType
-The type of this virtual network gateway: Vpn, ExoressRoute
+The type of this virtual network gateway: Vpn, ExpressRoute
 
 ```yaml
 Type: System.String
@@ -495,10 +453,10 @@ P2S External Radius server address.
 
 ```yaml
 Type: System.String
-Parameter Sets: RadiusServerConfiguration
+Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
@@ -510,10 +468,10 @@ P2S multiple external Radius server servers.
 
 ```yaml
 Type: Microsoft.Azure.Commands.Network.Models.PSRadiusServer[]
-Parameter Sets: MultipleRadiusServersConfiguration
+Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
@@ -525,10 +483,10 @@ P2S External Radius server secret.
 
 ```yaml
 Type: System.Security.SecureString
-Parameter Sets: RadiusServerConfiguration
+Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
@@ -555,6 +513,21 @@ A hashtable which represents resource tags.
 
 ```yaml
 Type: System.Collections.Hashtable
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -VpnAuthenticationType
+The list of P2S VPN client authentication types.
+
+```yaml
+Type: System.String[]
 Parameter Sets: (All)
 Aliases:
 

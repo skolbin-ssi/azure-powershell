@@ -88,6 +88,7 @@ namespace Microsoft.Azure.Commands.FrontDoor.Helpers
                 Type = sdkFrontDoor.Type,
                 Tags = sdkFrontDoor.Tags.ToHashTableTags(),
                 FriendlyName = sdkFrontDoor.FriendlyName,
+                FrontDoorId = sdkFrontDoor.FrontdoorId,
                 RoutingRules = sdkFrontDoor.RoutingRules?.Select(x => x.ToPSRoutingRule()).ToList(),
                 BackendPools = sdkFrontDoor.BackendPools?.Select(x => x.ToPSBackendPool()).ToList(),
                 HealthProbeSettings = sdkFrontDoor.HealthProbeSettings?.Select(x => x.ToPSHealthProbeSetting()).ToList(),
@@ -118,7 +119,7 @@ namespace Microsoft.Azure.Commands.FrontDoor.Helpers
                     BackendPoolId = SDKForwardingConfiguration.BackendPool?.Id,
                     EnableCaching = SDKForwardingConfiguration.CacheConfiguration != null,
                     QueryParameterStripDirective = SDKForwardingConfiguration.CacheConfiguration?.QueryParameterStripDirective,
-                    DynamicCompression = SDKForwardingConfiguration.CacheConfiguration == null ? (PSEnabledState?)null : (PSEnabledState)Enum.Parse(typeof(PSEnabledState), SDKForwardingConfiguration.CacheConfiguration.DynamicCompression)
+                    DynamicCompression = SDKForwardingConfiguration.CacheConfiguration?.DynamicCompression == null ? (PSEnabledState?)null : (PSEnabledState)Enum.Parse(typeof(PSEnabledState), SDKForwardingConfiguration.CacheConfiguration.DynamicCompression)
                 };
             }
             else if (sdkRouteConfiguration is SdkRedirectConfiguration)
@@ -326,6 +327,8 @@ namespace Microsoft.Azure.Commands.FrontDoor.Helpers
                 Weight = sdkBackend.Weight,
                 BackendHostHeader = sdkBackend.BackendHostHeader,
                 PrivateLinkAlias = sdkBackend.PrivateLinkAlias,
+                PrivateLinkResourceId = sdkBackend.PrivateLinkResourceId,
+                PrivateLinkLocation = sdkBackend.PrivateLinkLocation,
                 PrivateEndpointStatus = sdkBackend.PrivateEndpointStatus == null ?
                         (PSPrivateEndpointStatus?)null :
                         (PSPrivateEndpointStatus)Enum.Parse(typeof(PSPrivateEndpointStatus), sdkBackend.PrivateEndpointStatus.ToString()),
@@ -335,18 +338,18 @@ namespace Microsoft.Azure.Commands.FrontDoor.Helpers
         public static SdkBackend ToSdkBackend(this PSBackend psBackend)
         {
             return new SdkBackend(
-                psBackend.Address,
-                psBackend.PrivateLinkAlias,
-                psBackend.PrivateEndpointStatus == null
-                        ? (PrivateEndpointStatus?)null
-                        : (PrivateEndpointStatus)Enum.Parse(typeof(PrivateEndpointStatus), psBackend.PrivateEndpointStatus.ToString()),
-                psBackend.PrivateLinkApprovalMessage,
-                psBackend.HttpPort,
-                psBackend.HttpsPort,
-                psBackend.EnabledState.ToString(),
-                psBackend.Priority,
-                psBackend.Weight,
-                psBackend.BackendHostHeader
+                address: psBackend.Address,
+                httpPort: psBackend.HttpPort,
+                httpsPort: psBackend.HttpsPort,
+                enabledState: psBackend.EnabledState.ToString(),
+                priority: psBackend.Priority,
+                weight: psBackend.Weight,
+                backendHostHeader: psBackend.BackendHostHeader,
+                privateLinkAlias: psBackend.PrivateLinkAlias,
+                privateLinkResourceId: psBackend.PrivateLinkResourceId,
+                privateLinkLocation: psBackend.PrivateLinkLocation,
+                privateEndpointStatus: psBackend.PrivateEndpointStatus?.ToString(),
+                privateLinkApprovalMessage: psBackend.PrivateLinkApprovalMessage
                 );
         }
         public static PSBackendPool ToPSBackendPool(this SdkBackendPool sdkBackendPool)
@@ -567,7 +570,8 @@ namespace Microsoft.Azure.Commands.FrontDoor.Helpers
                 ProvisioningState = sdkPolicy.ProvisioningState,
                 CustomBlockResponseBody = sdkPolicy.PolicySettings?.CustomBlockResponseBody == null ? null : Encoding.UTF8.GetString(Convert.FromBase64String(sdkPolicy.PolicySettings?.CustomBlockResponseBody)),
                 CustomBlockResponseStatusCode = (ushort?)sdkPolicy.PolicySettings?.CustomBlockResponseStatusCode,
-                RedirectUrl = sdkPolicy.PolicySettings?.RedirectUrl
+                RedirectUrl = sdkPolicy.PolicySettings?.RedirectUrl,
+                RequestBodyCheck = sdkPolicy.PolicySettings?.RequestBodyCheck == null ? (PSEnabledState?)null : (PSEnabledState)Enum.Parse(typeof(PSEnabledState), sdkPolicy.PolicySettings.RequestBodyCheck)
             };
         }
 

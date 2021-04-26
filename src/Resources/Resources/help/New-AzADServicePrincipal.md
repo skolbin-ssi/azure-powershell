@@ -2,7 +2,7 @@
 external help file: Microsoft.Azure.PowerShell.Cmdlets.Resources.dll-Help.xml
 Module Name: Az.Resources
 ms.assetid: D602F910-B26F-473D-B5B6-C7BDFB0A14CB
-online version: https://docs.microsoft.com/en-us/powershell/module/az.resources/new-azadserviceprincipal
+online version: https://docs.microsoft.com/powershell/module/az.resources/new-azadserviceprincipal
 schema: 2.0.0
 ---
 
@@ -128,7 +128,12 @@ principal with the **Role** and **Scope** parameters. If both are omitted, the c
 assigned to the service principal. The default values for the **Role** and **Scope** parameters are
 **Contributor** for the current subscription. The cmdlet creates an application and sets its
 properties if an ApplicationId is not provided. To update the application-specific parameters, use
-the [Set-AzADApplication](./get-azadapplication.md) cmdlet.
+the [Update-AzADApplication](./update-azadapplication.md) cmdlet.
+
+> [!WARNING]
+> When you create a service principal using the **New-AzADServicePrincipal** command, the output includes credentials that you must protect. As an alternative, consider using [managed identities](/azure/active-directory/managed-identities-azure-resources/overview) to avoid the need to use credentials.
+>
+> By default, **New-AzADServicePrincipal** assigns the [Contributor](/azure/role-based-access-control/built-in-roles#contributor) role to the service principal at the subscription scope. To reduce your risk of a compromised service principal, assign a more specific role and narrow the scope to a resource or resource group. See [Steps to add a role assignment](/azure/role-based-access-control/role-assignments-steps) for more information.
 
 ## EXAMPLES
 
@@ -609,12 +614,10 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable,
 -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose,
 -WarningAction, and -WarningVariable. For more information, see
 [about_CommonParameters](/powershell/module/microsoft.powershell.core/about/about_commonparameters).
-
 ## INPUTS
 
 ### System.Guid

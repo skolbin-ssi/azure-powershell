@@ -1,7 +1,7 @@
 ﻿---
 external help file: Microsoft.Azure.PowerShell.Cmdlets.EventHub.dll-Help.xml
 Module Name: Az.EventHub
-online version: https://docs.microsoft.com/en-us/powershell/module/az.eventhub/get-azeventhubkey
+online version: https://docs.microsoft.com/powershell/module/az.eventhub/get-azeventhubkey
 schema: 2.0.0
 ---
 
@@ -35,20 +35,20 @@ The Get-AzEventHubKey cmdlet returns Primary and Secondary connectionstrings and
 
 ## EXAMPLES
 
-### Example 1 - Namespace
-```
+### Example 1: Namespace
+```powershell
 PS C:\> Get-AzEventHubKey -ResourceGroupName MyResourceGroupName -NamespaceName MyNamespaceName -AuthorizationRuleName MyAuthRuleName
 ```
 
-### Example 2 - EventHub
-```
+### Example 2: EventHub
+```powershell
 PS C:\> Get-AzEventHubKey -ResourceGroupName MyResourceGroupName -NamespaceName MyNamespaceName -EventHubName MyEventHubName -AuthorizationRuleName MyAuthRuleName
 ```
 
 Gets details of Primary and Secondary connectionstrings and keys for the authorization rule \`MyAuthRuleName\`.
 
-### Example 3 - Alias (GeoRecovery Configuration)
-```
+### Example 3: Alias (GeoRecovery Configuration)
+```powershell
 PS C:\> Get-AzEventHubKey -ResourceGroupName MyResourceGroupName -NamespaceName MyNamespaceName -EventHubName MyEventHubName -AliasName MyAliasName -Name MyAuthRuleName
 ```
 

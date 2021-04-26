@@ -24,6 +24,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Management.Automation;
 
+
 namespace Microsoft.Azure.Commands.HealthcareApis.Commands
 {
     [Cmdlet(VerbsCommon.Set, ResourceManager.Common.AzureRMConstants.AzureRMPrefix + "HealthcareApisService", DefaultParameterSetName = ServiceNameParameterSet, SupportsShouldProcess = true), OutputType(typeof(PSHealthcareApisService))]
@@ -33,75 +34,194 @@ namespace Microsoft.Azure.Commands.HealthcareApis.Commands
         protected const string ResourceIdParameterSet = "ResourceIdParameterSet";
         protected const string InputObjectParameterSet = "InputObjectParameterSet";
 
-        [Parameter(Mandatory = true, ParameterSetName = ServiceNameParameterSet, HelpMessage = "HealthcareApis Service Name.")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = ServiceNameParameterSet,
+            HelpMessage = "HealthcareApis Service Name.")]
         [ValidateNotNullOrEmpty]
         [ValidateLength(2, 64)]
         public string Name { get; set; }
 
-        [Parameter(Mandatory = true, ParameterSetName = ServiceNameParameterSet, HelpMessage = "HealthcareApis Service Resource Group Name.")]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = ServiceNameParameterSet,
+            HelpMessage = "HealthcareApis Service Resource Group Name.")]
         [ResourceGroupCompleter]
         [ValidateNotNullOrEmpty]
         public string ResourceGroupName { get; set; }
 
-        [Parameter(Mandatory = false, ParameterSetName = ServiceNameParameterSet, HelpMessage = "HealthcareApis FhirService CosmosOfferThroughput.")]
-        [Parameter(Mandatory = false, ParameterSetName = ResourceIdParameterSet, HelpMessage = "HealthcareApis FhirService CosmosOfferThroughput.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ServiceNameParameterSet,
+            HelpMessage = "HealthcareApis FhirService CosmosOfferThroughput.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "HealthcareApis FhirService CosmosOfferThroughput.")]
         [ValidateNotNullOrEmpty]
         public int? CosmosOfferThroughput { get; set; }
 
-        [Parameter(Mandatory = false, ParameterSetName = ServiceNameParameterSet, HelpMessage = "HealthcareApis FhirService Authority.")]
-        [Parameter(Mandatory = false, ParameterSetName = ResourceIdParameterSet, HelpMessage = "HealthcareApis FhirService Authority.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ServiceNameParameterSet,
+            HelpMessage = "HealthcareApis Fhir Service CosmosKeyVaultKeyUri. The URI of the customer-managed key for the backing database.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "HealthcareApis Fhir Service CosmosKeyVaultKeyUri. The URI of the customer-managed key for the backing database.")]
+        [ValidateNotNullOrEmpty]
+        public string CosmosKeyVaultKeyUri { get; set; }
+
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ServiceNameParameterSet,
+            HelpMessage = "HealthcareApis FhirService Authority.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "HealthcareApis FhirService Authority.")]
         [ValidateNotNullOrEmpty]
         public string Authority { get; set; }
 
-        [Parameter(Mandatory = false, ParameterSetName = ServiceNameParameterSet, HelpMessage = "HealthcareApis FhirService Audience.")]
-        [Parameter(Mandatory = false, ParameterSetName = ResourceIdParameterSet, HelpMessage = "HealthcareApis FhirService Audience.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ServiceNameParameterSet,
+            HelpMessage = "HealthcareApis FhirService Audience.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "HealthcareApis FhirService Audience.")]
         [ValidateNotNullOrEmpty]
         public string Audience { get; set; }
 
-        [Parameter(Mandatory = false, ParameterSetName = ServiceNameParameterSet, HelpMessage = "HealthcareApis FhirService EnableSmartProxy.")]
-        [Parameter(Mandatory = false, ParameterSetName = ResourceIdParameterSet, HelpMessage = "SmartProxyEnabled.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ServiceNameParameterSet,
+            HelpMessage = "HealthcareApis FhirService EnableSmartProxy.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "SmartProxyEnabled.")]
         [ValidateNotNullOrEmpty]
         public SwitchParameter EnableSmartProxy { get; set; }
 
-        [Parameter(Mandatory = false, ParameterSetName = ServiceNameParameterSet, HelpMessage = "HealthcareApis FhirService DisableSmartProxy.")]
-        [Parameter(Mandatory = false, ParameterSetName = ResourceIdParameterSet, HelpMessage = "HealthcareApis FhirService DisableSmartProxy.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ServiceNameParameterSet,
+            HelpMessage = "HealthcareApis FhirService DisableSmartProxy.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "HealthcareApis FhirService DisableSmartProxy.")]
         [ValidateNotNullOrEmpty]
         public SwitchParameter DisableSmartProxy { get; set; }
 
-        [Parameter(Mandatory = false, ParameterSetName = ServiceNameParameterSet, HelpMessage = "HealthcareApis FhirService List of Cors Origins. Specify URLs of origin sites that can access this API, or use \" * \" to allow access from any site.")]
-        [Parameter(Mandatory = false, ParameterSetName = ResourceIdParameterSet, HelpMessage = "HealthcareApis FhirService List of Cors Origins. Specify URLs of origin sites that can access this API, or use \" * \" to allow access from any site.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ServiceNameParameterSet,
+            HelpMessage = "HealthcareApis FhirService List of Cors Origins. Specify URLs of origin sites that can access this API, or use \" * \" to allow access from any site.")]
+        [Parameter(Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "HealthcareApis FhirService List of Cors Origins. Specify URLs of origin sites that can access this API, or use \" * \" to allow access from any site.")]
         [ValidateNotNullOrEmpty]
         public string[] CorsOrigin { get; set; }
 
-        [Parameter(Mandatory = false, ParameterSetName = ServiceNameParameterSet, HelpMessage = "HealthcareApis FhirService List of Cors Headers. Specify HTTP headers which can be used during the request. Use \" * \" for any header.")]
-        [Parameter(Mandatory = false, ParameterSetName = ResourceIdParameterSet, HelpMessage = "HealthcareApis FhirService List of Cors Headers. Specify HTTP headers which can be used during the request. Use \" * \" for any header.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ServiceNameParameterSet,
+            HelpMessage = "HealthcareApis FhirService List of Cors Headers. Specify HTTP headers which can be used during the request. Use \" * \" for any header.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "HealthcareApis FhirService List of Cors Headers. Specify HTTP headers which can be used during the request. Use \" * \" for any header.")]
         [ValidateNotNullOrEmpty]
         public string[] CorsHeader { get; set; }
 
-        [Parameter(Mandatory = false, ParameterSetName = ServiceNameParameterSet, HelpMessage = "HealthcareApis FhirService List of Cors Methods.")]
-        [Parameter(Mandatory = false, ParameterSetName = ResourceIdParameterSet, HelpMessage = "HealthcareApis FhirService List of Cors Methods.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ServiceNameParameterSet,
+            HelpMessage = "HealthcareApis FhirService List of Cors Methods.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "HealthcareApis FhirService List of Cors Methods.")]
         [ValidateNotNullOrEmpty]
         public string[] CorsMethod { get; set; }
 
-        [Parameter(Mandatory = false, ParameterSetName = ServiceNameParameterSet, HelpMessage = "HealthcareApis FhirService Cors Max Age. Specify how long a result from a request can be cached in seconds. Example: 600 means 10 minutes.")]
-        [Parameter(Mandatory = false, ParameterSetName = ResourceIdParameterSet, HelpMessage = "HealthcareApis FhirService Cors Max Age. Specify how long a result from a request can be cached in seconds. Example: 600 means 10 minutes.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ServiceNameParameterSet,
+            HelpMessage = "HealthcareApis FhirService Cors Max Age. Specify how long a result from a request can be cached in seconds. Example: 600 means 10 minutes.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "HealthcareApis FhirService Cors Max Age. Specify how long a result from a request can be cached in seconds. Example: 600 means 10 minutes.")]
         [ValidateNotNullOrEmpty]
         public int? CorsMaxAge { get; set; }
 
-        [Parameter(Mandatory = false, ParameterSetName = ServiceNameParameterSet, HelpMessage = "HealthcareApis FhirService AllowCorsCredentials.")]
-        [Parameter(Mandatory = false, ParameterSetName = ResourceIdParameterSet, HelpMessage = "HealthcareApis FhirService AllowCorsCredentials.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ServiceNameParameterSet,
+            HelpMessage = "HealthcareApis FhirService AllowCorsCredentials.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "HealthcareApis FhirService AllowCorsCredentials.")]
         [ValidateNotNullOrEmpty]
         public SwitchParameter AllowCorsCredential { get; set; }
 
-        [Parameter(Mandatory = false, ParameterSetName = ServiceNameParameterSet, HelpMessage = "HealthcareApis FhirService CorsCredentials Not Allowed.")]
-        [Parameter(Mandatory = false, ParameterSetName = ResourceIdParameterSet, HelpMessage = "HealthcareApis FhirService CorsCredentials Not Allowed.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ServiceNameParameterSet,
+            HelpMessage = "HealthcareApis FhirService CorsCredentials Not Allowed.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "HealthcareApis FhirService CorsCredentials Not Allowed.")]
         [ValidateNotNullOrEmpty]
         public SwitchParameter DisableCorsCredential { get; set; }
 
-        [Parameter(Mandatory = false, ParameterSetName = ServiceNameParameterSet, HelpMessage = "List of Access Policy Object IDs.")]
-        [Parameter(Mandatory = false, ParameterSetName = ResourceIdParameterSet, HelpMessage = "List of Access Policy Object IDs.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ServiceNameParameterSet,
+            HelpMessage = "HealthcareApis Fhir Service Export Storage Account Name.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "HealthcareApis Fhir Service Export Storage Account Name.")]
+        [ValidateNotNullOrEmpty]
+        public string ExportStorageAccountName { get; set; }
+
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ServiceNameParameterSet,
+            HelpMessage = "List of Access Policy Object IDs.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "List of Access Policy Object IDs.")]
         [ValidateNotNullOrEmpty]
         public string[] AccessPolicyObjectId { get; set; }
+
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ServiceNameParameterSet,
+            HelpMessage = "Enable Managed Identity.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "Enable Managed Identity.")]
+        public SwitchParameter EnableManagedIdentity { get; set; }
+
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ServiceNameParameterSet,
+            HelpMessage = "Disable Managed Identity.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "Disable Managed Identity.")]
+        public SwitchParameter DisableManagedIdentity { get; set; }
 
         [Parameter(
             Mandatory = false,
@@ -116,19 +236,40 @@ namespace Microsoft.Azure.Commands.HealthcareApis.Commands
         [AllowEmptyCollection]
         public Hashtable Tag { get; set; }
 
-        [Parameter(Mandatory = true, ParameterSetName = InputObjectParameterSet, HelpMessage = "HealthcareApis fhir service piped from Get-AzHealthcareApisFhirService.", ValueFromPipeline = true)]
+        [Parameter(
+            Mandatory = true,
+            ParameterSetName = InputObjectParameterSet,
+            HelpMessage = "HealthcareApis fhir service piped from Get-AzHealthcareApisFhirService.", ValueFromPipeline = true)]
         public PSHealthcareApisService InputObject { get; set; }
 
 
-        [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ResourceIdParameterSet, HelpMessage = "HealthcareApis Fhir Service ResourceId.")]
+        [Parameter(
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "HealthcareApis Fhir Service ResourceId.")]
         [ResourceIdCompleter("Microsoft.HealthcareApis/services")]
         [ValidateNotNullOrEmpty]
         public string ResourceId { get; set; }
 
         [Parameter(
-         Mandatory = false,
-         HelpMessage = "Run cmdlet as a job in the background.")]
+            Mandatory = false,
+            HelpMessage = "Run cmdlet as a job in the background.")]
         public SwitchParameter AsJob { get; set; }
+
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ServiceNameParameterSet,
+            HelpMessage = "The network access type for Fhir service. Commonly `Enabled` or `Disabled`.")]
+        [Parameter(
+            Mandatory = false,
+            ParameterSetName = ResourceIdParameterSet,
+            HelpMessage = "The network access type for Fhir service. Commonly `Enabled` or `Disabled`.")]
+        [ValidateSet(
+            "Enabled",
+            "Disabled",
+            IgnoreCase = true)]
+        public string PublicNetworkAccess { get; set; }
 
         public override void ExecuteCmdlet()
         {
@@ -141,31 +282,20 @@ namespace Microsoft.Azure.Commands.HealthcareApis.Commands
                     switch (ParameterSetName)
                     {
                         case ServiceNameParameterSet:
-                            {
-                                var healthcareApisAccount = this.HealthcareApisClient.Services.Get(this.ResourceGroupName, this.Name);
-
-                                IList<ServiceAccessPolicyEntry> accessPolicies = GetAccessPolicies(healthcareApisAccount);
-
-                                ServicesDescription servicesDescription = GenerateServiceDescription(healthcareApisAccount, accessPolicies);
-
-                                try
-                                {
-                                    var createAccountResponse = this.HealthcareApisClient.Services.CreateOrUpdate(this.ResourceGroupName, this.Name, servicesDescription);
-                                    var healthCareFhirService = this.HealthcareApisClient.Services.Get(this.ResourceGroupName, this.Name);
-                                    WriteHealthcareApisAccount(healthCareFhirService);
-                                }
-                                catch (ErrorDetailsException wex)
-                                {
-                                    WriteError(WriteErrorforBadrequest(wex));
-                                }
-
-                                break;
-                            }
                         case ResourceIdParameterSet:
                             {
                                 string rgName = null;
                                 string name = null;
-                                ValidateAndExtractName(this.ResourceId, out rgName, out name);
+
+                                if (ParameterSetName.Equals(ResourceIdParameterSet))
+                                {
+                                    ValidateAndExtractName(this.ResourceId, out rgName, out name);
+                                }
+                                else if (ParameterSetName.Equals(ServiceNameParameterSet))
+                                {
+                                    rgName = this.ResourceGroupName;
+                                    name = this.Name;
+                                }
 
                                 var healthcareApisAccount = this.HealthcareApisClient.Services.Get(rgName, name);
 
@@ -252,7 +382,7 @@ namespace Microsoft.Azure.Commands.HealthcareApis.Commands
 
         private ServicesDescription GenerateServiceDescription(ServicesDescription healthcareApisAccount, IList<ServiceAccessPolicyEntry> accessPolicies)
         {
-            return new ServicesDescription()
+            ServicesDescription servicesDescription = new ServicesDescription()
             {
                 Location = healthcareApisAccount.Location,
                 Properties = new ServicesProperties()
@@ -265,6 +395,7 @@ namespace Microsoft.Azure.Commands.HealthcareApis.Commands
                     },
                     CosmosDbConfiguration = new ServiceCosmosDbConfigurationInfo()
                     {
+                        KeyVaultKeyUri = CosmosKeyVaultKeyUri ?? healthcareApisAccount.Properties.CosmosDbConfiguration.KeyVaultKeyUri,
                         OfferThroughput = CosmosOfferThroughput ?? healthcareApisAccount.Properties.CosmosDbConfiguration.OfferThroughput
                     },
                     CorsConfiguration = new ServiceCorsConfigurationInfo()
@@ -275,11 +406,31 @@ namespace Microsoft.Azure.Commands.HealthcareApis.Commands
                         MaxAge = CorsMaxAge ?? healthcareApisAccount.Properties.CorsConfiguration.MaxAge,
                         AllowCredentials = IsCorsCredentialsAllowed(healthcareApisAccount.Properties.CorsConfiguration.AllowCredentials)
                     },
-                    AccessPolicies = accessPolicies
+                    ExportConfiguration = new ServiceExportConfigurationInfo()
+                    {
+                        StorageAccountName = ExportStorageAccountName ?? healthcareApisAccount.Properties.ExportConfiguration.StorageAccountName
+                    },
+                    AccessPolicies = accessPolicies,
+                    PublicNetworkAccess = PublicNetworkAccess ?? healthcareApisAccount.Properties.PublicNetworkAccess
                 },
                 Kind = healthcareApisAccount.Kind,
                 Tags = GetTags(healthcareApisAccount)
             };
+
+            if (this.EnableManagedIdentity.ToBool() && healthcareApisAccount.Identity == null)
+            {
+                servicesDescription.Identity = new ServicesResourceIdentity() { Type = "SystemAssigned" };
+            }
+            else if (!this.DisableManagedIdentity.ToBool())
+            {
+                servicesDescription.Identity = healthcareApisAccount.Identity;
+            }
+            else
+            {
+                servicesDescription.Identity = new ServicesResourceIdentity() { Type = "None" };
+            }
+
+            return servicesDescription;
         }
 
         private IDictionary<string, string> GetTags(ServicesDescription healthcareApisAccount)
@@ -334,7 +485,7 @@ namespace Microsoft.Azure.Commands.HealthcareApis.Commands
 
         private ServicesDescription InputObjectToServiceDescription(ServicesDescription healthcareApisAccount, List<ServiceAccessPolicyEntry> accessPolicies)
         {
-            return new ServicesDescription()
+            ServicesDescription servicesDescription = new ServicesDescription()
             {
                 Location = InputObject.Location,
                 Properties = new ServicesProperties()
@@ -347,6 +498,7 @@ namespace Microsoft.Azure.Commands.HealthcareApis.Commands
                     },
                     CosmosDbConfiguration = new ServiceCosmosDbConfigurationInfo()
                     {
+                        KeyVaultKeyUri = InputObject.CosmosDbKeyVaultKeyUri ?? healthcareApisAccount.Properties.CosmosDbConfiguration.KeyVaultKeyUri,
                         OfferThroughput = InputObject.CosmosDbOfferThroughput ?? healthcareApisAccount.Properties.CosmosDbConfiguration.OfferThroughput
                     },
                     CorsConfiguration = new ServiceCorsConfigurationInfo()
@@ -357,11 +509,27 @@ namespace Microsoft.Azure.Commands.HealthcareApis.Commands
                         MaxAge = InputObject.CorsMaxAge ?? healthcareApisAccount.Properties.CorsConfiguration.MaxAge,
                         AllowCredentials = InputObject.CorsAllowCredentials ?? healthcareApisAccount.Properties.CorsConfiguration.AllowCredentials
                     },
-                    AccessPolicies = accessPolicies
+                    ExportConfiguration = new ServiceExportConfigurationInfo()
+                    {
+                        StorageAccountName = InputObject.ExportStorageAccountName ?? healthcareApisAccount.Properties.ExportConfiguration.StorageAccountName
+                    },
+                    AccessPolicies = accessPolicies,
+                    PublicNetworkAccess = healthcareApisAccount.Properties.PublicNetworkAccess
                 },
                 Kind = ParseKind(InputObject.Kind),
                 Tags = InputObject.Tags
             };
+
+            if (!String.IsNullOrEmpty(InputObject.IdentityType))
+            {
+                servicesDescription.Identity = new ServicesResourceIdentity(InputObject.IdentityPrincipalId, InputObject.IdentityTenantId, InputObject.IdentityType);
+            }
+            else
+            {
+                servicesDescription.Identity = healthcareApisAccount.Identity;
+            }
+
+            return servicesDescription;
         }
     }
 }

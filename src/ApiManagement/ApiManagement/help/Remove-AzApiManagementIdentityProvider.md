@@ -1,7 +1,7 @@
 ---
 external help file: Microsoft.Azure.PowerShell.Cmdlets.ApiManagement.ServiceManagement.dll-Help.xml
 Module Name: Az.ApiManagement
-online version: https://docs.microsoft.com/en-us/powershell/module/az.apimanagement/remove-azapimanagementidentityprovider
+online version: https://docs.microsoft.com/powershell/module/az.apimanagement/remove-azapimanagementidentityprovider
 schema: 2.0.0
 ---
 
@@ -23,8 +23,8 @@ Removes an existing Identity Provider Configuration.
 
 ## EXAMPLES
 
-### Removes the Facebook identity provider settings from ApiManagement service
-```
+### Example 1: Removes the Facebook identity provider settings from ApiManagement service
+```powershell
 PS C:\>$apimContext = New-AzApiManagementContext -ResourceGroupName "Api-Default-WestUS" -ServiceName "contoso"
 PS C:\>Remove-AzApiManagementIdentityProvider -Context $apimContext -Type 'Facebook' -PassThru
 ```

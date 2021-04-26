@@ -18,6 +18,49 @@
         - Additional information about change #1
 -->
 ## Upcoming Release
+* Added User Assigned Identities to Data Factory.
+* Updated ADF .Net SDK version to 4.17.1
+
+## Version 1.11.5
+* Updated ADF .Net SDK version to 4.15.0
+
+## Version 1.11.4
+* Updated ADF .Net SDK version to 4.14.0
+
+## Version 1.11.3
+* Fixed the command `Invoke-AzDataFactoryV2Pipeline` for SupportsShouldProcess issue
+
+## Version 1.11.2
+* Updated ADF .Net SDK version to 4.13.0
+
+## Version 1.11.1
+* Improved error message of `New-AzDataFactoryV2LinkedServiceEncryptedCredential` command
+
+## Version 1.11.0
+* Updated ADF .Net SDK version to 4.12.0
+* Updated ADF encryption client SDK version to 4.14.7587.7
+* Added `Stop-AzDataFactoryV2TriggerRun` and `Invoke-AzDataFactoryV2TriggerRun` commands
+
+## Version 1.10.2
+* Fixed typo in output messages
+
+## Version 1.10.1
+* Updated ADF .Net SDK version to 4.11.0
+
+## Version 1.10.0
+* Added missing properties to PSPipelineRun class.
+
+## Version 1.9.0
+
+* Added global parameters to Data Factory.
+
+## Version 1.8.2
+* Updated ADF .Net SDK version to 4.9.0
+
+## Version 1.8.1
+* Updated assembly version of data factory V2 cmdlets
+
+## Version 1.8.0
 * Supported CRUD of data flow runtime properties in Managed IR.
 
 ## Version 1.7.0

@@ -120,6 +120,23 @@ namespace Microsoft.Azure.Commands.Network.Cortex.VpnGateway
         public bool? EnableInternetSecurity { get; set; }
 
         [Parameter(
+           Mandatory = false,
+           HelpMessage = "The routing configuration for this vpn connection")]
+        public PSRoutingConfiguration RoutingConfiguration { get; set; }
+
+        [Parameter(
+        Mandatory = false,
+        HelpMessage = "The connection mode for the link connections.")]
+        [PSArgumentCompleter("Default", "ResponderOnly", "InitiatorOnly")]
+        public string VpnLinkConnectionMode { get; set; }
+
+        [Parameter(
+             Mandatory = false,
+             ValueFromPipelineByPropertyName = true,
+             HelpMessage = "A list of traffic selector policies.")]
+        public PSTrafficSelectorPolicy[] TrafficSelectorPolicy { get; set; }
+
+        [Parameter(
             Mandatory = false,
             HelpMessage = "Run cmdlet in the background")]
         public SwitchParameter AsJob { get; set; }
@@ -214,6 +231,29 @@ namespace Microsoft.Azure.Commands.Network.Cortex.VpnGateway
             if (this.EnableInternetSecurity.HasValue)
             {
                 vpnConnectionToModify.EnableInternetSecurity = this.EnableInternetSecurity.Value;
+            }
+
+            if (this.RoutingConfiguration != null)
+            {
+                if (this.RoutingConfiguration.VnetRoutes != null && this.RoutingConfiguration.VnetRoutes.StaticRoutes != null && this.RoutingConfiguration.VnetRoutes.StaticRoutes.Any())
+                {
+                    throw new PSArgumentException(Properties.Resources.StaticRoutesNotSupportedForThisRoutingConfiguration);
+                }
+
+                vpnConnectionToModify.RoutingConfiguration = RoutingConfiguration;
+            }
+
+            if(!String.IsNullOrEmpty(this.VpnLinkConnectionMode))
+            {
+                foreach(var vpnSiteLinkConnection in vpnConnectionToModify.VpnLinkConnections)
+                {
+                    vpnSiteLinkConnection.VpnLinkConnectionMode = this.VpnLinkConnectionMode;
+                }
+            }
+
+            if (this.TrafficSelectorPolicy != null)
+            {
+                vpnConnectionToModify.TrafficSelectorPolicies = this.TrafficSelectorPolicy?.ToList();
             }
 
             ConfirmAction(

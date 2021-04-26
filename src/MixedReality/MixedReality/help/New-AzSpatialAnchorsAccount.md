@@ -1,7 +1,7 @@
 ---
 external help file: Microsoft.Azure.PowerShell.Cmdlets.MixedReality.dll-Help.xml
 Module Name: Az.MixedReality
-online version: https://docs.microsoft.com/en-us/powershell/module/az.mixedreality/new-azspatialanchorsaccount
+online version: https://docs.microsoft.com/powershell/module/az.mixedreality/new-azspatialanchorsaccount
 schema: 2.0.0
 ---
 
@@ -18,7 +18,7 @@ New-AzSpatialAnchorsAccount -ResourceGroupName <String> -Name <String> -Location
 ```
 
 ## DESCRIPTION
-Create a new Spatial Intelligence Account in certain Subscription, Resource Group and Region.
+Create a new Spatial Anchors Account in certain Subscription, Resource Group and Region.
 
 ## EXAMPLES
 

@@ -139,6 +139,17 @@ namespace Microsoft.Azure.Commands.Management.CognitiveServices
         [AllowEmptyCollection]
         public PSNetworkRuleSet NetworkRuleSet { get; set; }
 
+        [Parameter(
+            Mandatory = false,
+            HelpMessage = "The network access type for Cognitive Services Account. Commonly `Enabled` or `Disabled`.")]
+        [ValidateSet("Enabled", "Disabled", IgnoreCase = true)]
+        public string PublicNetworkAccess { get; set; }
+
+        [Parameter(
+            Mandatory = false,
+            HelpMessage = "The ApiProperties of Cognitive Services Account. Required by specific account types.")]
+        public CognitiveServicesAccountApiProperties ApiProperty { get; set; }
+
         [Parameter(Mandatory = false, HelpMessage = "Don't ask for confirmation.")]
         public SwitchParameter Force { get; set; }
 
@@ -157,6 +168,11 @@ namespace Microsoft.Azure.Commands.Management.CognitiveServices
             {
                 hasPropertiesChange = true;
                 properties.NetworkAcls = NetworkRuleSet.ToNetworkRuleSet();
+            }
+            if (ApiProperty != null)
+            {
+                hasPropertiesChange = true;
+                properties.ApiProperties = ApiProperty;
             }
 
             Sku sku = null;
@@ -178,6 +194,12 @@ namespace Microsoft.Azure.Commands.Management.CognitiveServices
                 Tags = tags,
                 Properties = properties
             };
+
+            if (!string.IsNullOrEmpty(PublicNetworkAccess))
+            {
+                hasPropertiesChange = true;
+                updateParameters.Properties.PublicNetworkAccess = PublicNetworkAccess;
+            }
 
             if (AssignIdentity.IsPresent)
             {

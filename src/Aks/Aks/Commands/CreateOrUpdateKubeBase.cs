@@ -37,6 +37,9 @@ using Microsoft.Azure.Commands.Aks.Properties;
 using Microsoft.WindowsAzure.Commands.Utilities.Common;
 using Microsoft.Rest.Azure.OData;
 using Microsoft.Azure.Management.Internal.Resources.Models;
+using Microsoft.WindowsAzure.Commands.Common.CustomAttributes;
+using Microsoft.Azure.Commands.Common.Exceptions;
+using Microsoft.WindowsAzure.Commands.Common;
 
 namespace Microsoft.Azure.Commands.Aks
 {
@@ -69,7 +72,7 @@ namespace Microsoft.Azure.Commands.Aks
             Mandatory = false,
             ParameterSetName = DefaultParamSet,
             HelpMessage = "The client id and client secret associated with the AAD application / service principal.")]
-        public PSCredential ClientIdAndSecret { get; set; }
+        public PSCredential ServicePrincipalIdAndSecret { get; set; }
 
         [Parameter(Mandatory = false,
             HelpMessage = "Azure location for the cluster. Defaults to the location of the resource group.")]
@@ -80,7 +83,7 @@ namespace Microsoft.Azure.Commands.Aks
         [Alias("AdminUserName")]
         public string LinuxProfileAdminUserName { get; set; } = "azureuser";
 
-        [Parameter(Mandatory = false, HelpMessage = "The DNS name prefix for the cluster.")]
+        [Parameter(Mandatory = false, HelpMessage = "The DNS name prefix for the cluster. The length must be <= 9 if users plan to add windows container.")]
         public string DnsNamePrefix { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "The version of Kubernetes to use for creating the cluster.")]
@@ -149,7 +152,7 @@ namespace Microsoft.Azure.Commands.Aks
                 new ContainerServiceLinuxProfile(LinuxProfileAdminUserName,
                     new ContainerServiceSshConfiguration(pubKey));
 
-            var acsServicePrincipal = EnsureServicePrincipal(ClientIdAndSecret?.UserName, ClientIdAndSecret?.Password?.ToString());
+            var acsServicePrincipal = EnsureServicePrincipal(ServicePrincipalIdAndSecret?.UserName, ServicePrincipalIdAndSecret?.Password?.ConvertToString());
 
             var spProfile = new ManagedClusterServicePrincipalProfile(
                 acsServicePrincipal.SpId,
@@ -217,8 +220,6 @@ namespace Microsoft.Azure.Commands.Aks
         /// <exception cref="ArgumentException">The SSH key or file argument was null and there was no default pub key in path.</exception>
         protected string GetSshKey(string sshKeyOrFile)
         {
-            const string helpLink = "https://docs.microsoft.com/en-us/azure/virtual-machines/linux/mac-create-ssh-keys";
-
             // SSH key was specified as either a file or as key data
             if (!string.IsNullOrEmpty(SshKeyValue))
             {
@@ -236,7 +237,8 @@ namespace Microsoft.Azure.Commands.Aks
             var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".ssh", "id_rsa.pub");
             if (!AzureSession.Instance.DataStore.FileExists(path))
             {
-                throw new ArgumentException(string.Format(Resources.CouldNotFindSshPublicKeyInError, path, helpLink));
+                var errorMessage = string.Format(Resources.CouldNotFindSshPublicKeyInError, path);
+                throw new AzPSArgumentException(errorMessage, nameof(SshKeyValue));
             }
 
             WriteVerbose(string.Format(Resources.FetchSshPublicKeyFromFile, path));
@@ -247,12 +249,22 @@ namespace Microsoft.Azure.Commands.Aks
 
         protected AcsServicePrincipal EnsureServicePrincipal(string spId = null, string clientSecret = null)
         {
+            //If user specifies service principal, just use it directly and no need to save to disk
+            if(!string.IsNullOrEmpty(spId) && !string.IsNullOrEmpty(clientSecret))
+            {
+                return new AcsServicePrincipal()
+                {
+                    SpId = spId,
+                    ClientSecret = clientSecret
+                };
+            }
+
             var acsServicePrincipal = LoadServicePrincipal();
             if (acsServicePrincipal == null)
             {
-                WriteVerbose(string.Format(
+                WriteWarning(string.Format(
                     Resources.NoServicePrincipalFoundCreatingANewServicePrincipal,
-                    AcsSpFilePath));
+                    AcsSpFilePath, DefaultContext.Subscription.Id));
 
                 // if nothing to load, make one
                 if (clientSecret == null)
@@ -295,14 +307,16 @@ namespace Microsoft.Azure.Commands.Aks
 
             if (!success)
             {
-                throw new CmdletInvocationException(Resources.CouldNotCreateAServicePrincipalWithTheRightPermissionsAreYouAnOwner);
+                throw new AzPSInvalidOperationException(
+                    Resources.CouldNotCreateAServicePrincipalWithTheRightPermissionsAreYouAnOwner,
+                    desensitizedMessage: Resources.CouldNotCreateAServicePrincipalWithTheRightPermissionsAreYouAnOwner);
             }
 
             AddSubscriptionRoleAssignment("Contributor", sp.ObjectId);
             return new AcsServicePrincipal { SpId = app.AppId, ClientSecret = clientSecret, ObjectId = app.ObjectId };
         }
 
-        protected void AddAcrRoleAssignment(string acrName, AcsServicePrincipal acsServicePrincipal)
+        protected void AddAcrRoleAssignment(string acrName, string acrParameterName, AcsServicePrincipal acsServicePrincipal)
         {
             string acrResourceId = null;
             try
@@ -312,9 +326,12 @@ namespace Microsoft.Azure.Commands.Aks
                 var acrObjects = RmClient.Resources.List(acrQuery);
                 acrResourceId = acrObjects.First().Id;
             }
-            catch(Exception ex)
+            catch(Exception)
             {
-                throw new CmdletInvocationException(string.Format(Resources.CouldNotFindSpecifiedAcr, acrName), ex);
+                throw new AzPSArgumentException(
+                    string.Format(Resources.CouldNotFindSpecifiedAcr, acrName),
+                    acrParameterName,
+                    string.Format(Resources.CouldNotFindSpecifiedAcr, "*"));
             }
 
             var roleId = GetRoleId("acrpull", acrResourceId);
@@ -330,7 +347,10 @@ namespace Microsoft.Azure.Commands.Aks
                 }
                 catch(Exception ex)
                 {
-                    throw new CmdletInvocationException(string.Format(Resources.CouldNotFindObjectIdForServicePrincipal, acsServicePrincipal.SpId), ex);
+                    throw new AzPSInvalidOperationException(
+                        string.Format(Resources.CouldNotFindObjectIdForServicePrincipal, acsServicePrincipal.SpId),
+                        ex,
+                        string.Format(Resources.CouldNotFindObjectIdForServicePrincipal,"*"));
                 }
             }
             var success = RetryAction(() =>
@@ -341,8 +361,9 @@ namespace Microsoft.Azure.Commands.Aks
 
             if (!success)
             {
-                throw new CmdletInvocationException(
-                    Resources.CouldNotAddAcrRoleAssignment);
+                throw new AzPSInvalidOperationException(
+                    Resources.CouldNotAddAcrRoleAssignment,
+                    desensitizedMessage: Resources.CouldNotAddAcrRoleAssignment);
             }
         }
 
@@ -373,8 +394,9 @@ namespace Microsoft.Azure.Commands.Aks
 
             if (!success)
             {
-                throw new CmdletInvocationException(
-                    Resources.CouldNotCreateAServicePrincipalWithTheRightPermissionsAreYouAnOwner);
+                throw new AzPSInvalidOperationException(
+                    Resources.CouldNotAssignServicePrincipalWithSubsContributorPermission,
+                    desensitizedMessage: Resources.CouldNotAssignServicePrincipalWithSubsContributorPermission);
             }
         }
 
@@ -406,7 +428,11 @@ namespace Microsoft.Azure.Commands.Aks
         protected AcsServicePrincipal LoadServicePrincipal()
         {
             var config = LoadServicePrincipals();
-            return config?[DefaultContext.Subscription.Id];
+            if(config?.ContainsKey(DefaultContext.Subscription.Id) == true)
+            {
+                return config[DefaultContext.Subscription.Id];
+            }
+            return null;
         }
 
         protected Dictionary<string, AcsServicePrincipal> LoadServicePrincipals()

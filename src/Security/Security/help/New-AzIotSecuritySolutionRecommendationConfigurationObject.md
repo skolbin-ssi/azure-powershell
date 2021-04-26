@@ -1,7 +1,7 @@
 ---
 external help file: Microsoft.Azure.PowerShell.Cmdlets.Security.dll-Help.xml
 Module Name: Az.Security
-online version: https://docs.microsoft.com/en-us/powershell/module/az.security/New-AzIotSecuritySolutionRecommendationConfigurationObject
+online version: https://docs.microsoft.com/powershell/module/az.security/New-AzIotSecuritySolutionRecommendationConfigurationObject
 schema: 2.0.0
 ---
 
@@ -51,11 +51,11 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -RecommendationType
-Recommendation type.
+### -Enabled
+Status .
 
 ```yaml
-Type: System.String
+Type: System.Boolean
 Parameter Sets: (All)
 Aliases:
 
@@ -66,11 +66,11 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Enabled
-Status .
+### -RecommendationType
+Recommendation type.
 
 ```yaml
-Type: System.Boolean
+Type: System.String
 Parameter Sets: (All)
 Aliases:
 

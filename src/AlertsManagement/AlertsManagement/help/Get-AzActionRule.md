@@ -1,7 +1,7 @@
 ---
 external help file: Microsoft.Azure.PowerShell.Cmdlets.AlertsManagement.dll-Help.xml
 Module Name: Az.AlertsManagement
-online version: https://docs.microsoft.com/en-us/powershell/module/az.alertsmanagement/get-azactionrule
+online version: https://docs.microsoft.com/powershell/module/az.alertsmanagement/get-azactionrule
 schema: 2.0.0
 ---
 
@@ -205,7 +205,7 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceId
-Get Action rule by resoure id.
+Get Action rule by resource id.
 
 ```yaml
 Type: System.String

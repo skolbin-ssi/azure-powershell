@@ -11,7 +11,7 @@ namespace Microsoft.Azure.Commands.Synapse
     [Cmdlet(VerbsCommon.Get, ResourceManager.Common.AzureRMConstants.AzureRMPrefix + SynapseConstants.SynapsePrefix + SynapseConstants.SqlPool,
         DefaultParameterSetName = GetByNameParameterSet)]
     [OutputType(typeof(PSSynapseSqlPool))]
-    public class GetAzureSynapseSqlPool : SynapseCmdletBase
+    public class GetAzureSynapseSqlPool : SynapseManagementCmdletBase
     {
         private const string GetByNameParameterSet = "GetByNameParameterSet";
         private const string GetByParentObjectParameterSet = "GetByParentObjectParameterSet";
@@ -35,8 +35,13 @@ namespace Microsoft.Azure.Commands.Synapse
             ResourceTypes.SqlPool,
             nameof(ResourceGroupName),
             nameof(WorkspaceName))]
+        [Alias(nameof(SynapseConstants.SqlPoolName))]
         [ValidateNotNullOrEmpty]
         public string Name { get; set; }
+
+        [Parameter(Mandatory = false, HelpMessage = HelpMessages.SqlPoolVersion)]
+        [ValidateNotNullOrEmpty]
+        public int Version { get; set; }
 
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = GetByParentObjectParameterSet, HelpMessage = HelpMessages.WorkspaceObject)]
         [ValidateNotNull]
@@ -63,15 +68,31 @@ namespace Microsoft.Azure.Commands.Synapse
                 this.WorkspaceName = this.WorkspaceObject.Name;
             }
 
-            if (!string.IsNullOrEmpty(this.Name))
+            if (this.Version == 3)
             {
-                var result = new PSSynapseSqlPool(this.SynapseAnalyticsClient.GetSqlPool(this.ResourceGroupName, this.WorkspaceName, this.Name));
-                WriteObject(result);
+                if (!string.IsNullOrEmpty(this.Name))
+                {
+                    var result = new PSSynapseSqlPoolV3(this.SynapseAnalyticsClient.GetSqlPoolV3(this.ResourceGroupName, this.WorkspaceName, this.Name));
+                    WriteObject(result);
+                }
+                else
+                {
+                    var result = this.SynapseAnalyticsClient.ListSqlPoolsV3(this.ResourceGroupName, this.WorkspaceName).Select(r => new PSSynapseSqlPoolV3(r));
+                    WriteObject(result, true);
+                }
             }
             else
             {
-                var result = this.SynapseAnalyticsClient.ListSqlPools(this.ResourceGroupName, this.WorkspaceName).Select(r => new PSSynapseSqlPool(r));
-                WriteObject(result, true);
+                if (!string.IsNullOrEmpty(this.Name))
+                {
+                    var result = new PSSynapseSqlPool(this.ResourceGroupName, this.WorkspaceName, this.SynapseAnalyticsClient.GetSqlPool(this.ResourceGroupName, this.WorkspaceName, this.Name));
+                    WriteObject(result);
+                }
+                else
+                {
+                    var result = this.SynapseAnalyticsClient.ListSqlPools(this.ResourceGroupName, this.WorkspaceName).Select(r => new PSSynapseSqlPool(this.ResourceGroupName, this.WorkspaceName, r));
+                    WriteObject(result, true);
+                }
             }
         }
     }

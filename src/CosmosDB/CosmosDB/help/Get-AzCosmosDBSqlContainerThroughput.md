@@ -1,7 +1,7 @@
 ---
 external help file: Microsoft.Azure.PowerShell.Cmdlets.CosmosDB.dll-Help.xml
 Module Name: Az.CosmosDB
-online version: https://docs.microsoft.com/en-us/powershell/module/az.cosmosdb/get-azcosmosdbsqlcontainerthroughput
+online version: https://docs.microsoft.com/powershell/module/az.cosmosdb/get-azcosmosdbsqlcontainerthroughput
 schema: 2.0.0
 ---
 
@@ -18,7 +18,7 @@ Get-AzCosmosDBSqlContainerThroughput -ResourceGroupName <String> -AccountName <S
  [-Name <String>] [-DefaultProfile <IAzureContextContainer>] [<CommonParameters>]
 ```
 
-### ByParentObjectParameterSet
+### ByObjectParameterSet
 ```
 Get-AzCosmosDBSqlContainerThroughput [-Name <String>] -InputObject <PSSqlContainerGetResults>
  [-DefaultProfile <IAzureContextContainer>] [<CommonParameters>]
@@ -95,7 +95,7 @@ Sql Container object.
 
 ```yaml
 Type: PSSqlContainerGetResults
-Parameter Sets: ByParentObjectParameterSet
+Parameter Sets: ByObjectParameterSet
 Aliases:
 
 Required: True

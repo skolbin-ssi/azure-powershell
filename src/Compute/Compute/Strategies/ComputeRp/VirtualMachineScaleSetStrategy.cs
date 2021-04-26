@@ -55,11 +55,15 @@ namespace Microsoft.Azure.Commands.Compute.Strategies.ComputeRp
             IList<string> zones,
             bool ultraSSDEnabled,
             Func<IEngine, SubResource> proximityPlacementGroup,
+            Func<IEngine, SubResource> hostGroup,
             string priority,
             string evictionPolicy,
             double? maxPrice,
             string[] scaleInPolicy,
-            bool doNotRunExtensionsOnOverprovisionedVMs)
+            bool doNotRunExtensionsOnOverprovisionedVMs,
+            bool encryptionAtHost,
+            int? platformFaultDomainCount
+            )
             => Strategy.CreateResourceConfig(
                 resourceGroup: resourceGroup,
                 name: name,
@@ -78,8 +82,10 @@ namespace Microsoft.Azure.Commands.Compute.Strategies.ComputeRp
                     Identity = identity,
                     SinglePlacementGroup = singlePlacementGroup,
                     AdditionalCapabilities = ultraSSDEnabled ? new AdditionalCapabilities(true) : null,
+                    PlatformFaultDomainCount = platformFaultDomainCount,
                     VirtualMachineProfile = new VirtualMachineScaleSetVMProfile
                     {
+                        SecurityProfile = (encryptionAtHost == true) ? new SecurityProfile(encryptionAtHost: encryptionAtHost) : null,
                         OsProfile = new VirtualMachineScaleSetOSProfile
                         {
                             ComputerNamePrefix = name.Substring(0, Math.Min(name.Length, 9)),
@@ -126,6 +132,7 @@ namespace Microsoft.Azure.Commands.Compute.Strategies.ComputeRp
                         BillingProfile = (maxPrice == null) ? null : new BillingProfile(maxPrice)
                     },
                     ProximityPlacementGroup = proximityPlacementGroup(engine),
+                    HostGroup = hostGroup(engine),
                     ScaleInPolicy = (scaleInPolicy == null) ? null : new ScaleInPolicy
                     {
                         Rules = scaleInPolicy

@@ -2,7 +2,7 @@
 external help file: Microsoft.Azure.PowerShell.Cmdlets.RecoveryServices.Backup.dll-Help.xml
 Module Name: Az.RecoveryServices
 ms.assetid: 838026E4-F001-434C-86F0-B2A838E93A9C
-online version: https://docs.microsoft.com/en-us/powershell/module/az.recoveryservices/get-azrecoveryservicesbackuprecoverypoint
+online version: https://docs.microsoft.com/powershell/module/az.recoveryservices/get-azrecoveryservicesbackuprecoverypoint
 schema: 2.0.0
 ---
 
@@ -16,20 +16,20 @@ Gets the recovery points for a backed up item.
 
 ### NoFilterParameterSet (Default)
 ```
-Get-AzRecoveryServicesBackupRecoveryPoint [-Item] <ItemBase> [-VaultId <String>]
+Get-AzRecoveryServicesBackupRecoveryPoint [-Item] <ItemBase> [-UseSecondaryRegion] [-VaultId <String>]
  [-DefaultProfile <IAzureContextContainer>] [<CommonParameters>]
 ```
 
 ### DateTimeFilter
 ```
 Get-AzRecoveryServicesBackupRecoveryPoint [[-StartDate] <DateTime>] [[-EndDate] <DateTime>] [-Item] <ItemBase>
- [-VaultId <String>] [-DefaultProfile <IAzureContextContainer>] [<CommonParameters>]
+ [-UseSecondaryRegion] [-VaultId <String>] [-DefaultProfile <IAzureContextContainer>] [<CommonParameters>]
 ```
 
 ### RecoveryPointId
 ```
 Get-AzRecoveryServicesBackupRecoveryPoint [-Item] <ItemBase> [-RecoveryPointId] <String>
- [[-KeyFileDownloadLocation] <String>] [-VaultId <String>] [-DefaultProfile <IAzureContextContainer>]
+ [[-KeyFileDownloadLocation] <String>] [-UseSecondaryRegion] [-VaultId <String>] [-DefaultProfile <IAzureContextContainer>]
  [<CommonParameters>]
 ```
 
@@ -52,10 +52,11 @@ PS C:\> $BackupItem = Get-AzRecoveryServicesBackupItem -ContainerType AzureVM -W
 PS C:\> $RP = Get-AzRecoveryServicesBackupRecoveryPoint -Item $BackupItem -StartDate $Startdate.ToUniversalTime() -EndDate $Enddate.ToUniversalTime() -VaultId $vault.ID
 ```
 
-The first command gets the date from seven days ago, and then stores it in the $StartDate variable.
-The second command gets today's date, and then stores it in the $EndDate variable.
-The third command gets AzureVM backup containers, and stores them in the $Containers variable.
-The fourth command gets the backup item named V2VM, and then stores it in the $BackupItem variable.
+The first command gets vault object based on vaultName. 
+The second command gets the date from seven days ago, and then stores it in the $StartDate variable.
+The third command gets today's date, and then stores it in the $EndDate variable.
+The fourth command gets AzureVM backup containers, and stores them in the $Container variable. 
+The fifth command gets the backup item based on workloadType, vaultId and then stores it in the $BackupItem variable.
 The last command gets an array of recovery points for the item in $BackupItem, and then stores them in the $RP variable.
 
 ## PARAMETERS

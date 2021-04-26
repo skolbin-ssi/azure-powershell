@@ -2,7 +2,7 @@
 external help file: Microsoft.Azure.PowerShell.Cmdlets.Compute.dll-Help.xml
 Module Name: Az.Compute
 ms.assetid: 979E956B-4C74-426E-A617-E50C4EBC8A20
-online version: https://docs.microsoft.com/en-us/powershell/module/az.compute/disable-azvmdiskencryption
+online version: https://docs.microsoft.com/powershell/module/az.compute/disable-azvmdiskencryption
 schema: 2.0.0
 ---
 
@@ -39,9 +39,10 @@ Since the *VolumeType* parameter is not specified, the cmdlet sets the value to 
 
 ### Example 2: Disable encryption for data volumes on a Windows virtual machine
 ```
-PS C:\> $ResourceGroup = "Group002";
-PS C:\> $VMName = "VM004";
-PS C:\> Disable-AzVMDiskEncryption -ResourceGroupName "Group002" -VMName "VM004" -VolumeType "Data"
+PS C:\> $ResourceGroup = "Group002"
+PS C:\> $VMName = "VM004"
+PS C:\> $VolumeType = "Data"
+PS C:\> Disable-AzVMDiskEncryption -ResourceGroupName $ResourceGroup -VMName $VMName -VolumeType $VolumeType
 ```
 
 This command disables encryption for volumes of type data for the virtual machine named VM004 that belongs to the resource group named Group002.

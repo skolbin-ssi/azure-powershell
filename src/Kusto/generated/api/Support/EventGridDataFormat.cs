@@ -6,9 +6,14 @@
 namespace Microsoft.Azure.PowerShell.Cmdlets.Kusto.Support
 {
 
+    /// <summary>
+    /// The data format of the message. Optionally the data format can be added to each message.
+    /// </summary>
     public partial struct EventGridDataFormat :
         System.IEquatable<EventGridDataFormat>
     {
+        public static Microsoft.Azure.PowerShell.Cmdlets.Kusto.Support.EventGridDataFormat Apacheavro = @"APACHEAVRO";
+
         public static Microsoft.Azure.PowerShell.Cmdlets.Kusto.Support.EventGridDataFormat Avro = @"AVRO";
 
         public static Microsoft.Azure.PowerShell.Cmdlets.Kusto.Support.EventGridDataFormat Csv = @"CSV";
@@ -36,6 +41,8 @@ namespace Microsoft.Azure.PowerShell.Cmdlets.Kusto.Support
         public static Microsoft.Azure.PowerShell.Cmdlets.Kusto.Support.EventGridDataFormat Tsve = @"TSVE";
 
         public static Microsoft.Azure.PowerShell.Cmdlets.Kusto.Support.EventGridDataFormat Txt = @"TXT";
+
+        public static Microsoft.Azure.PowerShell.Cmdlets.Kusto.Support.EventGridDataFormat W3Clogfile = @"W3CLOGFILE";
 
         /// <summary>the value for an instance of the <see cref="EventGridDataFormat" /> Enum.</summary>
         private string _value { get; set; }

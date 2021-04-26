@@ -507,6 +507,13 @@ function Test-SqlThroughputCmdlets
   $UpdatedContainerThroughputValue2 = 600
   $UpdatedContainerThroughputValue3 = 500
 
+  $DatabaseName2 = "dbName4"
+  $ContainerName2 = "containerName3"
+  $AutoscaleContainerThroughput = 5000
+  $AutoscaleUpdatedContainerThroughput = 10000
+  $AutoscaleDatabaseThroughput = 8000
+  $AutoscaleUpdatedDatabaseThroughput = 12000
+
   Try{
       $NewDatabase =  New-AzCosmosDBSqlDatabase -AccountName $AccountName -ResourceGroupName $rgName -Name $DatabaseName -Throughput  $ThroughputValue
       $Throughput = Get-AzCosmosDBSqlDatabaseThroughput -AccountName $AccountName -ResourceGroupName $rgName -Name $DatabaseName
@@ -535,11 +542,84 @@ function Test-SqlThroughputCmdlets
       $UpdatedContainerThroughput = Update-AzCosmosDBSqlContainerThroughput -ParentObject $NewDatabase -Name $ContainerName -Throughput $UpdatedContainerThroughputValue3
       Assert-AreEqual $UpdatedContainerThroughput.Throughput $UpdatedContainerThroughputValue3
 
+      # autoscale scenarios
+      $AutoscaleDatabase =  New-AzCosmosDBSqlDatabase -AccountName $AccountName -ResourceGroupName $rgName -Name $DatabaseName2 -AutoscaleMaxThroughput $AutoscaleDatabaseThroughput
+      $Throughput = Get-AzCosmosDBSqlDatabaseThroughput -AccountName $AccountName -ResourceGroupName $rgName -Name $DatabaseName2
+      Assert-AreEqual $Throughput.AutoscaleSettings.MaxThroughput $AutoscaleDatabaseThroughput
+
+      $AutoscaleContainer =  New-AzCosmosDBSqlContainer -AccountName $AccountName -ResourceGroupName $rgName -DatabaseName $DatabaseName2 -AutoscaleMaxThroughput $AutoscaleContainerThroughput -Name $ContainerName2 -PartitionKeyPath $PartitionKeyPathValue -PartitionKeyKind $PartitionKeyKindValue
+      $ContainerThroughput = Get-AzCosmosDBSqlContainerThroughput -InputObject $AutoscaleContainer
+      Assert-AreEqual $ContainerThroughput.AutoscaleSettings.MaxThroughput $AutoscaleContainerThroughput
+
+      $UpdatedContainerThroughput = Update-AzCosmosDBSqlContainerThroughput -AccountName $AccountName -ResourceGroupName $rgName -DatabaseName $DatabaseName2 -Name $ContainerName2 -AutoscaleMaxThroughput $AutoscaleUpdatedContainerThroughput
+      Assert-AreEqual $UpdatedContainerThroughput.AutoscaleSettings.MaxThroughput $AutoscaleUpdatedContainerThroughput
+
+      # can only update throughput of database if it has atleast one container with shared throughput
+      # $UpdatedThroughput = Update-AzCosmosDBSqlDatabaseThroughput  -InputObject $AutoscaleDatabase -AutoscaleMaxThroughput $AutoscaleUpdatedDatabaseThroughput
+      # Assert-AreEqual $UpdatedThroughput.AutoscaleSettings.MaxThroughput $AutoscaleUpdatedDatabaseThroughput
+
       Remove-AzCosmosDBSqlContainer -InputObject $NewContainer 
-      Remove-AzCosmosDBSqlDatabase -InputObject $NewDatabase 
+      Remove-AzCosmosDBSqlDatabase -InputObject $NewDatabase
+      Remove-AzCosmosDBSqlContainer -InputObject $AutoscaleContainer 
+      Remove-AzCosmosDBSqlDatabase -InputObject $AutoscaleDatabase 
   }
   Finally{
       Remove-AzCosmosDBSqlContainer -AccountName $AccountName -ResourceGroupName $rgName -DatabaseName $DatabaseName  -Name $ContainerName
-      Remove-AzCosmosDBSqlDatabase -AccountName $AccountName -ResourceGroupName $rgName -Name $DatabaseName 
+      Remove-AzCosmosDBSqlDatabase -AccountName $AccountName -ResourceGroupName $rgName -Name $DatabaseName
+      Remove-AzCosmosDBSqlContainer -AccountName $AccountName -ResourceGroupName $rgName -DatabaseName $DatabaseName2  -Name $ContainerName2
+      Remove-AzCosmosDBSqlDatabase -AccountName $AccountName -ResourceGroupName $rgName -Name $DatabaseName2
+  }
+}
+
+<#
+.SYNOPSIS
+Test SQL migrate throughput cmdlets 
+#>
+function Test-SqlMigrateThroughputCmdlets
+{
+  $AccountName = "cosmosdb9921232812"
+  $rgName = "rgtest9921232812"
+  $DatabaseName = "dbName4"
+  $ContainerName = "containerName"
+
+  $PartitionKeyPathValue = "/foo/bar"
+  $PartitionKeyKindValue = "Hash"
+
+  $ThroughputValue = 1200
+
+  $ContainerThroughputValue = 800
+
+  $Autoscale = "Autoscale"
+  $Manual = "Manual"
+
+  Try{
+      $NewDatabase =  New-AzCosmosDBSqlDatabase -AccountName $AccountName -ResourceGroupName $rgName -Name $DatabaseName -Throughput  $ThroughputValue
+      $Throughput = Get-AzCosmosDBSqlDatabaseThroughput -AccountName $AccountName -ResourceGroupName $rgName -Name $DatabaseName
+      Assert-AreEqual $Throughput.Throughput $ThroughputValue
+      Assert-AreEqual $Throughput.AutoscaleSettings.MaxThroughput 0
+
+      $AutoscaleThroughput = Invoke-AzCosmosDBSqlDatabaseThroughputMigration -InputObject $NewDatabase -ThroughputType $Autoscale
+      Assert-AreNotEqual $AutoscaleThroughput.AutoscaleSettings.MaxThroughput 0
+
+      $CosmosDBAccount = Get-AzCosmosDBAccount -ResourceGroupName $rgName -Name $AccountName #get parent object
+      $ManualThroughput = Invoke-AzCosmosDBSqlDatabaseThroughputMigration -ParentObject $CosmosDBAccount -Name $DatabaseName -ThroughputType $Manual
+      Assert-AreEqual $ManualThroughput.AutoscaleSettings.MaxThroughput 0
+
+      $NewContainer =  New-AzCosmosDBSqlContainer -AccountName $AccountName -ResourceGroupName $rgName -DatabaseName $DatabaseName -Throughput  $ContainerThroughputValue -Name $ContainerName -PartitionKeyPath $PartitionKeyPathValue -PartitionKeyKind $PartitionKeyKindValue
+      $ContainerThroughput = Get-AzCosmosDBSqlContainerThroughput -AccountName $AccountName -ResourceGroupName $rgName -DatabaseName $DatabaseName -Name $ContainerName
+      Assert-AreEqual $ContainerThroughput.Throughput $ContainerThroughputValue
+
+      $AutoscaledContainerThroughput = Invoke-AzCosmosDBSqlContainerThroughputMigration -AccountName $AccountName -ResourceGroupName $rgName -DatabaseName $DatabaseName -Name $ContainerName -ThroughputType $Autoscale
+      Assert-AreNotEqual $AutoscaledContainerThroughput.AutoscaleSettings.MaxThroughput 0
+
+      $ManualContainerThroughput = Invoke-AzCosmosDBSqlContainerThroughputMigration  -InputObject $NewContainer -ThroughputType $Manual
+      Assert-AreEqual $ManualContainerThroughput.AutoscaleSettings.MaxThroughput 0
+
+      Remove-AzCosmosDBSqlContainer -InputObject $NewContainer 
+      Remove-AzCosmosDBSqlDatabase -InputObject $NewDatabase
+  }
+  Finally{
+      Remove-AzCosmosDBSqlContainer -AccountName $AccountName -ResourceGroupName $rgName -DatabaseName $DatabaseName  -Name $ContainerName
+      Remove-AzCosmosDBSqlDatabase -AccountName $AccountName -ResourceGroupName $rgName -Name $DatabaseName
   }
 }

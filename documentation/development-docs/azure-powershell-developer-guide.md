@@ -44,7 +44,7 @@ The Azure PowerShell Developer Guide was created to help with the development an
 
 The following prerequisites should be completed before contributing to the Azure PowerShell repository:
 
-- Install [Visual Studio 2017](https://www.visualstudio.com/downloads/)
+- Install [Visual Studio 2019 or above](https://www.visualstudio.com/downloads/)
 - Install the latest version of [Git](https://git-scm.com/downloads)
 - Install the [`platyPS` module](help-generation.md#Installing-platyPS)
 - Install the latest [**.NET Core SDK** and **.NET Framework Dev Pack 4.7.2**](https://dotnet.microsoft.com/download) or greater
@@ -58,7 +58,7 @@ The following prerequisites should be completed before contributing to the Azure
 
 ## GitHub Basics
 
-If you don't have experience with Git and GitHub, some of the terminology and process can be confusing. [Here is a guide to understanding the GitHub flow](https://guides.github.com/introduction/flow/) and [here is a guide to understanding the basic Git commands](https://services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf).
+If you don't have experience with Git and GitHub, some of the terminology and process can be confusing. [Here is a guide to understanding the GitHub flow](https://guides.github.com/introduction/flow/) and [here is a guide to understanding the basic Git commands](https://education.github.com/git-cheat-sheet-education.pdf).
 
 To develop in the Azure PowerShell repository locally, you first need to create your own fork. For more information on how to fork, click [here](https://guides.github.com/activities/forking/).
 

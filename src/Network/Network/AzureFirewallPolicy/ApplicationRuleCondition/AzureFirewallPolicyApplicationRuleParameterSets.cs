@@ -16,8 +16,20 @@ namespace Microsoft.Azure.Commands.Network
 {
     public static class AzureFirewallPolicyApplicationRuleParameterSets
     {
-        public const string TargetFqdn = @"TargetFqdn";
+        public const string SourceAddressAndTargetFqdn = @"SourceAddressAndTargetFqdn";
 
-        public const string FqdnTag = @"FqdnTag";
+        public const string SourceAddressAndFqdnTag = @"SourceAddressAndFqdnTag";
+
+        public const string SourceAddressAndTargetUrl = @"SourceAddressAndTargetUrl";
+
+        public const string SourceIpGroupAndTargetFqdn = @"SourceIpGroupAndTargetFqdn";
+
+        public const string SourceIpGroupAndFqdnTag = @"SourceIpGroupAndFqdnTag";
+
+        public const string SourceAddressAndWebCategory = @"SourceAddressAndWebCategory";
+
+        public const string SourceIpGroupAndWebCategory = @"SourceIpGroupAndWebCategory";
+
+        public const string SourceIpGroupAndTargetUrl = @"SourceIpGroupAndTargetUrl";
     }
 }

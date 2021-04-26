@@ -35,8 +35,8 @@ namespace Microsoft.Azure.Commands.WebApps.Cmdlets.AppServicePlans
         [ValidateNotNullOrEmpty]
         public string Location { get; set; }
 
-        [Parameter(Position = 3, Mandatory = false, HelpMessage = "The App Service plan tier. Allowed values are [Free|Shared|Basic|Standard|Premium|PremiumV2]")]
-        [PSArgumentCompleter("Free", "Shared", "Basic", "Standard", "Premium", "PremiumV2", "Isolated", "PremiumContainer")]
+        [Parameter(Position = 3, Mandatory = false, HelpMessage = "The App Service plan tier. Allowed values are [Free|Shared|Basic|Standard|Premium|PremiumV2|PremiumV3]. For ASE: [Isolated|IsolatedV2].")]
+        [PSArgumentCompleter("Free", "Shared", "Basic", "Standard", "Premium", "PremiumV2", "PremiumV3", "Isolated", "IsolatedV2", "PremiumContainer")]
         public string Tier { get; set; }
 
         [Parameter(Position = 4, Mandatory = false, HelpMessage = "Number of Workers to be allocated.")]
@@ -68,11 +68,15 @@ namespace Microsoft.Azure.Commands.WebApps.Cmdlets.AppServicePlans
         [Parameter(ParameterSetName = ParameterSet1Name, Mandatory = false, HelpMessage = "Tags are name/value pairs that enable you to categorize resources")]
         public Hashtable Tag { get; set; }
 
+        [Parameter(ParameterSetName = ParameterSet1Name, Mandatory = false)]
+        public SwitchParameter Linux { get; set; }
+
         public override void ExecuteCmdlet()
         {
-            if (HyperV.IsPresent && Tier != "PremiumContainer")
+            if (HyperV.IsPresent && 
+                (Tier != "PremiumContainer" && Tier != "PremiumV3"))
             {
-                throw new Exception("HyperV switch is only allowed for PremiumContainer tier");
+                throw new Exception("HyperV switch is only allowed for PremiumContainer or PremiumV3 tiers");
             }
             if (!HyperV.IsPresent && Tier == "PremiumContainer")
             {
@@ -113,7 +117,8 @@ namespace Microsoft.Azure.Commands.WebApps.Cmdlets.AppServicePlans
                 Sku = sku,
                 PerSiteScaling = PerSiteScaling,
                 IsXenon = HyperV.IsPresent,
-                Tags= (IDictionary<string, string>)CmdletHelpers.ConvertToStringDictionary(Tag)
+                Tags= (IDictionary<string, string>)CmdletHelpers.ConvertToStringDictionary(Tag),
+                Reserved = Linux.IsPresent
             };
 
             AppServicePlan retPlan = WebsitesClient.CreateOrUpdateAppServicePlan(ResourceGroupName, Name, appServicePlan, AseName, aseResourceGroupName);

@@ -35,6 +35,8 @@ namespace Microsoft.Azure.Commands.Network.Models
 
         public List<PSApplicationGatewayTrustedRootCertificate> TrustedRootCertificates { get; set; }
 
+        public List<PSApplicationGatewayTrustedClientCertificate> TrustedClientCertificates { get; set; }
+
         public List<PSApplicationGatewayFrontendIPConfiguration> FrontendIPConfigurations { get; set; }
 
         public List<PSApplicationGatewayFrontendPort> FrontendPorts { get; set; }
@@ -44,6 +46,8 @@ namespace Microsoft.Azure.Commands.Network.Models
         public List<PSApplicationGatewayBackendAddressPool> BackendAddressPools { get; set; }
 
         public List<PSApplicationGatewayBackendHttpSettings> BackendHttpSettingsCollection { get; set; }
+
+        public List<PSApplicationGatewaySslProfile> SslProfiles { get; set; }
 
         public List<PSApplicationGatewayHttpListener> HttpListeners { get; set; }
 
@@ -62,6 +66,10 @@ namespace Microsoft.Azure.Commands.Network.Models
         public PSApplicationGatewayAutoscaleConfiguration AutoscaleConfiguration { get; set; }
 
         public List<PSApplicationGatewayCustomError> CustomErrorConfigurations { get; set; }
+
+        public List<PSApplicationGatewayPrivateLinkConfiguration> PrivateLinkConfigurations { get; set; }
+
+        public List<PSApplicationGatewayPrivateEndpointConnection> PrivateEndpointConnections { get; set; }
 
         [Ps1Xml(Target = ViewControl.Table)]
         public bool? EnableHttp2 { get; set; }
@@ -87,6 +95,12 @@ namespace Microsoft.Azure.Commands.Network.Models
         public string GatewayIpConfigurationsText
         {
             get { return JsonConvert.SerializeObject(GatewayIPConfigurations, Formatting.Indented, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }); }
+        }
+
+        [JsonIgnore]
+        public string TrustedClientCertificatesText
+        {
+            get { return JsonConvert.SerializeObject(TrustedClientCertificates, Formatting.Indented, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }); }
         }
 
         [JsonIgnore]
@@ -123,6 +137,12 @@ namespace Microsoft.Azure.Commands.Network.Models
         public string BackendHttpSettingsCollectionText
         {
             get { return JsonConvert.SerializeObject(BackendHttpSettingsCollection, Formatting.Indented, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }); }
+        }
+
+        [JsonIgnore]
+        public string SslProfilesText
+        {
+            get { return JsonConvert.SerializeObject(SslProfiles, Formatting.Indented, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }); }
         }
 
         [JsonIgnore]
@@ -171,6 +191,18 @@ namespace Microsoft.Azure.Commands.Network.Models
         public string FirewallPolicyText
         {
             get { return JsonConvert.SerializeObject(FirewallPolicy, Formatting.Indented, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }); }
+        }
+
+        [JsonIgnore]
+        public string PrivateLinkConfigurationsText
+        {
+            get { return JsonConvert.SerializeObject(PrivateLinkConfigurations, Formatting.Indented, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }); }
+        }
+
+        [JsonIgnore]
+        public string PrivateLinkEndpointConnectionsText
+        {
+            get { return JsonConvert.SerializeObject(PrivateEndpointConnections, Formatting.Indented, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }); }
         }
     }
 }

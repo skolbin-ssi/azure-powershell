@@ -23,7 +23,7 @@ function Test-GremlinOperationsCmdlets
   $DatabaseName = "dbName"
   $graphName = "graph1"
 
-  $DatabaseName2 = "dbName2"
+  $DatabaseName2 = "dbName29"
   $graphName2 = "graph2"
 
   $PartitionKeyPathValue = "/foo"
@@ -254,7 +254,7 @@ function Test-GremlinThroughputCmdlets
 {
   $AccountName = "db1002"
   $rgName = "CosmosDBResourceGroup2510"
-  $DatabaseName = "dbName3"
+  $DatabaseName = "dbName30"
   $GraphName = "graphName"
 
   $PartitionKeyPathValue = "/foo"
@@ -304,5 +304,58 @@ function Test-GremlinThroughputCmdlets
   Finally{
       Remove-AzCosmosDBGremlinGraph -AccountName $AccountName -ResourceGroupName $rgName -DatabaseName $DatabaseName -Name $GraphName
       Remove-AzCosmosDBGremlinDatabase -AccountName $AccountName -ResourceGroupName $rgName -Name $DatabaseName 
+  }
+}
+
+<#
+.SYNOPSIS
+Test Gremlin migrate throughput cmdlets 
+#>
+function Test-GremlinMigrateThroughputCmdlets
+{
+  $AccountName = "db1002"
+  $rgName = "CosmosDBResourceGroup2510"
+  $DatabaseName = "dbName4"
+  $GraphName = "graphName"
+
+  $PartitionKeyPathValue = "/foo"
+  $PartitionKeyKindValue = "Hash"
+
+  $ThroughputValue = 1200
+
+  $GraphThroughputValue = 800
+
+  $Autoscale = "Autoscale"
+  $Manual = "Manual"
+
+  Try{
+      $NewDatabase =  New-AzCosmosDBGremlinDatabase -AccountName $AccountName -ResourceGroupName $rgName -Name $DatabaseName -Throughput  $ThroughputValue
+      $Throughput = Get-AzCosmosDBGremlinDatabaseThroughput -AccountName $AccountName -ResourceGroupName $rgName -Name $DatabaseName
+      Assert-AreEqual $Throughput.Throughput $ThroughputValue
+      Assert-AreEqual $Throughput.AutoscaleSettings.MaxThroughput 0
+
+      $AutoscaleThroughput = Invoke-AzCosmosDBGremlinDatabaseThroughputMigration -InputObject $NewDatabase -ThroughputType $Autoscale
+      Assert-AreNotEqual $AutoscaleThroughput.AutoscaleSettings.MaxThroughput 0
+
+      $CosmosDBAccount = Get-AzCosmosDBAccount -ResourceGroupName $rgName -Name $AccountName #get parent object
+      $ManualThroughput = Invoke-AzCosmosDBGremlinDatabaseThroughputMigration -ParentObject $CosmosDBAccount -Name $DatabaseName -ThroughputType $Manual
+      Assert-AreEqual $ManualThroughput.AutoscaleSettings.MaxThroughput 0
+
+      $NewGraph =  New-AzCosmosDBGremlinGraph -AccountName $AccountName -ResourceGroupName $rgName -DatabaseName $DatabaseName -Throughput  $GraphThroughputValue -Name $GraphName -PartitionKeyPath $PartitionKeyPathValue -PartitionKeyKind $PartitionKeyKindValue
+      $GraphThroughput = Get-AzCosmosDBGremlinGraphThroughput -AccountName $AccountName -ResourceGroupName $rgName -DatabaseName $DatabaseName -Name $GraphName
+      Assert-AreEqual $GraphThroughput.Throughput $GraphThroughputValue
+
+      $AutoscaledGraphThroughput = Invoke-AzCosmosDBGremlinGraphThroughputMigration -AccountName $AccountName -ResourceGroupName $rgName -DatabaseName $DatabaseName -Name $GraphName -ThroughputType $Autoscale
+      Assert-AreNotEqual $AutoscaledGraphThroughput.AutoscaleSettings.MaxThroughput 0
+
+      $ManualGraphThroughput = Invoke-AzCosmosDBGremlinGraphThroughputMigration  -InputObject $NewGraph -ThroughputType $Manual
+      Assert-AreEqual $ManualGraphThroughput.AutoscaleSettings.MaxThroughput 0
+
+      Remove-AzCosmosDBGremlinGraph -InputObject $NewGraph 
+      Remove-AzCosmosDBGremlinDatabase -InputObject $NewDatabase
+  }
+  Finally{
+      Remove-AzCosmosDBGremlinGraph -AccountName $AccountName -ResourceGroupName $rgName -DatabaseName $DatabaseName  -Name $GraphName
+      Remove-AzCosmosDBGremlinDatabase -AccountName $AccountName -ResourceGroupName $rgName -Name $DatabaseName
   }
 }

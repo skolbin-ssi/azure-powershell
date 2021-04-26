@@ -19,6 +19,27 @@
 -->
 ## Upcoming Release
 
+## Version 1.8.0
+
+* Updated SDK to 7.4.0-preview.
+
+## Version 1.7.0
+* Added `New-AzCognitiveServicesAccountApiProperty` cmdlet.
+* Supported `ApiProperty` parameter for `New-AzCognitiveServicesAccount` and `Set-AzCognitiveServicesAccount`
+
+## Version 1.6.0
+* Showed additional legal terms for certain APIs.
+
+## Version 1.5.1
+* Used `Deny` specifically as NetworkRules default action.
+
+## Version 1.5.0
+* Supported displaying account capabilities.
+* Supported modifying PublicNetworkAccess.
+
+## Version 1.4.0
+* Support PrivateEndpoint and PublicNetworkAccess control. 
+
 ## Version 1.3.0
 * Supported Identity, Encryption, UserOwnedStorage 
 

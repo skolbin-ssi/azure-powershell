@@ -68,6 +68,10 @@ namespace Microsoft.Azure.Commands.DataFactoryV2
 
         public const string HelpTriggerName = "The trigger name.";
 
+        public const string HelpTriggerRunId = "The Run ID of the trigger.";
+
+        public const string HelpTriggerRun = "The information about the trigger run.";
+
         public const string HelpTriggerObject = "The trigger object.";
 
         public const string HelpPipeline = "The pipeline object.";
@@ -254,6 +258,12 @@ namespace Microsoft.Azure.Commands.DataFactoryV2
 
         public const string HelpFactoryLocation = "The geographic region of the data factory.";
 
+        public const string HelpGlobalParameter = "The dictionary containing the global parameters of the data factory.";
+
+        public const string HelpIdentityType = "The identity type for the factory. It can be 'SystemAssigned', 'UserAssigned' or 'SystemAssigned,UserAssigned'";
+
+        public const string HelpUserAssignedIdenty = "Dictionary of user assigned identities to use. { \"<UAMI Id>\" : {} }";
+
         public const string HelpRepoConfigurationProjectName = "The project name for repo configuration.";
 
         public const string HelpRepoConfigurationTenantId = "The tenant id for repo configuration.";
@@ -280,5 +290,6 @@ namespace Microsoft.Azure.Commands.DataFactoryV2
 
         public const string ActionDescriptionForRemoveEventSubscription = "Unsubscribe the event trigger from external service events.";
 
+        public const string ActionDescriptionForInvokePipeline = "Starts a run for \"{0}\" pipeline in the \"{1}\" factory.";
     }
 }

@@ -47,6 +47,13 @@ namespace Microsoft.Azure.Commands.Websites.Test.ScenarioTests
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestSetWebAppHyperVCredentials()
+        {
+            WebsitesController.NewInstance.RunPsTest(_logger, "Test-SetWebAppHyperVCredentials");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestEnableContainerContinuousDeploymentAndGetUrl()
         {
             WebsitesController.NewInstance.RunPsTest(_logger, "Test-EnableContainerContinuousDeploymentAndGetUrl");
@@ -144,7 +151,7 @@ namespace Microsoft.Azure.Commands.Websites.Test.ScenarioTests
             WebsitesController.NewInstance.RunPsTest(_logger, "Test-RemoveWebApp");
         }
 
-        [Fact]
+        [Fact(Skip = "Test is being skipped until issue with HttpMockserver unable to load error is resolved.")]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestWindowsContainerWebAppCanIssuePSSession()
         {

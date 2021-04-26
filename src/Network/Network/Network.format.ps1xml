@@ -334,6 +334,10 @@
                 <PropertyName>Name</PropertyName>
               </ListItem>
               <ListItem>
+                <Label>Type</Label>
+                <PropertyName>Type</PropertyName>
+              </ListItem>
+              <ListItem>
                 <Label>ResourceId</Label>
                 <PropertyName>ResourceId</PropertyName>
               </ListItem>
@@ -342,8 +346,12 @@
                 <PropertyName>Address</PropertyName>
               </ListItem>
               <ListItem>
-                <Label>Filter</Label>
-                <PropertyName>FilterText</PropertyName>
+                <Label>Scope</Label>
+                <PropertyName>ScopeText</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>CoverageLevel</Label>
+                <PropertyName>CoverageLevel</PropertyName>
               </ListItem>
             </ListItems>
           </ListEntry>
@@ -351,21 +359,21 @@
       </ListControl>
     </View>
     <View>
-      <Name>Microsoft.Azure.Commands.Network.Models.PSNetworkWatcherConnectionMonitorEndpointFilter</Name>
+      <Name>Microsoft.Azure.Commands.Network.Models.PSNetworkWatcherConnectionMonitorEndpointScope</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Azure.Commands.Network.Models.PSNetworkWatcherConnectionMonitorEndpointFilter</TypeName>
+        <TypeName>Microsoft.Azure.Commands.Network.Models.PSNetworkWatcherConnectionMonitorEndpointScope</TypeName>
       </ViewSelectedBy>
       <ListControl>
         <ListEntries>
           <ListEntry>
             <ListItems>
               <ListItem>
-                <Label>Type</Label>
-                <PropertyName>Type</PropertyName>
+                <Label>Include</Label>
+                <PropertyName>IncludeText</PropertyName>
               </ListItem>
               <ListItem>
-                <Label>Items</Label>
-                <PropertyName>ItemsText</PropertyName>
+                <Label>Exclude</Label>
+                <PropertyName>ExcludeText</PropertyName>
               </ListItem>
             </ListItems>
           </ListEntry>
@@ -373,18 +381,14 @@
       </ListControl>
     </View>
     <View>
-      <Name>Microsoft.Azure.Commands.Network.Models.PSNetworkWatcherConnectionMonitorEndpointFilterItem</Name>
+      <Name>Microsoft.Azure.Commands.Network.Models.PSNetworkWatcherConnectionMonitorEndpointScopeItem</Name>
       <ViewSelectedBy>
-        <TypeName>Microsoft.Azure.Commands.Network.Models.PSNetworkWatcherConnectionMonitorEndpointFilterItem</TypeName>
+        <TypeName>Microsoft.Azure.Commands.Network.Models.PSNetworkWatcherConnectionMonitorEndpointScoperItem</TypeName>
       </ViewSelectedBy>
       <ListControl>
         <ListEntries>
           <ListEntry>
             <ListItems>
-              <ListItem>
-                <Label>Type</Label>
-                <PropertyName>Type</PropertyName>
-              </ListItem>
               <ListItem>
                 <Label>Address</Label>
                 <PropertyName>Address</PropertyName>
@@ -492,6 +496,10 @@
               <ListItem>
                 <Label>DisableTraceRoute</Label>
                 <PropertyName>DisableTraceRoute</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>DestinationPortBehavior</Label>
+                <PropertyName>DestinationPortBehavior</PropertyName>
               </ListItem>
             </ListItems>
           </ListEntry>
@@ -1375,6 +1383,15 @@
                 <Label>RemoteVirtualNetworkAddressSpace</Label>
                 <PropertyName>RemoteVirtualNetworkAddressSpaceText</PropertyName>
               </ListItem>
+              <ListItem>
+                <Label>RemoteBgpCommunities</Label>
+                <PropertyName>RemoteBgpCommunitiesText</PropertyName>
+                <ItemSelectionCondition>
+                  <ScriptBlock>
+                    !($_.RemoteBgpCommunities -eq $null)
+                  </ScriptBlock>
+                </ItemSelectionCondition>
+              </ListItem>
             </ListItems>
           </ListEntry>
         </ListEntries>
@@ -1478,6 +1495,68 @@
               <ListItem>
                 <Label>Tag</Label>
                 <PropertyName>Tag</PropertyName>
+              </ListItem>
+            </ListItems>
+          </ListEntry>
+        </ListEntries>
+      </ListControl>
+    </View>
+	  <View>
+      <Name>Microsoft.Azure.Commands.Network.Models.PSCustomIpPrefix</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.Azure.Commands.Network.Models.PSCustomIpPrefix</TypeName>
+      </ViewSelectedBy>
+      <ListControl>
+        <ListEntries>
+          <ListEntry>
+            <ListItems>
+              <ListItem>
+                <Label>Name</Label>
+                <PropertyName>Name</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>ResourceGroupName</Label>
+                <PropertyName>ResourceGroupName</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Location</Label>
+                <PropertyName>Location</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Id</Label>
+                <PropertyName>Id</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Etag</Label>
+                <PropertyName>Etag</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>ResourceGuid</Label>
+                <PropertyName>ResourceGuid</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>ProvisioningState</Label>
+                <PropertyName>ProvisioningState</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Tags</Label>
+                <PropertyName>TagsTable</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Cidr</Label>
+                <PropertyName>Cidr</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>CommissionedState</Label>
+                <PropertyName>CommissionedState</PropertyName>
+              </ListItem>
+			        <ListItem>
+                <Label>PublicIpPrefixes</Label>
+                <PropertyName>PublicIpPrefixesText</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Zones</Label>
+                <PropertyName>Zones</PropertyName>
               </ListItem>
             </ListItems>
           </ListEntry>
@@ -2496,8 +2575,46 @@
                 <PropertyName>BackendIpConfigurationsText</PropertyName>
               </ListItem>
               <ListItem>
+                <Label>LoadBalancerBackendAddresses</Label>
+                <PropertyName>LoadBalancerBackendAddressesText</PropertyName>
+              </ListItem>
+              <ListItem>
                 <Label>LoadBalancingRules</Label>
                 <PropertyName>LoadBalancingRulesText</PropertyName>
+              </ListItem>
+            </ListItems>
+          </ListEntry>
+        </ListEntries>
+      </ListControl>
+    </View>
+    <View>
+      <Name>Microsoft.Azure.Commands.Network.Models.PSLoadBalancerBackendAddress</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.Azure.Commands.Network.Models.PSLoadBalancerBackendAddress</TypeName>
+      </ViewSelectedBy>
+      <ListControl>
+        <ListEntries>
+          <ListEntry>
+            <ListItems>
+              <ListItem>
+                <Label>Name</Label>
+                <PropertyName>Name</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>IpAddress</Label>
+                <PropertyName>IpAddress</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>NetworkInterfaceIpConfiguration</Label>
+                <PropertyName>NetworkInterfaceIpConfigurationIdText</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>VirtualNetwork</Label>
+                <PropertyName>VirtualNetworkIdText</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>LoadBalancerFrontendIPConfiguration</Label>
+                <PropertyName>LoadBalancerFrontendIPConfigurationIdText</PropertyName>
               </ListItem>
             </ListItems>
           </ListEntry>
@@ -3733,6 +3850,10 @@
                 <PropertyName>VirtualHub</PropertyName>
               </ListItem>
               <ListItem>
+                <Label>HubIPAddresses</Label>
+                <PropertyName>HubIPAddresses</PropertyName>
+              </ListItem>
+              <ListItem>
                 <Label>FirewallPolicy</Label>
                 <PropertyName>FirewallPolicy</PropertyName>
               </ListItem>
@@ -4142,6 +4263,10 @@
                 <Label>ProvisioningState</Label>
                 <PropertyName>ProvisioningState</PropertyName>
               </ListItem>
+              <ListItem>
+                <Label>RoutingConfiguration</Label>
+                <PropertyName>RoutingConfigurationText</PropertyName>
+              </ListItem>
             </ListItems>
           </ListEntry>
         </ListEntries>
@@ -4276,6 +4401,10 @@
                 <Label>Connections</Label>
                 <PropertyName>Connections</PropertyName>
               </ListItem>
+              <ListItem>
+                <Label>NatRules</Label>
+                <PropertyName>NatRules</PropertyName>
+              </ListItem>			  
             </ListItems>
           </ListEntry>
         </ListEntries>
@@ -4574,6 +4703,10 @@
                 <Label>VpnClientAddressPool</Label>
                 <PropertyName>VpnClientAddressPoolText</PropertyName>
               </ListItem>
+              <ListItem>
+                <Label>RoutingConfiguration</Label>
+                <PropertyName>RoutingConfigurationText</PropertyName>
+              </ListItem>
             </ListItems>
           </ListEntry>
         </ListEntries>
@@ -4739,6 +4872,10 @@
               <ListItem>
                 <Label>ProvisioningState</Label>
                 <PropertyName>ProvisioningState</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>RoutingConfiguration</Label>
+                <PropertyName>RoutingConfigurationText</PropertyName>
               </ListItem>
             </ListItems>
           </ListEntry>
@@ -5288,8 +5425,8 @@
                 <PropertyName>ProvisioningState</PropertyName>
               </ListItem>
               <ListItem>
-                <Label>HostedGateway</Label>
-                <PropertyName>HostedGatewayText</PropertyName>
+                <Label>HostedSubnet</Label>
+                <PropertyName>HostedSubnet</PropertyName>
               </ListItem>
               <ListItem>
                 <Label>VirtualRouterAsn</Label>
@@ -5299,6 +5436,10 @@
                 <Label>VirtualRouterIps</Label>
                 <PropertyName>VirtualRouterIps</PropertyName>
               </ListItem>
+		      <ListItem>
+			    <Label>AllowBranchToBranchTraffic</Label>
+			    <PropertyName>AllowBranchToBranchTraffic</PropertyName>
+			  </ListItem>
               <ListItem>
                 <Label>Peerings</Label>
                 <PropertyName>PeeringsText</PropertyName>
@@ -5351,6 +5492,74 @@
       </ListControl>
     </View>
     <View>
+      <Name>Microsoft.Azure.Commands.Network.Models.PSRoutingConfiguration</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.Azure.Commands.Network.Models.PSRoutingConfiguration</TypeName>
+      </ViewSelectedBy>
+      <ListControl>
+        <ListEntries>
+          <ListEntry>
+            <ListItems>
+              <ListItem>
+                <Label>AssociatedRouteTable</Label>
+                <PropertyName>AssociatedRouteTable</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>PropagatedRouteTables</Label>
+                <PropertyName>PropagatedRouteTablesText</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>VnetRoutes</Label>
+                <PropertyName>VnetRoutesText</PropertyName>
+              </ListItem>
+            </ListItems>
+          </ListEntry>
+        </ListEntries>
+      </ListControl>
+    </View>
+    <View>
+      <Name>Microsoft.Azure.Commands.Network.Models.PSVHubRouteTable</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.Azure.Commands.Network.Models.PSVHubRouteTable</TypeName>
+      </ViewSelectedBy>
+      <ListControl>
+        <ListEntries>
+          <ListEntry>
+            <ListItems>
+              <ListItem>
+                <Label>Name</Label>
+                <PropertyName>Name</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Id</Label>
+                <PropertyName>Id</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>ProvisioningState</Label>
+                <PropertyName>ProvisioningState</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Labels</Label>
+                <PropertyName>Labels</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Routes</Label>
+                <PropertyName>RoutesText</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>AssociatedConnections</Label>
+                <PropertyName>AssociatedConnectionsText</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>PropagatingConnections</Label>
+                <PropertyName>PropagatingConnectionsText</PropertyName>
+              </ListItem>
+            </ListItems>
+          </ListEntry>
+        </ListEntries>
+      </ListControl>
+    </View>
+    <View>
       <Name>Microsoft.Azure.Commands.Network.Models.PSPrivateLinkResource</Name>
       <ViewSelectedBy>
         <TypeName>Microsoft.Azure.Commands.Network.Models.PSPrivateLinkResource</TypeName>
@@ -5387,6 +5596,786 @@
           </ListEntry>
         </ListEntries>
       </ListControl>
+    </View>
+    <View>
+      <Name>Microsoft.Azure.Commands.Network.Models.PSVirtualNetworkGatewayConnectionIkeSaMainModeSa</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.Azure.Commands.Network.Models.PSVirtualNetworkGatewayConnectionIkeSaMainModeSa</TypeName>
+      </ViewSelectedBy>
+      <ListControl>
+        <ListEntries>
+          <ListEntry>
+            <ListItems>
+              <ListItem>
+                <Label>LocalEndpoint</Label>
+                <PropertyName>localEndpoint</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>RemoteEndpoint</Label>
+                <PropertyName>remoteEndpoint</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>InitiatorCookie</Label>
+                <PropertyName>initiatorCookie</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>ResponderCookie</Label>
+                <PropertyName>responderCookie</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>LocalUdpEncapsulationPort</Label>
+                <PropertyName>localUdpEncapsulationPort</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>RemoteUdpEncapsulationPort</Label>
+                <PropertyName>remoteUdpEncapsulationPort</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Encryption</Label>
+                <PropertyName>encryption</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Integrity</Label>
+                <PropertyName>integrity</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>DhGroup</Label>
+                <PropertyName>dhGroup</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>LifeTimeSeconds</Label>
+                <PropertyName>lifeTimeSeconds</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>IsSaInitiator</Label>
+                <PropertyName>isSaInitiator</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>ElapsedTimeInseconds</Label>
+                <PropertyName>elapsedTimeInseconds</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Quick Mode SA</Label>
+                <ScriptBlock>
+                  if ($_.quickModeSa.Length -ne $null)
+                  {
+                    "$($_.quickModeSa.Length) item(s)"
+                  }
+                  else
+                  {
+                    "0 item(s)"
+                  }
+                </ScriptBlock>
+              </ListItem>
+            </ListItems>
+          </ListEntry>
+        </ListEntries>
+      </ListControl>
+    </View>
+    <View>
+      <Name>Microsoft.Azure.Commands.Network.Models.PSVirtualNetworkGatewayConnectionIkeSaQuickModeSa</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.Azure.Commands.Network.Models.PSVirtualNetworkGatewayConnectionIkeSaQuickModeSa</TypeName>
+      </ViewSelectedBy>
+      <ListControl>
+        <ListEntries>
+          <ListEntry>
+            <ListItems>
+              <ListItem>
+                <Label>LocalEndpoint</Label>
+                <PropertyName>localEndpoint</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>RemoteEndpoint</Label>
+                <PropertyName>remoteEndpoint</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Encryption</Label>
+                <PropertyName>encryption</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Integrity</Label>
+                <PropertyName>integrity</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>PfsGroupId</Label>
+                <PropertyName>pfsGroupId</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>InboundSPI</Label>
+                <PropertyName>inboundSPI</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>OutboundSPI</Label>
+                <PropertyName>outboundSPI</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>LocalTrafficSelectors</Label>
+                <PropertyName>localTrafficSelectors</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>RemoteTrafficSelectors</Label>
+                <PropertyName>remoteTrafficSelectors</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>LifetimeKilobytes</Label>
+                <PropertyName>lifetimeKilobytes</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>LifetimeSeconds</Label>
+                <PropertyName>lifeTimeSeconds</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>IsSaInitiator</Label>
+                <PropertyName>isSaInitiator</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>ElapsedTimeInseconds</Label>
+                <PropertyName>elapsedTimeInseconds</PropertyName>
+              </ListItem>
+            </ListItems>
+          </ListEntry>
+        </ListEntries>
+      </ListControl>
+    </View>
+    <View>
+      <Name>Microsoft.Azure.Commands.Network.Models.PSVirtualNetworkGatewayConnectionIkeSaMainModeSa</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.Azure.Commands.Network.Models.PSVirtualNetworkGatewayConnectionIkeSaMainModeSa</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>LocalEndpoint</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>RemoteEndpoint</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>InitiatorCookie</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>ResponderCookie</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>LocalUdpEncapsulationPort</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>RemoteUdpEncapsulationPort</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>Encryption</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>Integrity</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>DhGroup</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>LifeTimeSeconds</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>IsSaInitiator</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>ElapsedTimeInseconds</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>Quick Mode SA</Label>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>localEndpoint</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>remoteEndpoint</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>initiatorCookie</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>responderCookie</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>localUdpEncapsulationPort</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>remoteUdpEncapsulationPort</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>encryption</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>integrity</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>dhGroup</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>lifeTimeSeconds</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>isSaInitiator</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>elapsedTimeInseconds</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <ScriptBlock>
+                  if ($_.quickModeSa.Length -ne $null)
+                  {
+                  "$($_.quickModeSa.Length) item(s)"
+                  }
+                  else
+                  {
+                  "0 item(s)"
+                  }
+                </ScriptBlock>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>Microsoft.Azure.Commands.Network.Models.PSVirtualNetworkGatewayConnectionIkeSaQuickModeSa</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.Azure.Commands.Network.Models.PSVirtualNetworkGatewayConnectionIkeSaQuickModeSa</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>LocalEndpoint</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>RemoteEndpoint</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>Encryption</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>Integrity</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>PfsGroupId</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>InboundSPI</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>OutboundSPI</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>LocalTrafficSelectors</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>RemoteTrafficSelectors</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>LifetimeKilobytes</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>LifetimeSeconds</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>IsSaInitiator</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>ElapsedTimeInseconds</Label>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>localEndpoint</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>remoteEndpoint</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>encryption</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>integrity</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>pfsGroupId</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>inboundSPI</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>outboundSPI</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>localTrafficSelectors</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>remoteTrafficSelectors</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>lifetimeKilobytes</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>lifeTimeSeconds</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>isSaInitiator</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>elapsedTimeInseconds</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>Microsoft.Azure.Commands.Network.Models.Cortex.PSVpnSiteLinkConnectionIkeSaMainModeSa</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.Azure.Commands.Network.Models.Cortex.PSVpnSiteLinkConnectionIkeSaMainModeSa</TypeName>
+      </ViewSelectedBy>
+      <ListControl>
+        <ListEntries>
+          <ListEntry>
+            <ListItems>
+              <ListItem>
+                <Label>LocalEndpoint</Label>
+                <PropertyName>localEndpoint</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>RemoteEndpoint</Label>
+                <PropertyName>remoteEndpoint</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>InitiatorCookie</Label>
+                <PropertyName>initiatorCookie</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>ResponderCookie</Label>
+                <PropertyName>responderCookie</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>LocalUdpEncapsulationPort</Label>
+                <PropertyName>localUdpEncapsulationPort</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>RemoteUdpEncapsulationPort</Label>
+                <PropertyName>remoteUdpEncapsulationPort</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Encryption</Label>
+                <PropertyName>encryption</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Integrity</Label>
+                <PropertyName>integrity</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>DhGroup</Label>
+                <PropertyName>dhGroup</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>LifeTimeSeconds</Label>
+                <PropertyName>lifeTimeSeconds</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>IsSaInitiator</Label>
+                <PropertyName>isSaInitiator</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>ElapsedTimeInseconds</Label>
+                <PropertyName>elapsedTimeInseconds</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Quick Mode SA</Label>
+                <ScriptBlock>
+                  if ($_.quickModeSa.Length -ne $null)
+                  {
+                  "$($_.quickModeSa.Length) item(s)"
+                  }
+                  else
+                  {
+                  "0 item(s)"
+                  }
+                </ScriptBlock>
+              </ListItem>
+            </ListItems>
+          </ListEntry>
+        </ListEntries>
+      </ListControl>
+    </View>
+    <View>
+      <Name>Microsoft.Azure.Commands.Network.Models.Cortex.PSVpnSiteLinkConnectionIkeSaQuickModeSa</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.Azure.Commands.Network.Models.Cortex.PSVpnSiteLinkConnectionIkeSaQuickModeSa</TypeName>
+      </ViewSelectedBy>
+      <ListControl>
+        <ListEntries>
+          <ListEntry>
+            <ListItems>
+              <ListItem>
+                <Label>LocalEndpoint</Label>
+                <PropertyName>localEndpoint</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>RemoteEndpoint</Label>
+                <PropertyName>remoteEndpoint</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Encryption</Label>
+                <PropertyName>encryption</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Integrity</Label>
+                <PropertyName>integrity</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>PfsGroupId</Label>
+                <PropertyName>pfsGroupId</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>InboundSPI</Label>
+                <PropertyName>inboundSPI</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>OutboundSPI</Label>
+                <PropertyName>outboundSPI</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>LocalTrafficSelectors</Label>
+                <PropertyName>localTrafficSelectors</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>RemoteTrafficSelectors</Label>
+                <PropertyName>remoteTrafficSelectors</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>LifetimeKilobytes</Label>
+                <PropertyName>lifetimeKilobytes</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>LifetimeSeconds</Label>
+                <PropertyName>lifeTimeSeconds</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>IsSaInitiator</Label>
+                <PropertyName>isSaInitiator</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>ElapsedTimeInseconds</Label>
+                <PropertyName>elapsedTimeInseconds</PropertyName>
+              </ListItem>
+            </ListItems>
+          </ListEntry>
+        </ListEntries>
+      </ListControl>
+    </View>
+    <View>
+      <Name>Microsoft.Azure.Commands.Network.Models.Cortex.PSVpnSiteLinkConnectionIkeSaMainModeSa</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.Azure.Commands.Network.Models.Cortex.PSVpnSiteLinkConnectionIkeSaMainModeSa</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>LocalEndpoint</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>RemoteEndpoint</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>InitiatorCookie</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>ResponderCookie</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>LocalUdpEncapsulationPort</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>RemoteUdpEncapsulationPort</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>Encryption</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>Integrity</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>DhGroup</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>LifeTimeSeconds</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>IsSaInitiator</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>ElapsedTimeInseconds</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>Quick Mode SA</Label>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>localEndpoint</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>remoteEndpoint</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>initiatorCookie</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>responderCookie</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>localUdpEncapsulationPort</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>remoteUdpEncapsulationPort</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>encryption</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>integrity</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>dhGroup</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>lifeTimeSeconds</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>isSaInitiator</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>elapsedTimeInseconds</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <ScriptBlock>
+                  if ($_.quickModeSa.Length -ne $null)
+                  {
+                  "$($_.quickModeSa.Length) item(s)"
+                  }
+                  else
+                  {
+                  "0 item(s)"
+                  }
+                </ScriptBlock>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>Microsoft.Azure.Commands.Network.Models.Cortex.PSVpnSiteLinkConnectionIkeSaQuickModeSa</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.Azure.Commands.Network.Models.Cortex.PSVpnSiteLinkConnectionIkeSaQuickModeSa</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>LocalEndpoint</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>RemoteEndpoint</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>Encryption</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>Integrity</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>PfsGroupId</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>InboundSPI</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>OutboundSPI</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>LocalTrafficSelectors</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>RemoteTrafficSelectors</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>LifetimeKilobytes</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>LifetimeSeconds</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>IsSaInitiator</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Alignment>Left</Alignment>
+            <Label>ElapsedTimeInseconds</Label>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>localEndpoint</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>remoteEndpoint</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>encryption</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>integrity</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>pfsGroupId</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>inboundSPI</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>outboundSPI</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>localTrafficSelectors</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>remoteTrafficSelectors</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>lifetimeKilobytes</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>lifeTimeSeconds</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>isSaInitiator</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <Alignment>Left</Alignment>
+                <PropertyName>elapsedTimeInseconds</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
     </View>
   </ViewDefinitions>
 </Configuration>

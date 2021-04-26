@@ -13,35 +13,24 @@
 // ----------------------------------------------------------------------------------
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Management.Automation;
+using Microsoft.Azure.Commands.CosmosDB.Exceptions;
 using Microsoft.Azure.Commands.CosmosDB.Helpers;
 using Microsoft.Azure.Commands.CosmosDB.Models;
 using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 using Microsoft.Azure.Management.CosmosDB;
 using Microsoft.Azure.Management.CosmosDB.Models;
+using Microsoft.Azure.PowerShell.Cmdlets.CosmosDB.Exceptions;
+using Microsoft.Rest.Azure;
+using SDKModel = Microsoft.Azure.Management.CosmosDB.Models;
 
 namespace Microsoft.Azure.Commands.CosmosDB
 {
     [Cmdlet(VerbsCommon.New, ResourceManager.Common.AzureRMConstants.AzureRMPrefix + "CosmosDBAccount", DefaultParameterSetName = NameParameterSet, SupportsShouldProcess = true), OutputType(typeof(PSDatabaseAccountGetResults))]
-    public class NewAzCosmosDBAccount : AzureCosmosDBCmdletBase
+    public class NewAzCosmosDBAccount : NewOrUpdateAzCosmosDBAccount
     {
-        [Parameter(Mandatory = true, ParameterSetName = NameParameterSet, HelpMessage = Constants.ResourceGroupNameHelpMessage)]
-        [ResourceGroupCompleter]
-        [ValidateNotNullOrEmpty]
-        public string ResourceGroupName { get; set; }
-
-        [Parameter(Mandatory = true, ParameterSetName = NameParameterSet, HelpMessage = Constants.AccountNameHelpMessage)]
-        [ValidateNotNullOrEmpty]
-        public string Name { get; set; }
-
-        [Parameter(Mandatory = false, HelpMessage = Constants.DefaultConsistencyLevelHelpMessage)]
-        [PSArgumentCompleter("BoundedStaleness", "ConsistentPrefix", "Eventual", "Session", "Strong")]
-        public string DefaultConsistencyLevel { get; set; }
-
         [Parameter(Mandatory = false, HelpMessage = Constants.EnableAutomaticFailoverHelpMessage)]
         public SwitchParameter EnableAutomaticFailover { get; set; }
 
@@ -51,9 +40,15 @@ namespace Microsoft.Azure.Commands.CosmosDB
         [Parameter(Mandatory = false, ParameterSetName = NameParameterSet, HelpMessage = Constants.EnableVirtualNetworkHelpMessage)]
         public SwitchParameter EnableVirtualNetwork { get; set; }
 
-        [Parameter(Mandatory = false, HelpMessage = Constants.IpRangeFilterHelpMessage)]
-        [ValidateNotNull]
-        public string[] IpRangeFilter { get; set; }
+        [Parameter(Mandatory = false, HelpMessage = Constants.ApiKindHelpMessage)]
+        [PSArgumentCompleter("Sql", "MongoDB", "Gremlin", "Cassandra", "Table")]
+        public string ApiKind { get; set; }
+
+        [Parameter(Mandatory = false, HelpMessage = Constants.DisableKeyBasedMetadataWriteAccessHelpMessage)]
+        public SwitchParameter DisableKeyBasedMetadataWriteAccess { get; set; }
+
+        [Parameter(Mandatory = false, HelpMessage = Constants.EnableFreeTierHelpMessage)]
+        public bool? EnableFreeTier { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = Constants.LocationHelpMessage)]
         [ValidateNotNullOrEmpty]
@@ -63,75 +58,27 @@ namespace Microsoft.Azure.Commands.CosmosDB
         [ValidateNotNullOrEmpty]
         public PSLocation[] LocationObject { get; set; }
 
-        [Parameter(Mandatory = false, HelpMessage = Constants.MaxStalenessIntervalInSecondsHelpMessage)]
-        public int? MaxStalenessIntervalInSeconds { get; set; }
-
-        [Parameter(Mandatory = false, HelpMessage = Constants.MaxStalenessPrefixHelpMessage)]
-        public int? MaxStalenessPrefix { get; set; }
-
-        [Parameter(Mandatory = false, HelpMessage = Constants.TagHelpMessage)]
-        [ValidateNotNull]
-        public Hashtable Tag { get; set; }
-
-        [Parameter(Mandatory = false, HelpMessage = Constants.VirtualNetworkRuleHelpMessage)]
-        [ValidateNotNullOrEmpty]
-        public string[] VirtualNetworkRule { get; set; }
-
-        [Parameter(Mandatory = false, HelpMessage = Constants.VirtualNetworkRuleObjectHelpMessage)]
-        [ValidateNotNullOrEmpty]
-        public PSVirtualNetworkRule[] VirtualNetworkRuleObject { get; set; }
-
-        [Parameter(Mandatory = false, HelpMessage = Constants.ApiKindHelpMessage)]
-        [PSArgumentCompleter("Sql", "MongoDB", "Gremlin", "Cassandra", "Table")]
-        public string ApiKind { get; set; }
-
-        [Parameter(Mandatory = false, HelpMessage = Constants.PublicNetworkAccessHelpMessage)]
-        [PSArgumentCompleter("Disabled", "Enabled")]
-        public string PublicNetworkAccess { get; set; }
-
-        [Parameter(Mandatory = false, HelpMessage = Constants.DisableKeyBasedMetadataWriteAccessHelpMessage)]
-        public SwitchParameter DisableKeyBasedMetadataWriteAccess { get; set; }
-
-        [Parameter(Mandatory = false, HelpMessage = Constants.KeyVaultUriHelpMessage)]
-        public string KeyVaultKeyUri { get; set; }
-
-        [Parameter(Mandatory = false, HelpMessage = Constants.AsJobHelpMessage)]
-        public SwitchParameter AsJob { get; set; }
-
         public override void ExecuteCmdlet()
         {
-            ConsistencyPolicy consistencyPolicy = new ConsistencyPolicy();
+            DatabaseAccountGetResults databaseAccountGetResults = null;
+            try
             {
-                switch(DefaultConsistencyLevel)
+                databaseAccountGetResults = CosmosDBManagementClient.DatabaseAccounts.Get(ResourceGroupName, Name);
+            }
+            catch (CloudException e)
+            {
+                if (e.Response.StatusCode != System.Net.HttpStatusCode.NotFound)
                 {
-                    case "Strong":
-                        consistencyPolicy.DefaultConsistencyLevel = Management.CosmosDB.Models.DefaultConsistencyLevel.Strong;
-                        break;
-
-                    case "Session":
-                        consistencyPolicy.DefaultConsistencyLevel = Management.CosmosDB.Models.DefaultConsistencyLevel.Session;
-                        break;
-
-                    case "Eventual":
-                        consistencyPolicy.DefaultConsistencyLevel = Management.CosmosDB.Models.DefaultConsistencyLevel.Eventual;
-                        break;
-
-                    case "ConsistentPrefix":
-                        consistencyPolicy.DefaultConsistencyLevel = Management.CosmosDB.Models.DefaultConsistencyLevel.ConsistentPrefix;
-                        break;
-
-                    case "BoundedStaleness":
-                        consistencyPolicy.DefaultConsistencyLevel = Management.CosmosDB.Models.DefaultConsistencyLevel.BoundedStaleness;
-                        consistencyPolicy.MaxIntervalInSeconds = MaxStalenessIntervalInSeconds;
-                        consistencyPolicy.MaxStalenessPrefix = MaxStalenessPrefix;
-                        break;
-
-                    default:
-                        consistencyPolicy.DefaultConsistencyLevel = Management.CosmosDB.Models.DefaultConsistencyLevel.Session;
-                        break;
+                    throw;
                 }
             }
 
+            if (databaseAccountGetResults != null)
+            {
+                throw new ConflictingResourceException(message: string.Format(ExceptionMessage.Conflict, Name));
+            }
+
+            ConsistencyPolicy consistencyPolicy = base.PopoulateConsistencyPolicy(DefaultConsistencyLevel, MaxStalenessIntervalInSeconds, MaxStalenessPrefix);
             string writeLocation = null;
             Collection<Location> LocationCollection = new Collection<Location>();
 
@@ -177,10 +124,7 @@ namespace Microsoft.Azure.Commands.CosmosDB
             Dictionary<string, string> tags = new Dictionary<string, string>();
             if (Tag != null)
             {
-                foreach (string key in Tag.Keys)
-                {
-                    tags.Add(key, Tag[key].ToString());
-                }
+                tags = base.PopulateTags(Tag);
             }
 
             Collection<VirtualNetworkRule> virtualNetworkRule = new Collection<VirtualNetworkRule>();
@@ -199,29 +143,48 @@ namespace Microsoft.Azure.Commands.CosmosDB
                 }
             }
 
-            string IpRangeFilterAsString = null;
-            if (IpRangeFilter != null && IpRangeFilter.Length > 0)
-            {
-                IpRangeFilterAsString = IpRangeFilter?.Aggregate(string.Empty, (output, next) => string.Concat(output, (!string.IsNullOrWhiteSpace(output) && !string.IsNullOrWhiteSpace(next) ? "," : string.Empty), next)) ?? string.Empty;
-            }
+            Collection<string> networkAclBypassResourceId = NetworkAclBypassResourceId != null ? new Collection<string>(NetworkAclBypassResourceId) : new Collection<string>();
 
-            DatabaseAccountCreateUpdateParameters databaseAccountCreateUpdateParameters = new DatabaseAccountCreateUpdateParameters(locations:LocationCollection, location: writeLocation, name:Name, consistencyPolicy:consistencyPolicy, tags:tags, ipRangeFilter:IpRangeFilterAsString);
+            DatabaseAccountCreateUpdateParameters databaseAccountCreateUpdateParameters = new DatabaseAccountCreateUpdateParameters(locations:LocationCollection, location: writeLocation, name:Name, consistencyPolicy:consistencyPolicy, tags:tags);
             databaseAccountCreateUpdateParameters.EnableMultipleWriteLocations = EnableMultipleWriteLocations;
             databaseAccountCreateUpdateParameters.IsVirtualNetworkFilterEnabled = EnableVirtualNetwork;
             databaseAccountCreateUpdateParameters.EnableAutomaticFailover = EnableAutomaticFailover;
             databaseAccountCreateUpdateParameters.VirtualNetworkRules = virtualNetworkRule;
             databaseAccountCreateUpdateParameters.DisableKeyBasedMetadataWriteAccess = DisableKeyBasedMetadataWriteAccess;
-            databaseAccountCreateUpdateParameters.IpRangeFilter = IpRangeFilterAsString;
             databaseAccountCreateUpdateParameters.PublicNetworkAccess = PublicNetworkAccess;
-            
+            databaseAccountCreateUpdateParameters.EnableFreeTier = EnableFreeTier;
+            databaseAccountCreateUpdateParameters.EnableAnalyticalStorage = EnableAnalyticalStorage;
+            databaseAccountCreateUpdateParameters.NetworkAclBypassResourceIds = networkAclBypassResourceId;
+
+            if (IpRule != null && IpRule.Length > 0)
+            {
+                databaseAccountCreateUpdateParameters.IpRules = base.PopulateIpRules(IpRule);
+            }
+
             if (KeyVaultKeyUri != null)
             {
                 databaseAccountCreateUpdateParameters.KeyVaultKeyUri = KeyVaultKeyUri;
             }
 
+            if (NetworkAclBypass != null)
+            {
+                databaseAccountCreateUpdateParameters.NetworkAclBypass = 
+                    NetworkAclBypass == "AzureServices" ? SDKModel.NetworkAclBypass.AzureServices : SDKModel.NetworkAclBypass.None;
+            }
+
             if (!string.IsNullOrEmpty(ApiKind))
             {
-                if (!ApiKind.Equals("MongoDB", StringComparison.OrdinalIgnoreCase))
+                if (ApiKind.Equals("MongoDB", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (ServerVersion != null)
+                    {
+                        databaseAccountCreateUpdateParameters.ApiProperties = new ApiProperties
+                        {
+                            ServerVersion = ServerVersion
+                        };
+                    }
+                }
+                else
                 {
                     switch (ApiKind)
                     {
@@ -245,7 +208,20 @@ namespace Microsoft.Azure.Commands.CosmosDB
             {
                 ApiKind = "GlobalDocumentDB";
             }
+
             databaseAccountCreateUpdateParameters.Kind = ApiKind;
+
+            if (BackupIntervalInMinutes.HasValue || BackupRetentionIntervalInHours.HasValue)
+            {
+                databaseAccountCreateUpdateParameters.BackupPolicy = new PeriodicModeBackupPolicy()
+                {
+                    PeriodicModeProperties = new PeriodicModeProperties()
+                    {
+                        BackupIntervalInMinutes = BackupIntervalInMinutes,
+                        BackupRetentionIntervalInHours = BackupRetentionIntervalInHours
+                    }
+                };
+            }
 
             if (ShouldProcess(Name, "Creating Database Account"))
             {

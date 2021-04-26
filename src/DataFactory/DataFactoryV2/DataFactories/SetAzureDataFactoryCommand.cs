@@ -13,6 +13,7 @@
 // ----------------------------------------------------------------------------------
 
 using System.Collections;
+using System.Collections.Generic;
 using System.Management.Automation;
 using Microsoft.Azure.Commands.DataFactoryV2.Models;
 using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
@@ -97,6 +98,16 @@ namespace Microsoft.Azure.Commands.DataFactoryV2
         [Alias(Constants.DataFactoryName)]
         #endregion // Attributes
         public string Name { get; set; }
+
+        #region Attributes
+        [Parameter(Mandatory = false, HelpMessage = Constants.HelpIdentityType)]
+        #endregion
+        public string IdentityType { get; set; }
+
+        #region Attributes
+        [Parameter(Mandatory = false, HelpMessage = Constants.HelpUserAssignedIdenty)]
+        #endregion
+        public IDictionary<string,object> UserAssignedIdentity { get; set; }
 
         #region Attributes
         [Parameter(
@@ -226,6 +237,11 @@ namespace Microsoft.Azure.Commands.DataFactoryV2
 
         [Parameter(Mandatory = false, HelpMessage = Constants.HelpDontAskConfirmation)]
         public SwitchParameter Force { get; set; }
+
+        #region Attributes
+        [Parameter(Mandatory = false, HelpMessage = Constants.HelpGlobalParameter)]
+        #endregion
+        public IDictionary<string, GlobalParameterSpecification> GlobalParameterDefinition { get; set; }
 
         #region Attributes
         [Parameter(
@@ -453,15 +469,32 @@ namespace Microsoft.Azure.Commands.DataFactoryV2
                 repoConfiguration.RepositoryName = this.RepositoryName;
             }
 
+            string factoryIdentityType = FactoryIdentityType.SystemAssigned;
+            if (!string.IsNullOrWhiteSpace(this.IdentityType))
+            {
+                factoryIdentityType = this.IdentityType;
+            }
+
+            if(this.UserAssignedIdentity != null && this.UserAssignedIdentity.Count > 0)
+            {
+                if (!factoryIdentityType.ToLower().Contains(FactoryIdentityType.UserAssigned.ToLower()))
+                {
+                    factoryIdentityType = FactoryIdentityType.SystemAssignedUserAssigned;
+                }
+            }
+            FactoryIdentity factoryIdentity = new FactoryIdentity(factoryIdentityType, userAssignedIdentities: this.UserAssignedIdentity);
+
             var parameters = new CreatePSDataFactoryParameters()
             {
                 ResourceGroupName = ResourceGroupName,
                 DataFactoryName = Name,
                 Location = Location,
+                FactoryIdentity = factoryIdentity,
                 Tags = Tag,
                 Force = Force.IsPresent,
                 RepoConfiguration = repoConfiguration,
-                ConfirmAction = ConfirmAction
+                ConfirmAction = ConfirmAction,
+                GlobalParameters = GlobalParameterDefinition
             };
 
             WriteObject(DataFactoryClient.CreatePSDataFactory(parameters));
@@ -475,6 +508,12 @@ namespace Microsoft.Azure.Commands.DataFactoryV2
                 this.Name = InputObject.DataFactoryName;
                 this.Location = this.Location ?? InputObject.Location;
                 this.Tag = this.Tag ?? new Hashtable((IDictionary)InputObject.Tags);
+
+                if(InputObject.Identity != null)
+                {
+                    this.IdentityType = InputObject.Identity.Type;
+                    this.UserAssignedIdentity = InputObject.Identity.UserAssignedIdentities;
+                }
                 if (InputObject.RepoConfiguration != null)
                 {
                     this.AccountName = this.AccountName ?? InputObject.RepoConfiguration.AccountName;
@@ -498,6 +537,8 @@ namespace Microsoft.Azure.Commands.DataFactoryV2
                         }
                     }
                 }
+                
+                this.GlobalParameterDefinition = InputObject.GlobalParameters;
             }
 
             if (!string.IsNullOrWhiteSpace(ResourceId))

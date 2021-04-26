@@ -34,9 +34,11 @@ namespace Microsoft.Azure.PowerShell.Cmdlets.Peering.Common
         public const string AzPeeringDirectConnectionObject = "AzPeeringDirectConnectionObject";
         public const string AzPeeringExchangeConnectionObject = "AzPeeringExchangeConnectionObject";
         public const string AzPeering = "AzPeering";
+        public const string AzPeeringReceivedRoute = "AzPeeringReceivedRoute";
         public const string AzPeeringServiceLocation = "AzPeeringServiceLocation";
         public const string AzPeeringServiceProvider = "AzPeeringServiceProvider";
         public const string AzPeeringServiceCountry = "AzPeeringServiceCountry";
+        public const string AzPeeringCdnPeeringPrefix = "AzPeeringCdnPeeringPrefix";
         #endregion
 
         #region Kind
@@ -257,6 +259,10 @@ namespace Microsoft.Azure.PowerShell.Cmdlets.Peering.Common
         /// The resource id help.
         /// </summary>
         public const string ResourceIdHelp = "The resource id string name.";
+        public const string RxPrefix = "Filter by prefix.";
+        public const string RxAsPath = "Filter by AS Path. Example: '9342 1234 4567'";
+        public const string RxOriginAsValidationState = "Filter by origin AS validation state.";
+        public const string RxRPKIValidationState = "Filter by RPKI validation state.";
 
         /// <summary>
         /// PeeringNameHelp
@@ -305,7 +311,13 @@ namespace Microsoft.Azure.PowerShell.Cmdlets.Peering.Common
             "The Physical Location Different from Azure Region. Use Get-AzPeeringLocation -Kind <kind> use City name as key.";
 
         /// <summary>
-        /// PeeringLocationHelp
+        /// PeeringLocationForCdnPrefixesHelp
+        /// </summary>
+        public const string PeeringLocationForCdnPrefixesHelp =
+            "The Physical Location Different from Azure Region. Use Get-AzPeeringLocation -Kind <kind> use City name as key to check if the peering location exists or Use Get-AzPeeringLocation -Kind <kind> to get all the peering locations to select.";
+
+        /// <summary>
+        /// PeeringServiceLocationHelp
         /// </summary>
         public const string PeeringServiceLocationHelp =
             "The Physical Location Different from Azure Region. Use Get-AzPeeringServiceLocation [-Country <country>]";
@@ -369,6 +381,11 @@ namespace Microsoft.Azure.PowerShell.Cmdlets.Peering.Common
         /// The MD5 hash for authentication between the peers.
         /// </summary>
         public const string MD5AuthenticationKeyHelp = "The MD5 authentication key for session.";
+
+        /// <summary>
+        /// The ID used within Microsoft's peering provisioning system to track the connection
+        /// </summary>
+        public const string MicrosoftTrackingId = "The ID used within Microsoft's peering provisioning system to track the connection";
 
         /// <summary>
         /// The metro help.

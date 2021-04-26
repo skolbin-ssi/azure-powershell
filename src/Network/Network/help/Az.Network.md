@@ -1,7 +1,7 @@
 ---
 Module Name: Az.Network
 Module Guid: eb75c732-e274-4a20-b502-e9958e63484a
-Download Help Link: https://docs.microsoft.com/en-us/powershell/module/az.network
+Download Help Link: https://docs.microsoft.com/powershell/module/az.network
 Help Version: 5.4.2.0
 Locale: en-US
 ---
@@ -770,6 +770,12 @@ Creates a Firewall Application Rule.
 ### [New-AzFirewallApplicationRuleCollection](New-AzFirewallApplicationRuleCollection.md)
 Creates a collection of Firewall application rules.
 
+### [New-AzFirewallHubIpAddress](New-AzFirewallHubIpAddress.md)
+Ip addresses assoicated to the firewall on virtual hub
+
+### [New-AzFirewallHubPublicIpAddress](New-AzFirewallHubPublicIpAddress.md)
+Public Ip assoicated to the firewall on virtual hub
+
 ### [New-AzFirewallNatRule](New-AzFirewallNatRule.md)
 Creates a Firewall NAT Rule.
 
@@ -797,8 +803,17 @@ Create a new Azure Firewall Policy Nat Rule Collection
 ### [New-AzFirewallPolicyNetworkRule](New-AzFirewallPolicyNetworkRule.md)
 Create a new Azure Firewall Policy Network Rule
 
+### [New-AzFirewallPolicyNetworkRule](New-AzFirewallPolicyNatRule.md)
+Create a new Azure Firewall Policy NAT Rule
+
 ### [New-AzFirewallPolicyRuleCollectionGroup](New-AzFirewallPolicyRuleCollectionGroup.md)
 Create a new Azure Firewall Policy Rule Collection Group
+
+### [New-AzFirewallPublicIpAddress](New-AzFirewallPublicIpAddress.md)
+This is the placeholder for the Ip Address that can be used for multi pip on azure firewall.
+
+### [New-AzFirewallPolicyThreatIntelWhitelist](New-AzFirewallPolicyThreatIntelWhitelist.md)
+Create a new threat intelligence whitelist for Azure Firewall Policy
 
 ### [New-AzFirewallThreatIntelWhitelist](New-AzFirewallThreatIntelWhitelist.md)
 Create a new threat intelligence whitelist for Azure Firewall

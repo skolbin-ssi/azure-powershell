@@ -79,7 +79,30 @@ namespace Microsoft.Azure.Commands.RecoveryServices.Backup.Cmdlets.Models
         /// <summary>
         /// Represents Azure Workload
         /// </summary>
-        AzureWorkload
+        AzureWorkload,
+
+        /// <summary>
+        /// Represents MAB agent
+        /// </summary>
+        MAB,
+
+        /// <summary>
+        /// represents that the BackupManagementType is Not Applicable.
+        /// </summary>
+        NA
+    }  
+
+    /// <summary>
+    /// Tier information for Recovery point: "Vault", "Snapshot", "Archive"
+    /// </summary>
+    public enum RecoveryPointTier
+    {
+        VaultStandard = 1,
+        Snapshot,
+        VaultArchive,
+        VaultStandardRehydrated,
+        SnapshotAndVaultStandard,
+        SnapshotAndVaultArchive
     }
 
     /// <summary>
@@ -118,6 +141,7 @@ namespace Microsoft.Azure.Commands.RecoveryServices.Backup.Cmdlets.Models
         /// Represents MSSQL in Azure VM.
         /// </summary>
         MSSQL,
+        FileFolder
     }
 
     /// <summary>
@@ -324,7 +348,17 @@ namespace Microsoft.Azure.Commands.RecoveryServices.Backup.Cmdlets.Models
         /// <summary>
         /// Disable protection with delete data
         /// </summary>
-        DeleteBackupData
+        DeleteBackupData,
+
+        /// <summary>
+        /// Data move between source and target vaults
+        /// </summary>
+        BackupDataMove,
+
+        /// <summary>
+        /// update the customer managed key
+        /// </summary>
+        UpdateCustomerManagedKey
     }
 
     /// <summary>

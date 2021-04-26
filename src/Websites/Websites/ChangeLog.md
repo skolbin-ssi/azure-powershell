@@ -18,6 +18,52 @@
         - Additional information about change #1
 -->
 ## Upcoming Release
+
+## Version 2.5.0
+* Updated `Add-AzWebAppAccessRestrictionRule` to allow all supported Service Tags and validate against Service Tag API.
+
+## Version 2.4.0
+* Introduced an option to give custom timeout for `Publish-AzWebApp` 
+* Added support for App Service Environment
+    - `New-AzAppServiceEnvironment`
+    - `Remove-AzAppServiceEnvironment`
+    - `Get-AzAppServiceEnvironment`
+    - `New-AzAppServiceEnvironmentInboundServices`
+* Add-AzWebAppAccessRestrictionRule: When using subnet from another subscription, -IgnoreMissingServiceEndpoint must be used. Descriptive error message added.
+
+## Version 2.3.0
+* Added support for Importing a key vault certificate to WebApp.
+
+## Version 2.2.0
+* Added support for App Service Managed certificates
+    - `New-AzWebAppCertificate`
+    - `Remove-AzWebAppCertificate`
+* Fixed issue that causes Docker Password to be removed from appsettings in `Set-AzWebApp` and `Set-AzWebAppSlot`
+
+## Version 2.1.1
+* Prevent duplicate access restriction rules
+
+## Version 2.1.0
+* Added support for new access restriction features: ServiceTag, multi-ip and http-headers
+
+## Version 2.0.0
+* Added support for Premium V3 pricing tier
+* Updated the WebSites SDK to 3.1.0
+
+## Version 1.11.0
+* Added support to perform operations for Slots not in the same resource group as the App Service Plan
+
+## Version 1.10.0
+* Added safeguard to delete created webapp if restore failed in `Restore-AzDeletedWebApp`
+* Added "SourceWebApp.Location" for `New-AzWebApp` and `New-AzWebAppSlot`
+* Fixed bug that prevented changing Container settings in `Set-AzWebApp` and `Set-AzWebAppSlot`
+* Fixed bug to get SiteConfig when -Name is not given for Get-AzWebApp
+* Added a support to create ASP for Linux Apps
+* Added exceptions for clone across resource groups
+* Added support to perform operations for Slots not in the same resource group as the App Service Plan
+* Added support to use Id for Restore-AzDeletedWebApp.
+
+## Version 1.9.0
 * Fixed typo on help of `Update-AzWebAppAccessRestrictionConfig`.
 
 ## Version 1.8.0

@@ -1,7 +1,7 @@
 ---
 external help file: Microsoft.Azure.PowerShell.Cmdlets.ApiManagement.ServiceManagement.dll-Help.xml
 Module Name: Az.ApiManagement
-online version: https://docs.microsoft.com/en-us/powershell/module/az.apimanagement/new-azapimanagementhttpmessagediagnostic
+online version: https://docs.microsoft.com/powershell/module/az.apimanagement/new-azapimanagementhttpmessagediagnostic
 schema: 2.0.0
 ---
 
@@ -22,7 +22,7 @@ The cmdlet **New-AzApiManagementHttpMessageDiagnostic** creates the Http Message
 
 ## EXAMPLES
 
-### Example 1 : Create a Basic Http Message diagnostic Setting
+### Example 1: Create a Basic Http Message diagnostic Setting
 ```powershell
 PS C:\>  New-AzApiManagementHttpMessageDiagnostic -Headers 'Content-Type', 'UserAgent' -BodyBytes 100
 

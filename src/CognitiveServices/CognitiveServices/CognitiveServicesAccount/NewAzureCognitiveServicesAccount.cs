@@ -155,6 +155,17 @@ namespace Microsoft.Azure.Commands.Management.CognitiveServices
         [AllowEmptyCollection]
         public PSNetworkRuleSet NetworkRuleSet { get; set; }
 
+        [Parameter(
+            Mandatory = false,
+            HelpMessage = "The network access type for Cognitive Services Account. Commonly `Enabled` or `Disabled`.")]
+        [ValidateSet("Enabled", "Disabled", IgnoreCase = true)]
+        public string PublicNetworkAccess { get; set; }
+
+        [Parameter(
+            Mandatory = false,
+            HelpMessage = "The ApiProperties of Cognitive Services Account. Required by specific account types.")]
+        public CognitiveServicesAccountApiProperties ApiProperty { get; set; }
+
         [Parameter(Mandatory = false, HelpMessage = "Don't ask for confirmation.")]
         public SwitchParameter Force { get; set; }
 
@@ -175,6 +186,11 @@ namespace Microsoft.Azure.Commands.Management.CognitiveServices
                     properties.NetworkAcls = NetworkRuleSet.ToNetworkRuleSet();
                 }
 
+                if (ApiProperty != null)
+                {
+                    properties.ApiProperties = ApiProperty;
+                }
+
                 CognitiveServicesAccount createParameters = new CognitiveServicesAccount()
                 {
                     Location = Location,
@@ -183,6 +199,11 @@ namespace Microsoft.Azure.Commands.Management.CognitiveServices
                     Tags = TagsConversionHelper.CreateTagDictionary(Tag),
                     Properties = properties
                 };
+
+                if (!string.IsNullOrEmpty(PublicNetworkAccess))
+                {
+                    createParameters.Properties.PublicNetworkAccess = PublicNetworkAccess;
+                }
 
                 if (AssignIdentity.IsPresent)
                 {
@@ -234,6 +255,24 @@ namespace Microsoft.Azure.Commands.Management.CognitiveServices
                             }
                         }
                     }
+
+                    if (Type.Equals("Face", StringComparison.InvariantCultureIgnoreCase) || Type.Equals("CognitiveServices", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        if (Force.IsPresent)
+                        {
+                            WriteWarning(Resources.NewAccount_LegalTerm_NotPolice);
+                        }
+                        else
+                        {
+                            bool yesToAll = false, noToAll = false;
+                            if (!ShouldContinue(Resources.NewAccount_LegalTerm_NotPolice, "Notice", true, ref yesToAll, ref noToAll))
+                            {
+                                return;
+                            }
+                        }
+                    }
+
+
                     try
                     {
                         CognitiveServicesAccount createAccountResponse = CognitiveServicesClient.Accounts.Create(
@@ -241,10 +280,19 @@ namespace Microsoft.Azure.Commands.Management.CognitiveServices
                                         Name,
                                         createParameters);
                     }
+                    catch (ErrorException ex)
+                    {
+                        // If the Exception is ErrorException, clone the exception with modified message.
+                        var newEx = new ErrorException($"Failed to create Cognitive Services account. {ex.Message}", ex);
+                        newEx.Body = ex.Body;
+                        newEx.Request = ex.Request;
+                        newEx.Response = ex.Response;
+                        throw newEx;
+                    }
                     catch (Exception ex)
                     {
                         // Give users a specific message says `Failed to create Cognitive Services account.`
-                        // Details should able be found in the exception.
+                        // Details should able be found in the inner exception.
                         throw new Exception("Failed to create Cognitive Services account.", ex);
                     }
 

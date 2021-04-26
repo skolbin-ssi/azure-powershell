@@ -1,7 +1,7 @@
 ---
 external help file: Microsoft.Azure.PowerShell.Cmdlets.Accounts.dll-Help.xml
 Module Name: Az.Accounts
-online version: https://docs.microsoft.com/en-us/powershell/module/az.accounts/connect-azaccount
+online version: https://docs.microsoft.com/powershell/module/az.accounts/connect-azaccount
 schema: 2.0.0
 ---
 
@@ -13,59 +13,53 @@ Connect to Azure with an authenticated account for use with cmdlets from the Az 
 ## SYNTAX
 
 ### UserWithSubscriptionId (Default)
-
 ```
-Connect-AzAccount [-Environment <String>] [-Tenant <String>] [-Subscription <String>]
- [-ContextName <String>] [-SkipContextPopulation] [-UseDeviceAuthentication] [-Force]
+Connect-AzAccount [-Environment <String>] [-Tenant <String>] [-Subscription <String>] [-ContextName <String>]
+ [-SkipContextPopulation] [-MaxContextPopulation <Int32>] [-UseDeviceAuthentication] [-Force]
  [-Scope <ContextModificationScope>] [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
  [<CommonParameters>]
 ```
 
 ### ServicePrincipalWithSubscriptionId
-
 ```
-Connect-AzAccount [-Environment <String>] -Credential <PSCredential> -ServicePrincipal
- -Tenant <String> [-Subscription <String>] [-ContextName <String>] [-SkipContextPopulation] [-Force]
- [-Scope <ContextModificationScope>] [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
+Connect-AzAccount [-Environment <String>] -Credential <PSCredential> [-ServicePrincipal] -Tenant <String>
+ [-Subscription <String>] [-ContextName <String>] [-SkipContextPopulation] [-MaxContextPopulation <Int32>]
+ [-Force] [-Scope <ContextModificationScope>] [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
  [<CommonParameters>]
 ```
 
 ### UserWithCredential
-
 ```
 Connect-AzAccount [-Environment <String>] -Credential <PSCredential> [-Tenant <String>]
- [-Subscription <String>] [-ContextName <String>] [-SkipContextPopulation] [-Force]
- [-Scope <ContextModificationScope>] [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
+ [-Subscription <String>] [-ContextName <String>] [-SkipContextPopulation] [-MaxContextPopulation <Int32>]
+ [-Force] [-Scope <ContextModificationScope>] [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
  [<CommonParameters>]
 ```
 
 ### ServicePrincipalCertificateWithSubscriptionId
-
 ```
 Connect-AzAccount [-Environment <String>] -CertificateThumbprint <String> -ApplicationId <String>
- [-ServicePrincipal] -Tenant <String> [-Subscription <String>] [-ContextName <String>]
- [-SkipContextPopulation] [-Force] [-Scope <ContextModificationScope>]
+ [-ServicePrincipal] -Tenant <String> [-Subscription <String>] [-ContextName <String>] [-SkipContextPopulation]
+ [-MaxContextPopulation <Int32>] [-Force] [-Scope <ContextModificationScope>]
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### AccessTokenWithSubscriptionId
-
 ```
-Connect-AzAccount [-Environment <String>] [-Tenant <String>] -AccessToken <String>
- [-GraphAccessToken <String>] [-KeyVaultAccessToken <String>] -AccountId <String>
- [-Subscription <String>] [-ContextName <String>] [-SkipValidation] [-SkipContextPopulation]
- [-Force] [-Scope <ContextModificationScope>] [-DefaultProfile <IAzureContextContainer>] [-WhatIf]
- [-Confirm] [<CommonParameters>]
+Connect-AzAccount [-Environment <String>] [-Tenant <String>] -AccessToken <String> [-GraphAccessToken <String>]
+ [-KeyVaultAccessToken <String>] -AccountId <String> [-Subscription <String>] [-ContextName <String>]
+ [-SkipValidation] [-SkipContextPopulation] [-MaxContextPopulation <Int32>] [-Force]
+ [-Scope <ContextModificationScope>] [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
+ [<CommonParameters>]
 ```
 
 ### ManagedServiceLogin
-
 ```
-Connect-AzAccount [-Environment <String>] [-Tenant <String>] [-AccountId <String>] -Identity
- [-ManagedServicePort <Int32>] [-ManagedServiceHostName <String>]
- [-ManagedServiceSecret <SecureString>] [-Subscription <String>] [-ContextName <String>]
- [-SkipContextPopulation] [-Force] [-Scope <ContextModificationScope>]
- [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Connect-AzAccount [-Environment <String>] [-Tenant <String>] [-AccountId <String>] [-Identity]
+ [-ManagedServicePort <Int32>] [-ManagedServiceHostName <String>] [-ManagedServiceSecret <SecureString>]
+ [-Subscription <String>] [-ContextName <String>] [-SkipContextPopulation] [-MaxContextPopulation <Int32>]
+ [-Force] [-Scope <ContextModificationScope>] [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -426,7 +420,7 @@ Accept wildcard characters: False
 
 ### -ManagedServiceHostName
 
-Host name for the managed service.
+Obsolete. To use customized MSI endpoint, please set environment variable MSI_ENDPOINT, e.g. "http://localhost:50342/oauth2/token". Host name for the managed service.
 
 ```yaml
 Type: System.String
@@ -442,7 +436,7 @@ Accept wildcard characters: False
 
 ### -ManagedServicePort
 
-Port number for the managed service.
+Obsolete. To use customized MSI endpoint, please set environment variable MSI_ENDPOINT, e.g. "http://localhost:50342/oauth2/token".Port number for the managed service.
 
 ```yaml
 Type: System.Int32
@@ -458,11 +452,27 @@ Accept wildcard characters: False
 
 ### -ManagedServiceSecret
 
-Token for the managed service login.
+Obsolete. To use customized MSI secret, please set environment variable MSI_SECRET. Token for the managed service login.
 
 ```yaml
 Type: System.Security.SecureString
 Parameter Sets: ManagedServiceLogin
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxContextPopulation
+
+Max subscription number to populate contexts after login. Default is 25. To populate all subscriptions to contexts, set to -1.
+
+```yaml
+Type: System.Int32
+Parameter Sets: (All)
 Aliases:
 
 Required: False
@@ -600,8 +610,7 @@ Accept wildcard characters: False
 
 ### -UseDeviceAuthentication
 
-Use device code authentication instead of a browser control. This is the default authentication type
-for PowerShell version 6 and higher.
+Use device code authentication instead of a browser control.
 
 ```yaml
 Type: System.Management.Automation.SwitchParameter
@@ -648,11 +657,7 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable,
--InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose,
--WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](/powershell/module/microsoft.powershell.core/about/about_commonparameters).
-(http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

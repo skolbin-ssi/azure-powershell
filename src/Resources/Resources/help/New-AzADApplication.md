@@ -2,7 +2,7 @@
 external help file: Microsoft.Azure.PowerShell.Cmdlets.Resources.dll-Help.xml
 Module Name: Az.Resources
 ms.assetid: F58FD77E-2946-44B1-B410-6E983FC20E21
-online version: https://docs.microsoft.com/en-us/powershell/module/az.resources/new-azadapplication
+online version: https://docs.microsoft.com/powershell/module/az.resources/new-azadapplication
 schema: 2.0.0
 ---
 
@@ -59,17 +59,17 @@ Creates a new azure active directory application. Below are the permissions need
 
 ## EXAMPLES
 
-### Example 1 - Create new AAD application.
+### Example 1: Create new AAD application.
 
-```
+```powershell
 PS C:\> New-AzADApplication -DisplayName "NewApplication" -HomePage "http://www.microsoft.com" -IdentifierUris "http://NewApplication"
 ```
 
 Creates a new azure active directory application without any credentials.
 
-### Example 2 - Create new AAD application with password.
+### Example 2: Create new AAD application with password.
 
-```
+```powershell
 PS C:\> $SecureStringPassword = ConvertTo-SecureString -String "password" -AsPlainText -Force
 PS C:\> New-AzADApplication -DisplayName "NewApplication" -HomePage "http://www.microsoft.com" -IdentifierUris "http:
 //NewApplication" -Password $SecureStringPassword

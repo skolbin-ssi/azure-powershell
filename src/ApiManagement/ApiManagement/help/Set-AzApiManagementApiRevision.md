@@ -1,7 +1,7 @@
 ---
 external help file: Microsoft.Azure.PowerShell.Cmdlets.ApiManagement.ServiceManagement.dll-Help.xml
 Module Name: Az.ApiManagement
-online version: https://docs.microsoft.com/en-us/powershell/module/az.apimanagement/set-azapimanagementapirevision
+online version: https://docs.microsoft.com/powershell/module/az.apimanagement/set-azapimanagementapirevision
 schema: 2.0.0
 ---
 
@@ -37,7 +37,7 @@ The **Set-AzApiManagementApiRevision** cmdlet modifies an Azure API Management A
 
 ## EXAMPLES
 
-### Example 1 Modify an API Revision
+### Example 1: Modify an API Revision
 ```powershell
 PS C:\>$ApiMgmtContext = New-AzApiManagementContext -ResourceGroupName "Api-Default-WestUS" -ServiceName "contoso"
 PS C:\>Set-AzApiManagementApiRevision -Context $ApiMgmtContext -ApiId "echo-api" -ApiRevision "2" -Name "EchoApi" -ServiceUrl "https://contoso.com/apis/echo" -Protocols @('https') -Description "Responds with what was sent" -Path "echo"

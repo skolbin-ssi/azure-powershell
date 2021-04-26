@@ -1,7 +1,7 @@
 ---
 external help file:
 Module Name: Az.Functions
-online version: https://docs.microsoft.com/en-us/powershell/module/az.functions/update-azfunctionappplan
+online version: https://docs.microsoft.com/powershell/module/az.functions/update-azfunctionappplan
 schema: 2.0.0
 ---
 
@@ -166,7 +166,7 @@ Accept wildcard characters: False
 
 ### -Sku
 The plan sku.
-Valid inputs are: EP1, P2, EP3
+Valid inputs are: EP1, EP2, EP3
 
 ```yaml
 Type: System.String

@@ -1,7 +1,7 @@
 ---
 external help file: Microsoft.Azure.PowerShell.Cmdlets.RecoveryServices.Backup.dll-Help.xml
 Module Name: Az.RecoveryServices
-online version: https://docs.microsoft.com/en-us/powershell/module/az.recoveryservices/get-azrecoveryservicesbackupstatus
+online version: https://docs.microsoft.com/powershell/module/az.recoveryservices/get-azrecoveryservicesbackupstatus
 schema: 2.0.0
 ---
 
@@ -122,7 +122,7 @@ Accept wildcard characters: False
 ```
 
 ### -Type
-Name of the Azure Resource whose representative item needs to be checked if it is already protected by some Recovery Services Vault in the subscription.
+Type of the Azure Resource whose representative item needs to be checked if it is already protected by some Recovery Services Vault in the subscription.
 
 ```yaml
 Type: System.String

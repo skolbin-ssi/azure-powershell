@@ -1,14 +1,14 @@
 ﻿---
 external help file: Microsoft.Azure.PowerShell.Cmdlets.ServiceBus.dll-Help.xml
 Module Name: Az.ServiceBus
-online version: https://docs.microsoft.com/en-us/powershell/module/az.servicebus/get-azservicebusrule
+online version: https://docs.microsoft.com/powershell/module/az.servicebus/get-azservicebusrule
 schema: 2.0.0
 ---
 
 # Get-AzServiceBusRule
 
 ## SYNOPSIS
-Creates a new rule for a given Subscription of Topic. 
+Retrieves the definition of an existing rule in a given Subscription of Topic. 
 
 ## SYNTAX
 

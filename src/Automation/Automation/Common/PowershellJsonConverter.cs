@@ -34,6 +34,7 @@ namespace Microsoft.Azure.Commands.Automation.Common
             Hashtable parameters = new Hashtable();
             parameters.Add(Constants.PsCommandParamInputObject, inputObject);
             parameters.Add(Constants.PsCommandParamDepth, Constants.PsCommandValueDepth);
+            parameters.Add(Constants.PsCommandParamCompress, true);
             var result = PowerShellJsonConverter.InvokeScript(Constants.PsCommandConvertToJson, parameters);
 
             if (result.Count != 1)
@@ -46,7 +47,7 @@ namespace Microsoft.Azure.Commands.Automation.Common
 
         public static PSObject Deserialize(string json)
         {
-            if (String.IsNullOrEmpty(json))
+            if (string.IsNullOrEmpty(json))
             {
                 return null;
             }
@@ -63,12 +64,6 @@ namespace Microsoft.Azure.Commands.Automation.Common
             return result[0];
         }
 
-        /// <summary>
-        /// Invokes a powershell script using the same runspace as the caller.
-        /// </summary>
-        /// <param name="scriptName">script name</param>
-        /// <param name="parameters">parameters for the script</param>
-        /// <returns></returns>
         private static Collection<PSObject> InvokeScript(string scriptName, Hashtable parameters)
         {
             using (var powerShell = System.Management.Automation.PowerShell.Create(RunspaceMode.CurrentRunspace))
@@ -78,10 +73,7 @@ namespace Microsoft.Azure.Commands.Automation.Common
                 {
                     powerShell.AddParameter(parameter.Key.ToString(), parameter.Value);
                 }
-
-
                 var result = powerShell.Invoke();
-
                 //Error handling
                 if (powerShell.HadErrors)
                 {
@@ -91,11 +83,9 @@ namespace Microsoft.Azure.Commands.Automation.Common
                         errorStringBuilder.AppendLine(error.InvocationInfo.MyCommand.Name + " : " + error.Exception.Message);
                         errorStringBuilder.AppendLine(error.InvocationInfo.PositionMessage);
                     }
-
                     throw new AzureAutomationOperationException(string.Format(CultureInfo.CurrentCulture,
                        Resources.PowershellJsonDecrypterFailed, errorStringBuilder.ToString()));
                 }
-
                 return result;
             }
         }

@@ -33,6 +33,16 @@ namespace Microsoft.Azure.Commands.RecoveryServices.Backup.Cmdlets
         internal const string GetItemsForPolicyParamSet = "GetItemsForPolicy";
 
         /// <summary>
+        /// List of supported BackupManagementTypes for this cmdlet. Used in help text creation.
+        /// </summary>
+        private const string validBackupManagementTypes = "AzureVM, MAB, AzureStorage, AzureWorkload";
+
+        /// <summary>
+        /// List of supported WorkloadTypes for this cmdlet. Used in help text creation.
+        /// </summary>
+        private const string validWorkloadTypes = "AzureVM, AzureFiles, MSSQL";
+
+        /// <summary>
         /// When this option is specified, only those items which belong to this container will be returned.
         /// </summary>
         [Parameter(
@@ -47,7 +57,7 @@ namespace Microsoft.Azure.Commands.RecoveryServices.Backup.Cmdlets
         /// <summary>
         /// Backup management type of the items to be returned.
         /// </summary>
-        [Parameter(Mandatory = true, Position = 1, HelpMessage = ParamHelpMsgs.Common.BackupManagementType,
+        [Parameter(Mandatory = true, Position = 1, HelpMessage = ParamHelpMsgs.Common.BackupManagementType + validBackupManagementTypes,
             ParameterSetName = GetItemsForVaultParamSet)]
         [ValidateNotNullOrEmpty]
         public BackupManagementType BackupManagementType { get; set; }
@@ -84,9 +94,9 @@ namespace Microsoft.Azure.Commands.RecoveryServices.Backup.Cmdlets
         /// <summary>
         /// Workload type of the item to be returned.
         /// </summary>
-        [Parameter(Mandatory = true, Position = 5, HelpMessage = ParamHelpMsgs.Common.WorkloadType,
+        [Parameter(Mandatory = true, Position = 5, HelpMessage = ParamHelpMsgs.Common.WorkloadType + validWorkloadTypes,
             ParameterSetName = GetItemsForVaultParamSet)]
-        [Parameter(Mandatory = true, Position = 5, HelpMessage = ParamHelpMsgs.Common.WorkloadType,
+        [Parameter(Mandatory = true, Position = 5, HelpMessage = ParamHelpMsgs.Common.WorkloadType + validWorkloadTypes,
             ParameterSetName = GetItemsForContainerParamSet)]
         [ValidateNotNullOrEmpty]
         public WorkloadType WorkloadType { get; set; }
@@ -104,6 +114,12 @@ namespace Microsoft.Azure.Commands.RecoveryServices.Backup.Cmdlets
         [Parameter(Mandatory = false, HelpMessage = ParamHelpMsgs.Item.FriendlyName)]
         [ValidateNotNullOrEmpty]
         public string FriendlyName { get; set; }
+
+        /// <summary>
+        /// Fetches the VM Bakup Items from Secondary Region.
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = ParamHelpMsgs.Common.UseSecondaryReg)]
+        public SwitchParameter UseSecondaryRegion;
 
         public override void ExecuteCmdlet()
         {
@@ -128,26 +144,35 @@ namespace Microsoft.Azure.Commands.RecoveryServices.Backup.Cmdlets
                         { ItemParams.ProtectionStatus, ProtectionStatus },
                         { ItemParams.ProtectionState, ProtectionState },
                         { ItemParams.WorkloadType, WorkloadType },
-                        { ItemParams.FriendlyName, FriendlyName }
+                        { ItemParams.FriendlyName, FriendlyName },
+                        { CRRParams.UseSecondaryRegion, UseSecondaryRegion.IsPresent}
                     }, ServiceClientAdapter);
 
                 IPsBackupProvider psBackupProvider = null;
-
-                if (this.ParameterSetName == GetItemsForVaultParamSet)
+                List<ItemBase> itemModels = null;
+                if (BackupManagementType == BackupManagementType.MAB)
                 {
-                    psBackupProvider =
-                        providerManager.GetProviderInstance(WorkloadType, BackupManagementType);
-                }
-                else if (this.ParameterSetName == GetItemsForContainerParamSet)
-                {
-                    psBackupProvider = providerManager.GetProviderInstance(WorkloadType,
-                    (Container as ManagementContext).BackupManagementType);
+                    AzureWorkloadProviderHelper provider = new AzureWorkloadProviderHelper(ServiceClientAdapter);
+                    itemModels = provider.GetMABProtectedItems(vaultName, resourceGroupName);
                 }
                 else
                 {
-                    psBackupProvider = providerManager.GetProviderInstance(Policy.WorkloadType);
+                    if (this.ParameterSetName == GetItemsForVaultParamSet)
+                    {
+                        psBackupProvider =
+                            providerManager.GetProviderInstance(WorkloadType, BackupManagementType);
+                    }
+                    else if (this.ParameterSetName == GetItemsForContainerParamSet)
+                    {
+                        psBackupProvider = providerManager.GetProviderInstance(WorkloadType,
+                        (Container as ManagementContext).BackupManagementType);
+                    }
+                    else
+                    {
+                        psBackupProvider = providerManager.GetProviderInstance(Policy.WorkloadType);
+                    }
+                    itemModels = psBackupProvider.ListProtectedItems();
                 }
-                var itemModels = psBackupProvider.ListProtectedItems();
 
                 WriteObject(itemModels, enumerateCollection: true);
             });

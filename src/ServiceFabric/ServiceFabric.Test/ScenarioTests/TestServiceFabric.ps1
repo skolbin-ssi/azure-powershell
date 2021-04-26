@@ -83,7 +83,7 @@ function Test-RemoveAzureRmServiceFabricClusterCertificate
 {
 	$clusterName = Get-ClusterName
 	$resourceGroupName = Get-ResourceGroupName
-    $thumbprint  = Get-Thumbprint
+    $thumbprint  = Get-InitialThumbprint
 
 	WaitForClusterReadyStateIfRecord $clusterName  $resourceGroupName
 
@@ -293,4 +293,22 @@ function Test-SetAzureRmServiceFabricUpgradeType
 	$cluster = Set-AzServiceFabricUpgradeType -ResourceGroupName $resourceGroupName -ClusterName $clusterName -UpgradeMode Manual -Verbose
 	$clusters = Get-AzServiceFabricCluster -ClusterName $clusterName -ResourceGroupName $resourceGroupName 
 	Assert-AreEqual $clusters[0].UpgradeMode 'Manual'
+}
+
+function Test-UpdateAzureRmServiceFabricVmImage
+{
+	$clusterName = Get-ClusterName
+	$resourceGroupName = Get-ResourceGroupName
+    $targetVmImage = Get-VmImage
+
+	WaitForClusterReadyStateIfRecord $clusterName  $resourceGroupName
+
+    $clusters = Get-AzServiceFabricCluster -ClusterName $clusterName -ResourceGroupName $resourceGroupName
+    Assert-NotNull $clusters[0].VmImage
+
+    $cluster = Update-AzServiceFabricVmImage -ResourceGroupName $resourceGroupName -ClusterName $clusterName -VmImage $targetVmImage -Verbose
+	$clusters = Get-AzServiceFabricCluster -ClusterName $clusterName -ResourceGroupName $resourceGroupName
+    Assert-NotNull $clusters[0].VmImage 
+
+	Assert-AreEqual $clusters[0].VmImage $targetVmImage "Cluster vmimage was supposed to equal $targetVmImage. Change may not have been absorbed."
 }

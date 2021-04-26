@@ -18,12 +18,16 @@ using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using System.Text;
-using Microsoft.Azure.Management.ContainerService;
+
 using Microsoft.Azure.Commands.Aks.Models;
 using Microsoft.Azure.Commands.Aks.Properties;
 using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
+using Microsoft.Azure.Management.ContainerService;
+using Microsoft.Azure.Management.ContainerService.Models;
 using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
+using Microsoft.Rest;
 using Microsoft.WindowsAzure.Commands.Utilities.Common;
+
 using YamlDotNet.RepresentationModel;
 
 namespace Microsoft.Azure.Commands.Aks
@@ -140,11 +144,34 @@ namespace Microsoft.Azure.Commands.Aks
                         WriteVerbose(Admin
                             ? Resources.FetchingTheClusterAdminKubectlConfig
                             : Resources.FetchingTheDefaultClusterUserKubectlConfig);
-                        var accessProfile = Client.ManagedClusters.GetAccessProfile(ResourceGroupName, Name,
-                            Admin ? "clusterAdmin" : "clusterUser");
+
+                        CredentialResult credentialResult = null;
+
+                        try
+                        {
+                            if (Admin)
+                            {
+                                credentialResult = Client.ManagedClusters.ListClusterAdminCredentials(ResourceGroupName, Name).Kubeconfigs[0];
+                            }
+                            else
+                            {
+                                credentialResult = Client.ManagedClusters.ListClusterUserCredentials(ResourceGroupName, Name).Kubeconfigs[0];
+                            }
+                        }
+                        catch (ValidationException e)
+                        {
+                            var sdkApiParameterMap = new Dictionary<string, CmdletParameterNameValuePair>()
+                                {
+                                    { Constants.DotNetApiParameterResourceGroupName, new CmdletParameterNameValuePair(nameof(ResourceGroupName), ResourceGroupName) },
+                                    { Constants.DotNetApiParameterResourceName, new CmdletParameterNameValuePair(nameof(Name), Name) },
+                                };
+
+                            if (!HandleValidationException(e, sdkApiParameterMap))
+                                throw;
+                        }
 
                         var decodedKubeConfig =
-                            Encoding.UTF8.GetString(accessProfile.KubeConfig);
+                            Encoding.UTF8.GetString(credentialResult.Value);
                         if (ConfigPath == "-")
                         {
                             WriteObject(decodedKubeConfig);

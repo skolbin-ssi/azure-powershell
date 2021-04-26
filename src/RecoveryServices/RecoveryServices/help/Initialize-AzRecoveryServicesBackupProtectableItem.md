@@ -1,7 +1,7 @@
 ---
 external help file: Microsoft.Azure.PowerShell.Cmdlets.RecoveryServices.Backup.dll-Help.xml
 Module Name: Az.RecoveryServices
-online version: https://docs.microsoft.com/en-us/powershell/module/az.recoveryservices/initialize-azrecoveryservicesbackupprotectableitem
+online version: https://docs.microsoft.com/powershell/module/az.recoveryservices/initialize-azrecoveryservicesbackupprotectableitem
 schema: 2.0.0
 ---
 
@@ -71,7 +71,7 @@ Accept wildcard characters: False
 ```
 
 ### -PassThru
-Return the container to be deleted.
+Returns the container where the discovery is being triggered.
 
 ```yaml
 Type: System.Management.Automation.SwitchParameter
@@ -101,13 +101,13 @@ Accept wildcard characters: False
 ```
 
 ### -WorkloadType
-Workload type of the resource (for example: AzureVM, WindowsServer, AzureFiles, MSSQL).
+Workload type of the resource. The current supported values are AzureVM, WindowsServer, AzureFiles, MSSQL
 
 ```yaml
 Type: Microsoft.Azure.Commands.RecoveryServices.Backup.Cmdlets.Models.WorkloadType
 Parameter Sets: (All)
 Aliases:
-Accepted values: AzureVM, AzureSQLDatabase, AzureFiles, MSSQL
+Accepted values: AzureVM, WindowsServer, AzureFiles, MSSQL
 
 Required: True
 Position: 1
@@ -132,7 +132,7 @@ Accept wildcard characters: False
 ```
 
 ### -WhatIf
-Shows what would happen if the cmdlet runs. The cmdlet is not run.
+Shows what would happen if the cmdlet runs. 
 
 ```yaml
 Type: System.Management.Automation.SwitchParameter

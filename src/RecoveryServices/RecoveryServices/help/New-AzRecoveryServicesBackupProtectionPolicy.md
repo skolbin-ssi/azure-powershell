@@ -2,7 +2,7 @@
 external help file: Microsoft.Azure.PowerShell.Cmdlets.RecoveryServices.Backup.dll-Help.xml
 Module Name: Az.RecoveryServices
 ms.assetid: C2A7F37B-5713-4430-B83F-C6745692396D
-online version: https://docs.microsoft.com/en-us/powershell/module/az.recoveryservices/new-azrecoveryservicesbackupprotectionpolicy
+online version: https://docs.microsoft.com/powershell/module/az.recoveryservices/new-azrecoveryservicesbackupprotectionpolicy
 schema: 2.0.0
 ---
 
@@ -61,16 +61,16 @@ New-AzRecoveryServicesBackupProtectionPolicy -Name 'NewPolicy' -RetentionPolicy 
 ## PARAMETERS
 
 ### -BackupManagementType
-Specifies the Backup management type.
-The acceptable values for this parameter are:
+The class of resources being protected. The acceptable values for this parameter are:
 - AzureVM 
-- AzureSQLDatabase
+- AzureStorage
+- AzureWorkload
 
 ```yaml
 Type: System.Nullable`1[Microsoft.Azure.Commands.RecoveryServices.Backup.Cmdlets.Models.BackupManagementType]
 Parameter Sets: (All)
 Aliases:
-Accepted values: AzureVM, MARS, SCDPM, AzureBackupServer, AzureSQL, AzureStorage, AzureWorkload
+Accepted values: AzureVM, AzureStorage, AzureWorkload
 
 Required: False
 Position: 3
@@ -157,16 +157,16 @@ Accept wildcard characters: False
 ```
 
 ### -WorkloadType
-Specifies the workload type.
-The acceptable values for this parameter are:
+Workload type of the resource. The acceptable values for this parameter are:
 - AzureVM 
-- AzureSQLDatabase
+- AzureFiles
+- MSSQL
 
 ```yaml
 Type: Microsoft.Azure.Commands.RecoveryServices.Backup.Cmdlets.Models.WorkloadType
 Parameter Sets: (All)
 Aliases:
-Accepted values: AzureVM, AzureSQLDatabase, AzureFiles, MSSQL
+Accepted values: AzureVM, AzureFiles, MSSQL
 
 Required: True
 Position: 2
@@ -191,7 +191,7 @@ Accept wildcard characters: False
 ```
 
 ### -WhatIf
-Shows what would happen if the cmdlet runs. The cmdlet is not run.
+Shows what would happen if the cmdlet runs.
 
 ```yaml
 Type: System.Management.Automation.SwitchParameter
